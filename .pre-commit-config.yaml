@@ -1,0 +1,16 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+      - id: check-case-conflict # verifies that no file names will have issues with case sensitive file systems
+      - id: check-merge-conflict # checks if any files have merge conflict markers
+      - id: trailing-whitespace # trims trailing whitespace
+      - id: end-of-file-fixer # ensures that a file is either empty, or ends with one newline
+
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.79.1 # Get the latest from: https://github.com/antonbabenko/pre-commit-terraform/releases
+    hooks:
+      - id: terraform_fmt
+      - id: terraform_tflint
+        args:
+          - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
