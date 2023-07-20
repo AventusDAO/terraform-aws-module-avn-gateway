@@ -52,7 +52,7 @@ variable "memory_db" {
     auto_minor_version_upgrade = optional(bool, false)
     node_type                  = optional(string, "db.t4g.small")
     num_shards                 = optional(number, 1)
-    num_replicas_per_shard     = optional(number, 3)
+    num_replicas_per_shard     = optional(number, 2)
     port                       = optional(number, 6379)
     tls_enabled                = optional(bool, false)
     maintenance_window         = optional(string, "tue:09:00-tue:10:00")
