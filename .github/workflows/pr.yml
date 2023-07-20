@@ -44,7 +44,7 @@ jobs:
       with:
         working-dir: .
         output-file: README.md
-        output-method: replace
+        output-method: inject
         git-push: true
         git-commit-message: "create terraform-docs"
         template: |
