@@ -47,7 +47,7 @@ jobs:
         output-method: inject
         git-push: true
         git-commit-message: "create terraform-docs"
-        template: |
+        template: |-
           <!-- BEGIN_TF_DOCS -->
           {{ .Content }}
-          <!-- END_TF_DOCS -->"
+          <!-- END_TF_DOCS -->
