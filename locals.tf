@@ -34,21 +34,13 @@ locals {
 
   lambdas = {
     authorisation_handler = {
-      env_vars = lookup(var.lambdas.authorisation_handler, "env_vars",
-        {
-          MAX_TOKEN_AGE_MSEC = 600000
-          MIN_AVT_BALANCE    = "1000000000000000000"
-        }
-      )
-      memory_size = lookup(var.lambdas.authorisation_handler, "memory_size", 512)
-      timeout     = lookup(var.lambdas.authorisation_handler, "timeout", 30)
+      env_vars    = var.lambdas.authorisation_handler.env_vars
+      memory_size = var.lambdas.authorisation_handler.memory_size
+      timeout     = var.lambdas.authorisation_handler.timeout
     }
 
     send_handler = {
-      env_vars = merge(lookup(var.lambdas.send_handler, "env_vars",
-        {
-          MQ_AVN_TX_QUEUE = "avnTx"
-        }),
+      env_vars = merge(var.lambdas.send_handler.env_vars,
         {
           MQ_BROKER_AMQP_ENDPOINT = module.amazonmq.primary_amqp_ssl_endpoint
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
@@ -57,58 +49,55 @@ locals {
           SQS_PAYER_QUEUE_URL     = module.sqs_queues["gateway_payer_queue"].queue_url
         }
       )
-      memory_size      = lookup(var.lambdas.send_handler, "memory_size", 512)
-      timeout          = lookup(var.lambdas.send_handler, "timeout", 30)
+      memory_size      = var.lambdas.send_handler.memory_size
+      timeout          = var.lambdas.send_handler.timeout
       extra_policy_arn = aws_iam_policy.gateway_send_handler_access.arn
     }
 
     poll_handler = {
-      env_vars    = (lookup(var.lambdas.poll_handler, "env_vars", {}))
-      memory_size = lookup(var.lambdas.poll_handler, "memory_size", 256)
-      timeout     = lookup(var.lambdas.poll_handler, "timeout", 30)
+      env_vars    = var.lambdas.poll_handler.env_vars
+      memory_size = var.lambdas.poll_handler.memory_size
+      timeout     = var.lambdas.poll_handler.timeout
     }
 
     query_handler = {
-      env_vars    = (lookup(var.lambdas.query_handler, "env_vars", {}))
-      memory_size = lookup(var.lambdas.query_handler, "memory_size", 256)
-      timeout     = lookup(var.lambdas.query_handler, "timeout", 30)
+      env_vars    = var.lambdas.query_handler.env_vars
+      memory_size = var.lambdas.query_handler.memory_size
+      timeout     = var.lambdas.query_handler.timeout
     }
 
     lift_processing_handler = {
-      env_vars = merge(lookup(var.lambdas.lift_processing_handler, "env_vars",
-        {
-          MQ_AVN_TX_QUEUE = "avnTx"
-        }),
+      env_vars = merge(var.lambdas.lift_processing_handler.env_vars,
         {
           MQ_BROKER_AMQP_ENDPOINT = module.amazonmq.primary_amqp_ssl_endpoint
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
           SECRET_MANAGER_REGION   = data.aws_region.current.name
         }
       )
-      memory_size = lookup(var.lambdas.lift_processing_handler, "memory_size", 128)
-      timeout     = lookup(var.lambdas.lift_processing_handler, "timeout", 30)
+      memory_size = var.lambdas.lift_processing_handler.memory_size
+      timeout     = var.lambdas.lift_processing_handler.timeout
     }
 
     tx_status_update_handler = {
-      env_vars    = (lookup(var.lambdas.tx_status_update_handler, "env_vars", {}))
-      memory_size = lookup(var.lambdas.tx_status_update_handler, "memory_size", 256)
-      timeout     = lookup(var.lambdas.tx_status_update_handler, "timeout", 30)
+      env_vars    = var.lambdas.tx_status_update_handler.env_vars
+      memory_size = var.lambdas.tx_status_update_handler.memory_size
+      timeout     = var.lambdas.tx_status_update_handler.timeout
     }
 
     vote_handler = {
-      env_vars    = (lookup(var.lambdas.vote_handler, "env_vars", {}))
-      memory_size = lookup(var.lambdas.vote_handler, "memory_size", 256)
-      timeout     = lookup(var.lambdas.vote_handler, "timeout", 30)
+      env_vars    = var.lambdas.vote_handler.env_vars
+      memory_size = var.lambdas.vote_handler.memory_size
+      timeout     = var.lambdas.vote_handler.timeout
     }
 
     lower_handler = {
-      env_vars    = (lookup(var.lambdas.lower_handler, "env_vars", {}))
-      memory_size = lookup(var.lambdas.vote_handler, "memory_size", 256)
-      timeout     = lookup(var.lambdas.vote_handler, "timeout", 30)
+      env_vars    = var.lambdas.lower_handler.env_vars
+      memory_size = var.lambdas.vote_handler.memory_size
+      timeout     = var.lambdas.vote_handler.timeout
     }
 
     split_fee_handler = {
-      env_vars = merge(lookup(var.lambdas.split_fee_handler, "env_vars", {}),
+      env_vars = merge(var.lambdas.split_fee_handler.env_vars,
         {
           SECRET_MANAGER_REGION = data.aws_region.current.name
           SQS_DEFAULT_QUEUE_URL = module.sqs_queues["gateway_default_queue"].queue_url
@@ -121,16 +110,13 @@ locals {
           function_response_types = ["ReportBatchItemFailures"]
         }
       }
-      memory_size      = lookup(var.lambdas.split_fee_handler, "memory_size", 512)
-      timeout          = lookup(var.lambdas.split_fee_handler, "timeout", 30)
+      memory_size      = var.lambdas.split_fee_handler.memory_size
+      timeout          = var.lambdas.split_fee_handler.timeout
       extra_policy_arn = aws_iam_policy.gateway_split_fee_access.arn
     }
 
     tx_dispatch_handler = {
-      env_vars = merge(lookup(var.lambdas.tx_dispatch_handler, "env_vars",
-        {
-          MQ_AVN_TX_QUEUE = "avnTx"
-        }),
+      env_vars = merge(var.lambdas.tx_dispatch_handler.env_vars,
         {
           MQ_BROKER_AMQP_ENDPOINT = module.amazonmq.primary_amqp_ssl_endpoint
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
@@ -143,13 +129,13 @@ locals {
           function_response_types = ["ReportBatchItemFailures"]
         }
       }
-      memory_size      = lookup(var.lambdas.tx_dispatch_handler, "memory_size", 512)
-      timeout          = lookup(var.lambdas.tx_dispatch_handler, "timeout", 30)
+      memory_size      = var.lambdas.tx_dispatch_handler.memory_size
+      timeout          = var.lambdas.tx_dispatch_handler.timeout
       extra_policy_arn = aws_iam_policy.gateway_tx_dispatch_access.arn
     }
 
     invalid_transaction_handler = {
-      env_vars = (lookup(var.lambdas.invalid_transaction_handler, "env_vars", {}))
+      env_vars = var.lambdas.invalid_transaction_handler.env_vars
 
       event_source_mapping = {
         sqs_default = {
@@ -160,8 +146,8 @@ locals {
         }
       }
 
-      memory_size      = lookup(var.lambdas.invalid_transaction_handler, "memory_size", 512)
-      timeout          = lookup(var.lambdas.invalid_transaction_handler, "timeout", 30)
+      memory_size      = var.lambdas.invalid_transaction_handler.memory_size
+      timeout          = var.lambdas.invalid_transaction_handler.timeout
       extra_policy_arn = aws_iam_policy.gateway_invalid_transaction_access.arn
     }
   }

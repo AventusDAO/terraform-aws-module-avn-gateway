@@ -156,91 +156,92 @@ variable "api_gateway" {
 variable "lambdas" {
   type = object({
     vpc_subnet_ids            = list(string)
-    layer_compatible_runtimes = optional(list(string))
-    runtime                   = optional(string)
+    layer_compatible_runtimes = optional(list(string), ["nodejs14.x"])
+    runtime                   = optional(string, "nodejs14.x")
     zip_location = optional(
       object({
-        bucket     = optional(string) # bucket where to fetch lambda zips
-        key_prefix = optional(string) # bucket key prefix where to fetch lambda zips
+        bucket     = optional(string, "aventus-internal-artefact") # bucket where to fetch lambda zips
+        key_prefix = optional(string, "gateway-lambdas")           # bucket key prefix where to fetch lambda zips
       })
     )
-    common_env_vars                   = optional(map(any))
-    cloudwatch_logs_retention_in_days = optional(number)
+    common_env_vars                   = optional(map(any), {})
+    cloudwatch_logs_retention_in_days = optional(number, 14)
     authorisation_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
-      })
+        env_vars    = optional(map(any), { MAX_TOKEN_AGE_MSEC = 600000, MIN_AVT_BALANCE = "1000000000000000000" })
+        memory_size = optional(number, 512)
+        timeout     = optional(number, 30)
+        }
+      )
     )
     send_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars    = optional(map(any), { MQ_AVN_TX_QUEUE = "avnTx" })
+        memory_size = optional(number, 512)
+        timeout     = optional(number, 30)
       })
     )
     poll_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars    = optional(map(any), {})
+        memory_size = optional(number, 256)
+        timeout     = optional(number, 30)
       })
     )
     query_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars    = optional(map(any), {})
+        memory_size = optional(number, 256)
+        timeout     = optional(number, 30)
       })
     )
     lift_processing_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars    = optional(map(any), { MQ_AVN_TX_QUEUE = "avnTx" })
+        memory_size = optional(number, 128)
+        timeout     = optional(number, 30)
       })
     )
     tx_status_update_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars    = optional(map(any), {})
+        memory_size = optional(number, 256)
+        timeout     = optional(number, 30)
       })
     )
     vote_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars    = optional(map(any), {})
+        memory_size = optional(number, 256)
+        timeout     = optional(number, 30)
       })
     )
     lower_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars    = optional(map(any), {})
+        memory_size = optional(number, 256)
+        timeout     = optional(number, 30)
       })
     )
     split_fee_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars    = optional(map(any), {})
+        memory_size = optional(number, 512)
+        timeout     = optional(number, 30)
       })
     )
     tx_dispatch_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars    = optional(map(any), { MQ_AVN_TX_QUEUE = "avnTx" })
+        memory_size = optional(number, 512)
+        timeout     = optional(number, 30)
       })
     )
     invalid_transaction_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars    = optional(map(any), {})
+        memory_size = optional(number, 512)
+        timeout     = optional(number, 30)
       })
     )
   })

@@ -8,12 +8,12 @@ module "lambdas_layers" {
   create_layer        = true
   layer_name          = each.key
   description         = "${each.key} - ${var.lambda_version} - Deployed by Terraform"
-  compatible_runtimes = lookup(var.lambdas, "layer_compatible_runtimes", ["nodejs14.x"])
+  compatible_runtimes = var.lambdas.layer_compatible_runtimes
   create_package      = false
 
   s3_existing_package = {
-    bucket = lookup(var.lambdas.zip_location, "bucket", "aventus-internal-artefact")
-    key    = "${lookup(var.lambdas.zip_location, "key_prefix", "gateway-lambdas")}/${each.key}/${each.key}-${var.lambda_version}.zip"
+    bucket = var.lambdas.zip_location.bucket
+    key    = "${var.lambdas.zip_location.key_prefix}/${each.key}/${each.key}-${var.lambda_version}.zip"
   }
 
   for_each = local.lambda_layers
@@ -34,12 +34,12 @@ module "lambdas" {
   publish       = true
 
   handler                           = "${each.key}.handler"
-  runtime                           = lookup(var.lambdas, "runtime", "nodejs14.x")
-  environment_variables             = merge(lookup(each.value, "env_vars", {}), lookup(var.lambdas, "common_env_vars", {}))
+  runtime                           = var.lambdas.runtime
+  environment_variables             = merge(each.value.env_vars, var.lambdas.common_env_vars)
   timeout                           = each.value.timeout
   memory_size                       = each.value.memory_size
   layers                            = [for layer in module.lambdas_layers : layer.lambda_layer_arn]
-  cloudwatch_logs_retention_in_days = lookup(var.lambdas, "cloudwatch_logs_retention_in_days", 14)
+  cloudwatch_logs_retention_in_days = var.lambdas.cloudwatch_logs_retention_in_days
 
   allowed_triggers = {
     allow_api_gateway = {
@@ -56,8 +56,8 @@ module "lambdas" {
   create_package        = false
 
   s3_existing_package = {
-    bucket = lookup(var.lambdas.zip_location, "bucket", "aventus-internal-artefact")
-    key    = "${lookup(var.lambdas.zip_location, "key_prefix", "gateway-lambdas")}/${each.key}/${each.key}-${var.lambda_version}.zip"
+    bucket = var.lambdas.zip_location.bucket
+    key    = "${var.lambdas.zip_location.key_prefix}/${each.key}/${each.key}-${var.lambda_version}.zip"
   }
 
   for_each = local.lambdas
