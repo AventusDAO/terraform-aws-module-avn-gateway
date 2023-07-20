@@ -10,12 +10,12 @@ module "api_gateway" {
   protocol_type = var.api_gateway.protocol_type
 
   cors_configuration = {
-    allow_credentials = lookup(var.api_gateway.cors_configuration, "allow_credentials", false)
-    allow_headers     = lookup(var.api_gateway.cors_configuration, "allow_headers", ["*"])
-    allow_methods     = lookup(var.api_gateway.cors_configuration, "allow_methods", ["*"])
-    allow_origins     = lookup(var.api_gateway.cors_configuration, "allow_origins", ["*"])
-    expose_headers    = lookup(var.api_gateway.cors_configuration, "expose_headers", ["*"])
-    max_age           = lookup(var.api_gateway.cors_configuration, "max_age", 100)
+    allow_credentials = var.api_gateway.cors_configuration.allow_credentials
+    allow_headers     = var.api_gateway.cors_configuration.allow_headers
+    allow_methods     = var.api_gateway.cors_configuration.allow_methods
+    allow_origins     = var.api_gateway.cors_configuration.allow_origins
+    expose_headers    = var.api_gateway.cors_configuration.expose_headers
+    max_age           = var.api_gateway.cors_configuration.max_age
   }
 
   # Custom domain
