@@ -237,28 +237,30 @@ variable "lambdas" {
 }
 
 variable "sqs" {
-  type = object({
-    queue_names                   = optional(list(string))
-    fifo                          = optional(bool)
-    message_retention_seconds     = optional(number)
-    visibility_timeout_seconds    = optional(number)
-    create_dlq                    = optional(bool)
-    dlq_message_retention_seconds = optional(number)
-    receive_wait_time_seconds     = optional(number)
-    max_receive_count             = optional(number)
-    alarms = object({
-      alarm_description   = optional(string)
-      comparison_operator = optional(string)
-      evaluation_periods  = optional(number)
-      threshold           = optional(number)
-      period              = optional(number)
-      unit                = optional(string)
-      namespace           = optional(string)
-      metric_name         = optional(string)
-      statistic           = optional(string)
-      alarm_actions       = optional(string)
+  type = optional(
+    object({
+      queue_names                   = optional(list(string))
+      fifo                          = optional(bool)
+      message_retention_seconds     = optional(number)
+      visibility_timeout_seconds    = optional(number)
+      create_dlq                    = optional(bool)
+      dlq_message_retention_seconds = optional(number)
+      receive_wait_time_seconds     = optional(number)
+      max_receive_count             = optional(number)
+      alarms = object({
+        alarm_description   = optional(string)
+        comparison_operator = optional(string)
+        evaluation_periods  = optional(number)
+        threshold           = optional(number)
+        period              = optional(number)
+        unit                = optional(string)
+        namespace           = optional(string)
+        metric_name         = optional(string)
+        statistic           = optional(string)
+        alarm_actions       = optional(string)
+      })
     })
-  })
+  )
   description = "List of FIFO queue names to create and its global configurations. Alarms for more than 20 messages on the DLQ will also be created."
 }
 
