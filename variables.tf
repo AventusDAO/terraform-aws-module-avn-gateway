@@ -127,27 +127,27 @@ variable "api_gateway" {
     domain_name_certificate_arn = string
     override_name               = optional(string) # if not set, var.name is used
     description                 = optional(string)
-    protocol_type               = optional(string)
+    protocol_type               = optional(string, "HTTP")
     cors_configuration = optional(
       object({
-        allow_credentials = optional(bool)
-        allow_headers     = optional(list(string))
-        allow_methods     = optional(list(string))
-        allow_origins     = optional(list(string))
-        expose_headers    = optional(list(string))
-        max_age           = optional(number)
+        allow_credentials = optional(bool, false)
+        allow_headers     = optional(list(string), ["*"])
+        allow_methods     = optional(list(string), ["*"])
+        allow_origins     = optional(list(string), ["*"])
+        expose_headers    = optional(list(string), ["*"])
+        max_age           = optional(number, 100)
       })
     )
     default_stage_access_log_format = optional(string) # more here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_stage#access_log_settings
     default_route_settings = optional(
       object({
-        detailed_metrics_enabled = optional(bool)
-        throttling_burst_limit   = optional(number)
-        throttling_rate_limit    = optional(number)
+        detailed_metrics_enabled = optional(bool, true)
+        throttling_burst_limit   = optional(number, 100)
+        throttling_rate_limit    = optional(number, 100)
       })
     )
-    retention_in_days = optional(number)
-    tags              = optional(map(any))
+    retention_in_days = optional(number, 14)
+    tags              = optional(map(any), {})
   })
 
   description = "Subset of AWS API gateway configurations used on 'terraform-aws-modules/apigateway-v2/aws' module."

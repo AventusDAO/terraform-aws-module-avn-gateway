@@ -5,9 +5,9 @@ module "api_gateway" {
   source  = "terraform-aws-modules/apigateway-v2/aws"
   version = "2.2.2"
 
-  name          = lookup(var.api_gateway, "override_name", var.name)
-  description   = lookup(var.api_gateway, "description", "API Gateway for the AVN gateway")
-  protocol_type = lookup(var.api_gateway, "protocol_type", "HTTP")
+  name          = coalesce(var.api_gateway.override_name, var.name)
+  description   = coalesce(var.api_gateway.description, "API Gateway for the ${replace(coalesce(var.api_gateway.override_name, var.name), "-", " ")}")
+  protocol_type = var.api_gateway.protocol_type
 
   cors_configuration = {
     allow_credentials = lookup(var.api_gateway.cors_configuration, "allow_credentials", false)
@@ -19,13 +19,13 @@ module "api_gateway" {
   }
 
   # Custom domain
-  domain_name                 = "${lookup(var.api_gateway, "override_name", var.name)}.${var.api_gateway.domain_name_suffix}"
+  domain_name                 = "${coalesce(var.api_gateway.override_name, var.name)}.${var.api_gateway.domain_name_suffix}"
   domain_name_certificate_arn = var.api_gateway.domain_name_certificate_arn
 
   # Access logs
   default_stage_access_log_destination_arn = aws_cloudwatch_log_group.api_gateway.arn
 
-  default_stage_access_log_format = lookup(var.api_gateway, "default_stage_access_log_format",
+  default_stage_access_log_format = coalesce(var.api_gateway.default_stage_access_log_format,
     jsonencode(
       {
         httpMethod     = "$context.httpMethod"
@@ -116,13 +116,13 @@ module "api_gateway" {
     }
   }
 
-  tags = merge(lookup(var.api_gateway, "tags", {}), { Name = lookup(var.api_gateway, "override_name", var.name) })
+  tags = merge(var.api_gateway.tags, { Name = coalesce(var.api_gateway.override_name, var.name) })
 }
 
 #
 # gateway api gateway log group
 #
 resource "aws_cloudwatch_log_group" "api_gateway" {
-  name              = lookup(var.api_gateway, "override_name", var.name)
-  retention_in_days = lookup(var.api_gateway, "retention_in_days", 14)
+  name              = coalesce(var.api_gateway.override_name, var.name)
+  retention_in_days = var.api_gateway.retention_in_days
 }
