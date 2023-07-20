@@ -26,7 +26,7 @@ locals {
     password    = ""
     admin_user  = ""
     admin_passw = ""
-    server      = module.amazonmq.primary_amqp_ssl_endpoint
+    server      = ""
   }
 
   # lambdas

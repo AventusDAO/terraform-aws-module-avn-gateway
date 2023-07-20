@@ -8,7 +8,7 @@ data "aws_vpc" "current" {
 #
 # Gateway SM
 #
-data "aws_secretsmanager_secret_version" "gateway_amazonmq" {
+data "aws_secretsmanager_secret_version" "amazonmq" {
   secret_id = aws_secretsmanager_secret.amazonmq.id
 
   depends_on = [aws_secretsmanager_secret_version.amazonmq]
