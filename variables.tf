@@ -247,9 +247,6 @@ variable "sqs" {
     receive_wait_time_seconds     = optional(number)
     max_receive_count             = optional(number)
     alarms = object({
-      dimensions = object({
-        QueueName = string
-      })
       alarm_description   = optional(string)
       comparison_operator = optional(string)
       evaluation_periods  = optional(number)

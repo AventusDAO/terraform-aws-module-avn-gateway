@@ -33,7 +33,7 @@ module "gateway_sqs_queues_alarms" {
   namespace           = lookup(var.sqs.alarm, "namespace", "AWS/SQS")
   metric_name         = lookup(var.sqs.alarm, "metric_name", "NumberOfMessagesSent")
   statistic           = lookup(var.sqs.alarm, "statistic", "Sum")
-  dimensions          = lookup(var.sqs.alarm, "dimensions", { QueueName = each.key })
+  dimensions          = { QueueName = each.key }
   alarm_actions       = [var.sqs.alarm.alarm_actions]
 
   for_each = toset(var.sqs.queue_names)
