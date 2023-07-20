@@ -69,7 +69,7 @@ module "sg_amazonmq" {
     },
   ]
 
-  tags = merge(var.amazon_mq.tags, { Name = coalesce(var.amazon_mq.override_name, var.name) })
+  tags = { Name = coalesce(var.amazon_mq.override_name, var.name) }
 }
 
 #
@@ -89,5 +89,5 @@ module "sg_lambdas" {
   egress_rules        = ["all-all"]
   egress_cidr_blocks  = ["0.0.0.0/0"]
 
-  tags = merge(var.lambdas.tags, { Name = var.name })
+  tags = { Name = var.name }
 }

@@ -3,7 +3,7 @@ module "sqs_queues" {
   version = "4.0.2"
 
   name                          = each.key
-  fifo_queue                    = var.sqs.fifo_queue
+  fifo_queue                    = var.sqs.fifo
   message_retention_seconds     = var.sqs.message_retention_seconds
   visibility_timeout_seconds    = var.sqs.visibility_timeout_seconds
   create_dlq                    = var.sqs.create_dlq
