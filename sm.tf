@@ -34,7 +34,7 @@ resource "aws_secretsmanager_secret_version" "amazonmq" {
 # gateway cognito secret
 #
 resource "aws_secretsmanager_secret" "cognito" {
-  name                    = replace("cognito_${var.name}_admin_details", "-", "_")
+  name                    = replace("${var.name}_cognito", "-", "_")
   recovery_window_in_days = 0
 }
 
