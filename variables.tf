@@ -249,29 +249,28 @@ variable "lambdas" {
 
 variable "sqs" {
   type = object({
-    fifo                          = optional(bool)
-    message_retention_seconds     = optional(number)
-    visibility_timeout_seconds    = optional(number)
-    create_dlq                    = optional(bool)
-    dlq_message_retention_seconds = optional(number)
-    receive_wait_time_seconds     = optional(number)
-    max_receive_count             = optional(number)
+    fifo                          = optional(bool, true)
+    message_retention_seconds     = optional(number, 86400)
+    visibility_timeout_seconds    = optional(number, 60)
+    create_dlq                    = optional(bool, true)
+    dlq_message_retention_seconds = optional(number, 1209600)
+    receive_wait_time_seconds     = optional(number, 0)
+    max_receive_count             = optional(number, 5)
     alarm = optional(
       object({
         alarm_description   = optional(string)
-        comparison_operator = optional(string)
-        evaluation_periods  = optional(number)
-        threshold           = optional(number)
-        period              = optional(number)
-        unit                = optional(string)
-        namespace           = optional(string)
-        metric_name         = optional(string)
-        statistic           = optional(string)
-        alarm_actions       = optional(string)
+        comparison_operator = optional(string, "GreaterThanOrEqualToThreshold")
+        evaluation_periods  = optional(number, 1)
+        threshold           = optional(number, 20)
+        period              = optional(number, 300)
+        unit                = optional(string, "Count")
+        namespace           = optional(string, "AWS/SQS")
+        metric_name         = optional(string, "NumberOfMessagesSent")
+        statistic           = optional(string, "Sum")
+        alarm_actions       = (string)
       })
     )
   })
-  default     = {}
   description = "List of FIFO queue names to create and its global configurations. Alarms for more than 20 messages on the DLQ will also be created."
 }
 

@@ -3,15 +3,15 @@ module "sqs_queues" {
   version = "4.0.2"
 
   name                          = each.key
-  fifo_queue                    = lookup(var.sqs, "fifo_queue", true)
-  message_retention_seconds     = lookup(var.sqs, "message_retention_seconds", 86400)
-  visibility_timeout_seconds    = lookup(var.sqs, "visibility_timeout_seconds", 60)
-  create_dlq                    = lookup(var.sqs, "create_dlq", true)
-  dlq_message_retention_seconds = lookup(var.sqs, "dlq_message_retention_seconds", 1209600)
-  receive_wait_time_seconds     = lookup(var.sqs, "receive_wait_time_seconds", 0)
+  fifo_queue                    = var.sqs.fifo_queue
+  message_retention_seconds     = var.sqs.message_retention_seconds
+  visibility_timeout_seconds    = var.sqs.visibility_timeout_seconds
+  create_dlq                    = var.sqs.create_dlq
+  dlq_message_retention_seconds = var.sqs.dlq_message_retention_seconds
+  receive_wait_time_seconds     = var.sqs.receive_wait_time_seconds
 
   redrive_policy = {
-    maxReceiveCount = lookup(var.sqs, "max_receive_count", 5)
+    maxReceiveCount = var.sqs.max_receive_count
   }
 
   tags = { Name = each.key }
@@ -24,15 +24,15 @@ module "gateway_sqs_queues_alarms" {
   version = "4.3.0"
 
   alarm_name          = replace("${each.key}_dlq_alarm", "-", "_")
-  alarm_description   = lookup(var.sqs.alarm, "alarm_description", "Warning: DLQ queue [${each.key}] has more than 20 messages in the queue. Please investigate and take appropriate actions to avoid service disruption.")
-  comparison_operator = lookup(var.sqs.alarm, "comparison_operator", "GreaterThanOrEqualToThreshold")
-  evaluation_periods  = lookup(var.sqs.alarm, "evaluation_periods", 1)
-  threshold           = lookup(var.sqs.alarm, "threshold", 20)
-  period              = lookup(var.sqs.alarm, "period", 300)
-  unit                = lookup(var.sqs.alarm, "unit", "Count")
-  namespace           = lookup(var.sqs.alarm, "namespace", "AWS/SQS")
-  metric_name         = lookup(var.sqs.alarm, "metric_name", "NumberOfMessagesSent")
-  statistic           = lookup(var.sqs.alarm, "statistic", "Sum")
+  alarm_description   = coalesce(var.sqs.alarm.alarm_description, "Warning: DLQ queue [${each.key}] has more than 20 messages in the queue. Please investigate and take appropriate actions to avoid service disruption.")
+  comparison_operator = var.sqs.alarm.comparison_operator
+  evaluation_periods  = var.sqs.alarm.evaluation_periods
+  threshold           = var.sqs.alarm.threshold
+  period              = var.sqs.alarm.period
+  unit                = var.sqs.alarm.unit
+  namespace           = var.sqs.alarm.namespace
+  metric_name         = var.sqs.alarm.metric_name
+  statistic           = var.sqs.alarm.statistic
   dimensions          = { QueueName = each.key }
   alarm_actions       = [var.sqs.alarm.alarm_actions]
 
