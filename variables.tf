@@ -280,40 +280,48 @@ variable "cognito" {
     domain                       = string
     certificate_arn              = string
     override_name                = optional(string) # if not set, var.name is used
-    recovery_mechanism           = optional(list(string))
-    allow_admin_create_user_only = optional(bool)
+    recovery_mechanism           = optional(list(string), ["verified_email"])
+    allow_admin_create_user_only = optional(bool, true)
     password_policy = optional(
       object({
-        minimum_length                   = optional(number)
-        require_lowercase                = optional(bool)
-        require_numbers                  = optional(bool)
-        require_symbols                  = optional(bool)
-        require_uppercase                = optional(bool)
-        temporary_password_validity_days = optional(number)
-    }))
-    software_token_mfa_configuration = optional(bool)
-    user_pool_add_ons                = optional(string)
-    device_configuration = optional(
-      object({
-        challenge_required_on_new_device      = optional(bool)
-        device_only_remembered_on_user_prompt = optional(bool)
+        minimum_length                   = optional(number, 12)
+        require_lowercase                = optional(bool, true)
+        require_numbers                  = optional(bool, true)
+        require_symbols                  = optional(bool, true)
+        require_uppercase                = optional(bool, true)
+        temporary_password_validity_days = optional(number, 1)
       })
     )
-    deletion_protection = optional(string)
-    mfa_configuration   = optional(string)
-    username_attributes = optional(list(string))
+    software_token_mfa_configuration = optional(bool, true)
+    user_pool_add_ons                = optional(string, "OFF")
+    device_configuration = optional(
+      object({
+        challenge_required_on_new_device      = optional(bool, true)
+        device_only_remembered_on_user_prompt = optional(bool, true)
+      })
+    )
+    deletion_protection = optional(string, "ACTIVE")
+    mfa_configuration   = optional(string, "OPTIONAL")
+    username_attributes = optional(list(string), ["email"])
     pool_client = object({
       callback_urls                        = list(string)
       logout_urls                          = list(string)
-      user_pool_id                         = optional(string)
-      generate_secret                      = optional(bool)
-      allowed_oauth_flows_user_pool_client = optional(bool)
-      allowed_oauth_flows                  = optional(list(string))
-      explicit_auth_flows                  = optional(list(string))
-      allowed_oauth_scopes                 = optional(list(string))
-      prevent_user_existence_errors        = optional(string)
-      supported_identity_providers         = optional(list(string))
+      generate_secret                      = optional(bool, true)
+      allowed_oauth_flows_user_pool_client = optional(bool, true)
+      allowed_oauth_flows                  = optional(list(string), ["code"])
+      explicit_auth_flows = optional(
+        list(string),
+        [
+          "ALLOW_CUSTOM_AUTH",
+          "ALLOW_REFRESH_TOKEN_AUTH",
+          "ALLOW_USER_PASSWORD_AUTH",
+          "ALLOW_USER_SRP_AUTH"
+        ]
+      )
+      allowed_oauth_scopes          = optional(list(string), ["email", "openid"])
+      prevent_user_existence_errors = optional(string, "ENABLED")
+      supported_identity_providers  = optional(list(string), ["COGNITO"])
     })
-    tags = optional(map(any))
+    tags = optional(map(any), {})
   })
 }

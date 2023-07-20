@@ -5,11 +5,11 @@
 # for now, the email used to send the temp password to users will be no-reply@verificationemail.com
 # This is limited to 50emails/day and aws recommend to use AMAZON SES
 resource "aws_cognito_user_pool" "admin_portal" {
-  name = "${lookup(var.cognito, "override_name", var.name)}-admin-portal"
+  name = "${coalesce(var.cognito.override_name, var.name)}-admin-portal"
 
   account_recovery_setting {
     dynamic "recovery_mechanism" {
-      for_each = var.cognito.recovery_mechanism ? { for idx, mechanism in var.cognito.recovery_mechanism : idx => mechanism } : [{ 1 = "verified_email" }]
+      for_each = { for idx, mechanism in var.cognito.recovery_mechanism : idx => mechanism }
       content {
         name     = recovery_mechanism.value
         priority = recovery_mechanism.key + 1
@@ -18,7 +18,7 @@ resource "aws_cognito_user_pool" "admin_portal" {
   }
 
   admin_create_user_config {
-    allow_admin_create_user_only = lookup(var.cognito, "allow_admin_create_user_only", true)
+    allow_admin_create_user_only = var.cognito.allow_admin_create_user_only
 
     invite_message_template {
       email_message = <<EOT
@@ -37,32 +37,32 @@ EOT
   }
 
   password_policy {
-    minimum_length                   = lookup(var.cognito.password_policy, "minimum_length", 12)
-    require_lowercase                = lookup(var.cognito.password_policy, "require_lowercase", true)
-    require_numbers                  = lookup(var.cognito.password_policy, "require_numbers", true)
-    require_symbols                  = lookup(var.cognito.password_policy, "require_symbols", true)
-    require_uppercase                = lookup(var.cognito.password_policy, "require_uppercase", true)
-    temporary_password_validity_days = lookup(var.cognito.password_policy, "temporary_password_validity_days", 1)
+    minimum_length                   = var.cognito.password_policy.minimum_length
+    require_lowercase                = var.cognito.password_policy.require_lowercase
+    require_numbers                  = var.cognito.password_policy.require_numbers
+    require_symbols                  = var.cognito.password_policy.require_symbols
+    require_uppercase                = var.cognito.password_policy.require_uppercase
+    temporary_password_validity_days = var.cognito.password_policy.temporary_password_validity_days
   }
 
   software_token_mfa_configuration {
-    enabled = lookup(var.cognito, "software_token_mfa_configuration", true)
+    enabled = var.cognito.software_token_mfa_configuration
   }
 
   user_pool_add_ons {
-    advanced_security_mode = lookup(var.cognito, "user_pool_add_ons", "OFF")
+    advanced_security_mode = var.cognito.user_pool_add_ons
   }
 
   device_configuration {
-    challenge_required_on_new_device      = lookup(var.cognito.device_configuration, "challenge_required_on_new_device", true)
-    device_only_remembered_on_user_prompt = lookup(var.cognito.device_configuration, "device_only_remembered_on_user_prompt", true)
+    challenge_required_on_new_device      = var.cognito.device_configuration.challenge_required_on_new_device
+    device_only_remembered_on_user_prompt = var.cognito.device_configuration.device_only_remembered_on_user_prompt
   }
 
-  deletion_protection = lookup(var.cognito, "deletion_protection", "ACTIVE")
-  mfa_configuration   = lookup(var.cognito, "mfa_configuration", "OPTIONAL")
-  username_attributes = lookup(var.cognito, "username_attributes", ["email"])
+  deletion_protection = var.cognito.deletion_protection
+  mfa_configuration   = var.cognito.mfa_configuration
+  username_attributes = var.cognito.username_attributes
 
-  tags = merge(var.cognito.tags, { Name = lookup(var.cognito, "override_name", var.name) })
+  tags = merge(var.cognito.tags, { Name = coalesce(var.cognito.override_name, var.name) })
 }
 
 resource "aws_cognito_user_pool_domain" "admin_portal" {
@@ -72,15 +72,15 @@ resource "aws_cognito_user_pool_domain" "admin_portal" {
 }
 
 resource "aws_cognito_user_pool_client" "admin_portal" {
-  name                                 = "${lookup(var.cognito, "override_name", var.name)}-admin-portal"
+  name                                 = "${coalesce(var.cognito.override_name, var.name)}-admin-portal"
   user_pool_id                         = aws_cognito_user_pool.admin_portal.id
-  generate_secret                      = lookup(var.cognito.pool_client, "generate_secret", true)
-  allowed_oauth_flows_user_pool_client = lookup(var.cognito.pool_client, "allowed_oauth_flows_user_pool_client", true)
-  allowed_oauth_flows                  = lookup(var.cognito.pool_client, "allowed_oauth_flows", ["code"])
-  explicit_auth_flows                  = lookup(var.cognito.pool_client, "explicit_auth_flows", ["ALLOW_CUSTOM_AUTH", "ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_USER_PASSWORD_AUTH", "ALLOW_USER_SRP_AUTH"])
-  allowed_oauth_scopes                 = lookup(var.cognito.pool_client, "allowed_oauth_scopes", ["email", "openid"])
+  generate_secret                      = var.cognito.pool_client.generate_secret
+  allowed_oauth_flows_user_pool_client = var.cognito.pool_client.allowed_oauth_flows_user_pool_client
+  allowed_oauth_flows                  = var.cognito.pool_client.allowed_oauth_flows
+  explicit_auth_flows                  = var.cognito.pool_client.explicit_auth_flows
+  allowed_oauth_scopes                 = var.cognito.pool_client.allowed_oauth_scopes
   callback_urls                        = var.cognito.pool_client.callback_urls
   logout_urls                          = var.cognito.pool_client.logout_urls
-  prevent_user_existence_errors        = lookup(var.cognito.pool_client, "prevent_user_existence_errors", "ENABLED")
-  supported_identity_providers         = lookup(var.cognito.pool_client, "supported_identity_providers", ["COGNITO"])
+  prevent_user_existence_errors        = var.cognito.pool_client.prevent_user_existence_errors
+  supported_identity_providers         = var.cognito.pool_client.supported_identity_providers
 }
