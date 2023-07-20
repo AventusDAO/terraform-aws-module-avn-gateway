@@ -116,7 +116,7 @@ variable "rds" {
         }
       ]
     )
-    tags = optional(map(any))
+    tags = optional(map(any), {})
   })
   description = "Subset of AWS RDS configurations used on 'terraform-aws-modules/rds/aws' module."
 }
@@ -130,14 +130,22 @@ variable "api_gateway" {
     protocol_type               = optional(string, "HTTP")
     cors_configuration = optional(
       object({
-        allow_credentials = optional(bool, false)
-        allow_headers     = optional(list(string), ["*"])
-        allow_methods     = optional(list(string), ["*"])
-        allow_origins     = optional(list(string), ["*"])
-        expose_headers    = optional(list(string), ["*"])
-        max_age           = optional(number, 100)
-      })
-    )
+        allow_credentials = optional(bool)
+        allow_headers     = optional(list(string))
+        allow_methods     = optional(list(string))
+        allow_origins     = optional(list(string))
+        expose_headers    = optional(list(string))
+        max_age           = optional(number)
+        },
+        {
+          allow_credentials = false
+          allow_headers     = ["*"]
+          allow_methods     = ["*"]
+          allow_origins     = ["*"]
+          expose_headers    = ["*"]
+          max_age           = 100
+        }
+    ))
     default_stage_access_log_format = optional(string) # more here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_stage#access_log_settings
     default_route_settings = optional(
       object({
