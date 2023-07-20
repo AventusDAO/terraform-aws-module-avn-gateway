@@ -33,14 +33,14 @@ resource "aws_secretsmanager_secret_version" "amazonmq" {
 #
 # gateway cognito secret
 #
-resource "aws_secretsmanager_secret" "admin_portal" {
+resource "aws_secretsmanager_secret" "cognito" {
   name                    = replace("cognito_${var.name}_admin_details", "-", "_")
   recovery_window_in_days = 0
 }
 
-resource "aws_secretsmanager_secret_version" "admin_portal" {
+resource "aws_secretsmanager_secret_version" "cognito" {
 
-  secret_id     = aws_secretsmanager_secret.connector.id
+  secret_id     = aws_secretsmanager_secret.cognito.id
   secret_string = "{\"client_secret\":\"updated via AWS UI\"}"
 
   lifecycle {
