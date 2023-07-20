@@ -131,6 +131,9 @@ Temporary Items
 *.tfstate
 *.tfstate.*
 
+# .tf lock files
+*.lock.hcl
+
 # Crash log files
 crash.log
 crash.*.log
