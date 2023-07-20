@@ -22,7 +22,7 @@ module "lambdas_layers" {
 #
 # gateway lambdas
 #
-module "gateway_lambdas" {
+module "lambdas" {
   source  = "terraform-aws-modules/lambda/aws"
   version = "5.3.0"
 

@@ -51,7 +51,7 @@ module "api_gateway" {
       authorizer_type                   = "REQUEST"
       identity_sources                  = "$request.header.Authorization"
       name                              = "authorisation-handler"
-      authorizer_uri                    = module.gateway_lambdas["authorisation_handler"].lambda_function_qualified_invoke_arn
+      authorizer_uri                    = module.lambdas["authorisation_handler"].lambda_function_qualified_invoke_arn
       enable_simple_responses           = true
       authorizer_result_ttl_in_seconds  = 300
       authorizer_payload_format_version = "2.0"
@@ -66,7 +66,7 @@ module "api_gateway" {
       integration_type       = "AWS_PROXY"
       description            = "Poll handler integration"
       integration_method     = "POST"
-      integration_uri        = module.gateway_lambdas["poll_handler"].lambda_function_qualified_invoke_arn
+      integration_uri        = module.lambdas["poll_handler"].lambda_function_qualified_invoke_arn
       passthrough_behavior   = "WHEN_NO_MATCH"
       payload_format_version = "2.0"
     }
@@ -78,7 +78,7 @@ module "api_gateway" {
       connection_type        = "INTERNET"
       description            = "Send handler integration"
       integration_method     = "POST"
-      integration_uri        = module.gateway_lambdas["send_handler"].lambda_function_qualified_invoke_arn
+      integration_uri        = module.lambdas["send_handler"].lambda_function_qualified_invoke_arn
       passthrough_behavior   = "WHEN_NO_MATCH"
       payload_format_version = "2.0"
     }
@@ -90,7 +90,7 @@ module "api_gateway" {
       connection_type        = "INTERNET"
       description            = "Query handler integration"
       integration_method     = "POST"
-      integration_uri        = module.gateway_lambdas["query_handler"].lambda_function_qualified_invoke_arn
+      integration_uri        = module.lambdas["query_handler"].lambda_function_qualified_invoke_arn
       passthrough_behavior   = "WHEN_NO_MATCH"
       payload_format_version = "2.0"
     }
@@ -100,7 +100,7 @@ module "api_gateway" {
       connection_type        = "INTERNET"
       description            = "Vote handler integration"
       integration_method     = "POST"
-      integration_uri        = module.gateway_lambdas["vote_handler"].lambda_function_qualified_invoke_arn
+      integration_uri        = module.lambdas["vote_handler"].lambda_function_qualified_invoke_arn
       passthrough_behavior   = "WHEN_NO_MATCH"
       payload_format_version = "2.0"
     }
@@ -110,7 +110,7 @@ module "api_gateway" {
       connection_type        = "INTERNET"
       description            = "Lower handler integration"
       integration_method     = "POST"
-      integration_uri        = module.gateway_lambdas["lower_handler"].lambda_function_qualified_invoke_arn
+      integration_uri        = module.lambdas["lower_handler"].lambda_function_qualified_invoke_arn
       passthrough_behavior   = "WHEN_NO_MATCH"
       payload_format_version = "2.0"
     }

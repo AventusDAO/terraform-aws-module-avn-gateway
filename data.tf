@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "gateway_send_handler_access" {
       "secretsmanager:GetSecretValue"
     ]
     resources = [
-      aws_secretsmanager_secret.gateway_amazonmq.arn
+      aws_secretsmanager_secret.amazonmq.arn
     ]
   }
 }
@@ -54,7 +54,7 @@ data "aws_iam_policy_document" "gateway_split_fee_access" {
       "sqs:GetQueueAttributes",
     ]
     resources = [
-      module.gateway_sqs_queues["gateway_payer_queue"].queue_arn
+      module.sqs_queues["gateway_payer_queue"].queue_arn
     ]
   }
 
@@ -65,7 +65,7 @@ data "aws_iam_policy_document" "gateway_split_fee_access" {
       "sqs:SendMessageBatch"
     ]
     resources = [
-      module.gateway_sqs_queues["gateway_default_queue"].queue_arn
+      module.sqs_queues["gateway_default_queue"].queue_arn
     ]
   }
 }
@@ -81,7 +81,7 @@ data "aws_iam_policy_document" "gateway_tx_dispatch_access" {
       "sqs:GetQueueAttributes",
     ]
     resources = [
-      module.gateway_sqs_queues["gateway_default_queue"].queue_arn
+      module.sqs_queues["gateway_default_queue"].queue_arn
     ]
   }
 
@@ -91,7 +91,7 @@ data "aws_iam_policy_document" "gateway_tx_dispatch_access" {
       "secretsmanager:GetSecretValue"
     ]
     resources = [
-      aws_secretsmanager_secret.gateway_amazonmq.arn
+      aws_secretsmanager_secret.amazonmq.arn
     ]
   }
 }
@@ -107,8 +107,8 @@ data "aws_iam_policy_document" "gateway_invalid_transaction_access" {
       "sqs:GetQueueAttributes"
     ]
     resources = [
-      module.gateway_sqs_queues["gateway_default_queue"].queue_arn,
-      module.gateway_sqs_queues["gateway_payer_queue"].queue_arn
+      module.sqs_queues["gateway_default_queue"].queue_arn,
+      module.sqs_queues["gateway_payer_queue"].queue_arn
     ]
   }
 
@@ -118,7 +118,7 @@ data "aws_iam_policy_document" "gateway_invalid_transaction_access" {
       "secretsmanager:GetSecretValue"
     ]
     resources = [
-      aws_secretsmanager_secret.gateway_amazonmq.arn
+      aws_secretsmanager_secret.amazonmq.arn
     ]
   }
 }
@@ -132,7 +132,7 @@ data "aws_iam_policy_document" "gateway_admin_portal" {
       "cognito-idp:AdminGetUser",
     ]
     resources = [
-      "arn:aws:cognito-idp:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:userpool/${aws_cognito_user_pool_domain.gateway_admin_portal.id}"
+      "arn:aws:cognito-idp:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:userpool/${aws_cognito_user_pool_domain.admin_portal.id}"
     ]
   }
 
@@ -143,8 +143,8 @@ data "aws_iam_policy_document" "gateway_admin_portal" {
       "secretsmanager:DescribeSecret",
     ]
     resources = [
-      aws_secretsmanager_secret.gateway_admin_portal.arn,
-      aws_secretsmanager_secret.gateway_rds.arn
+      aws_secretsmanager_secret.cognito.arn,
+      aws_secretsmanager_secret.rds.arn
     ]
   }
 }
@@ -190,7 +190,7 @@ data "aws_iam_policy_document" "gateway_connector" {
       aws_secretsmanager_secret.amazonmq.arn,
       aws_secretsmanager_secret.rds.arn,
       aws_secretsmanager_secret.vault.arn,
-      aws_secretsmanager_secret.gateway_connector.arn
+      aws_secretsmanager_secret.connector.arn
     ]
   }
 
@@ -200,8 +200,8 @@ data "aws_iam_policy_document" "gateway_connector" {
       "lambda:InvokeFunction"
     ]
     resources = [
-      module.gateway_lambdas["tx-status-update-handler"].lambda_function_qualified_arn,
-      module.gateway_lambdas["tx-status-update-handler"].lambda_function_qualified_arn
+      module.lambdas["tx-status-update-handler"].lambda_function_qualified_arn,
+      module.lambdas["tx-status-update-handler"].lambda_function_qualified_arn
     ]
   }
 }
