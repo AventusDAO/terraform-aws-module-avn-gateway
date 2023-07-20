@@ -136,16 +136,17 @@ variable "api_gateway" {
         allow_origins     = optional(list(string))
         expose_headers    = optional(list(string))
         max_age           = optional(number)
-        },
-        {
-          allow_credentials = false
-          allow_headers     = ["*"]
-          allow_methods     = ["*"]
-          allow_origins     = ["*"]
-          expose_headers    = ["*"]
-          max_age           = 100
         }
-    ))
+      ),
+      {
+        allow_credentials = false
+        allow_headers     = ["*"]
+        allow_methods     = ["*"]
+        allow_origins     = ["*"]
+        expose_headers    = ["*"]
+        max_age           = 100
+      }
+    )
     default_stage_access_log_format = optional(string) # more here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_stage#access_log_settings
     default_route_settings = optional(
       object({
