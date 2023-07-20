@@ -6,7 +6,7 @@ This module provisions all resources needed for the avn-gateway to work:
 - AWS `RDS`
 - `SQS queues` and respective `alarms`
 - Custom `DNS records` for the `api gateway` and `admin portal`
-- Deployment of `lambda layers` and `lambdas`  
+- Deployment of `lambda layers` and `lambdas`
 - AWS `cognito pool` and `pool client` for `gateway admin portal`
 - AWS `gateway api`
 - `vault KMS key` used for auto-unseal
