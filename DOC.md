@@ -18,8 +18,8 @@ This module provisions all resources needed for the avn-gateway to work:
   - `Connector service account`
 - Secret Manager facilities pre-populated during the first apply:
   - `RDS`
-  -  `amazon mq`
-  -  `cognito`
+  - `amazon mq`
+  - `cognito`
   - `vault`
   - `connector`
 - Multiple AWS `policies`.
