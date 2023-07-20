@@ -5,8 +5,8 @@ module "sg_rds" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.1.0"
 
-  name        = lookup(var.rds, "override_name", "${var.name}-rds")
-  description = "${lookup(var.rds, "override_name", "${var.name}-rds")} access"
+  name        = coalesce(var.rds.override_name, "${var.name}-rds")
+  description = "${coalesce(var.rds.override_name, "${var.name}-rds")} access"
 
   vpc_id = var.vpc_id
 
@@ -19,7 +19,7 @@ module "sg_rds" {
     },
   ]
 
-  tags = merge(lookup(var.rds, "tags", {}), { Name = lookup(var.rds, "override_name", var.name) })
+  tags = merge(var.rds.tags, { Name = coalesce(var.rds.override_name, var.name) })
 }
 
 #
@@ -29,8 +29,8 @@ module "sg_memorydb" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.1.0"
 
-  name        = lookup(var.rds, "override_name", "${var.name}-memorydb")
-  description = "${lookup(var.rds, "override_name", "${var.name}-memorydb")} access"
+  name        = coalesce(var.memory_db.override_name, "${var.name}-memorydb")
+  description = "${coalesce(var.memory_db.override_name, "${var.name}-memorydb")} access"
 
   vpc_id = var.vpc_id
 
@@ -44,7 +44,7 @@ module "sg_memorydb" {
     },
   ]
 
-  tags = merge(lookup(var.memory_db, "tags", {}), { Name = lookup(var.memory_db, "override_name", var.name) })
+  tags = merge(var.memory_db.tags, { Name = coalesce(var.memory_db.override_name, var.name) })
 }
 
 #
@@ -54,8 +54,8 @@ module "sg_amazonmq" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.1.0"
 
-  name        = lookup(var.amazon_mq, "override_name", "${var.name}-amq")
-  description = "${lookup(var.amazon_mq, "override_name", var.name)} amazon MQ access"
+  name        = coalesce(var.amazon_mq.override_name, "${var.name}-amq")
+  description = "${coalesce(var.amazon_mq.override_name, var.name)} amazon MQ access"
 
   vpc_id = var.vpc_id
 
@@ -69,7 +69,7 @@ module "sg_amazonmq" {
     },
   ]
 
-  tags = merge(lookup(var.amazon_mq, "tags", {}), { Name = lookup(var.amazon_mq, "override_name", var.name) })
+  tags = merge(var.amazon_mq.tags, { Name = coalesce(var.amazon_mq.override_name, var.name) })
 }
 
 #
@@ -89,5 +89,5 @@ module "sg_lambdas" {
   egress_rules        = ["all-all"]
   egress_cidr_blocks  = ["0.0.0.0/0"]
 
-  tags = merge(lookup(var.lambdas, "tags", {}), { Name = var.name })
+  tags = merge(var.lambdas.tags, { Name = var.name })
 }
