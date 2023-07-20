@@ -367,21 +367,35 @@ variable "cognito" {
     allow_admin_create_user_only = optional(bool, true)
     password_policy = optional(
       object({
-        minimum_length                   = optional(number, 12)
-        require_lowercase                = optional(bool, true)
-        require_numbers                  = optional(bool, true)
-        require_symbols                  = optional(bool, true)
-        require_uppercase                = optional(bool, true)
-        temporary_password_validity_days = optional(number, 1)
-      })
+        minimum_length                   = optional(number)
+        require_lowercase                = optional(bool)
+        require_numbers                  = optional(bool)
+        require_symbols                  = optional(bool)
+        require_uppercase                = optional(bool)
+        temporary_password_validity_days = optional(number)
+        }
+      ),
+      {
+        minimum_length                   = 12
+        require_lowercase                = true
+        require_numbers                  = true
+        require_symbols                  = true
+        require_uppercase                = true
+        temporary_password_validity_days = 1
+      }
     )
     software_token_mfa_configuration = optional(bool, true)
     user_pool_add_ons                = optional(string, "OFF")
     device_configuration = optional(
       object({
-        challenge_required_on_new_device      = optional(bool, true)
-        device_only_remembered_on_user_prompt = optional(bool, true)
-      })
+        challenge_required_on_new_device      = optional(bool)
+        device_only_remembered_on_user_prompt = optional(bool)
+        }
+      ),
+      {
+        challenge_required_on_new_device      = true
+        device_only_remembered_on_user_prompt = true
+      }
     )
     deletion_protection = optional(string, "ACTIVE")
     mfa_configuration   = optional(string, "OPTIONAL")
