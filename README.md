@@ -24,14 +24,101 @@ This module provisions all resources needed for the avn-gateway to work:
   - `connector`
 - Multiple AWS `policies`.
 
+Example use:
+```
+#
+# TLS Certificate for cognito
+#
+module "gateway_cognito_acm" {
+  source  = "terraform-aws-modules/acm/aws"
+  version = "4.3.2"
+
+  domain_name = "*.dev.aventus.io"
+  zone_id     = data.aws_route53_zone.dev_zone.id
+
+  wait_for_validation = true
+
+  tags = {
+    Name        = "Cognito gateway certificate"
+    Description = "Managed via terraform"
+    Project     = "Gateway"
+  }
+
+  providers = {
+    aws = aws.us_east_1
+  }
+}
+
+#
+# avn gateway - all aws components
+#
+module "dev_gateway" {
+  source = "git@github.com:Aventus-Network-Services/terraform-avn-gateway-module.git?ref=vx.x.x"
+
+  name                = "dev-gateway"
+  vpc_id              = <vpc id>
+  route53_zone_id     = <zone id>
+  eks_oidc_issuer_url = <oddc provider url>
+  lambda_version      = <commit hash from gateway api repo>
+
+  amazon_mq = {
+    subnet_ids = ["id1", "id2" , ... ]
+  }
+
+  memory_db = {
+    subnet_ids = ["id1", "id2" , ... ]
+    sns_topic_arn = <sns topic arn>
+  }
+
+  rds = {
+    subnet_ids = ["id1", "id2" , ... ]
+  }
+
+  sqs = {
+    alarm = {
+      alarm_actions =  <sns topic arn>
+    }
+  }
+
+  lambdas = {
+    vpc_subnet_ids = subnet_ids = ["id1", "id2" , ... ]
+
+    tx_status_update_handler = {
+      env_vars = {
+        BLOCK_EXPLORER_BASE_URL = "..."
+      }
+    }
+    vote_handler = {
+      env_vars = {
+        AVN_VOTES_BUCKET = "..."
+      }
+    }
+  }
+
+  api_gateway = {
+    override_name               = "gateway"
+    domain_name_suffix          = "dev.aventus.io"
+    domain_name_certificate_arn = <acm cert arn>
+  }
+
+  cognito = {
+    domain          = "auth-gateway.dev.aventus.io"
+    certificate_arn = module.gateway_cognito_acm.acm_certificate_arn
+
+    pool_client = {
+      #TODO: the 'temp' of the urls needs to be deleted
+      callback_urls = ["<url1>"]
+      logout_urls   = ["<url2>"]
+    }
+  }
+}
 ```
 
-```
-
-**NOTE:** Bear in mind that after the first initialization two more actions are needed:
+**NOTE1:** Bear in mind that after the first initialization two more actions are needed:
 - duly fill the secret manager facilities
 - Create user/passwords on the different database systems
 
+**NOTE2:** during the first apply, the module will fail waiting for the amazonmq secret to be duly filled
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements

@@ -16,7 +16,7 @@ module "rds" {
   auto_minor_version_upgrade = var.rds.auto_minor_version_upgrade
   storage_type               = var.rds.storage_type
   allocated_storage          = var.rds.allocated_storage
-  max_allocated_storage      = var.rds.allocated_storage
+  max_allocated_storage      = var.rds.max_allocated_storage
   username                   = var.rds.username
   port                       = var.rds.port
 
