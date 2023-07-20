@@ -150,10 +150,16 @@ variable "api_gateway" {
     default_stage_access_log_format = optional(string) # more here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_stage#access_log_settings
     default_route_settings = optional(
       object({
-        detailed_metrics_enabled = optional(bool, true)
-        throttling_burst_limit   = optional(number, 100)
-        throttling_rate_limit    = optional(number, 100)
-      })
+        detailed_metrics_enabled = optional(bool)
+        throttling_burst_limit   = optional(number)
+        throttling_rate_limit    = optional(number)
+        }
+      ),
+      {
+        detailed_metrics_enabled = true
+        throttling_burst_limit   = 100
+        throttling_rate_limit    = 100
+      }
     )
     retention_in_days = optional(number, 14)
     tags              = optional(map(any), {})
@@ -169,89 +175,159 @@ variable "lambdas" {
     runtime                   = optional(string, "nodejs14.x")
     zip_location = optional(
       object({
-        bucket     = optional(string, "aventus-internal-artefact") # bucket where to fetch lambda zips
-        key_prefix = optional(string, "gateway-lambdas")           # bucket key prefix where to fetch lambda zips
-      })
+        bucket     = optional(string)
+        key_prefix = optional(string)
+        }
+      ),
+      {
+        bucket     = "aventus-internal-artefact"
+        key_prefix = "gateway-lambdas"
+      }
     )
     common_env_vars                   = optional(map(any), {})
     cloudwatch_logs_retention_in_days = optional(number, 14)
     authorisation_handler = optional(
       object({
-        env_vars    = optional(map(any), { MAX_TOKEN_AGE_MSEC = 600000, MIN_AVT_BALANCE = "1000000000000000000" })
-        memory_size = optional(number, 512)
-        timeout     = optional(number, 30)
+        env_vars    = optional(map(any))
+        memory_size = optional(number)
+        timeout     = optional(number)
         }
-      )
+      ),
+      {
+        env_vars    = { MAX_TOKEN_AGE_MSEC = 600000, MIN_AVT_BALANCE = "1000000000000000000" }
+        memory_size = 512
+        timeout     = 30
+      }
     )
     send_handler = optional(
       object({
-        env_vars    = optional(map(any), { MQ_AVN_TX_QUEUE = "avnTx" })
-        memory_size = optional(number, 512)
-        timeout     = optional(number, 30)
-      })
+        env_vars    = optional(map(any))
+        memory_size = optional(number)
+        timeout     = optional(number)
+        }
+      ),
+      {
+        env_vars    = { MQ_AVN_TX_QUEUE = "avnTx" }
+        memory_size = 512
+        timeout     = 30
+      }
     )
     poll_handler = optional(
       object({
-        env_vars    = optional(map(any), {})
-        memory_size = optional(number, 256)
-        timeout     = optional(number, 30)
-      })
+        env_vars    = optional(map(any))
+        memory_size = optional(number)
+        timeout     = optional(number)
+        }
+      ),
+      {
+        env_vars    = {}
+        memory_size = 256
+        timeout     = 30
+      }
     )
     query_handler = optional(
       object({
-        env_vars    = optional(map(any), {})
-        memory_size = optional(number, 256)
-        timeout     = optional(number, 30)
-      })
+        env_vars    = optional(map(any))
+        memory_size = optional(number)
+        timeout     = optional(number)
+        }
+      ),
+      {
+        env_vars    = {}
+        memory_size = 256
+        timeout     = 30
+      }
     )
     lift_processing_handler = optional(
       object({
-        env_vars    = optional(map(any), { MQ_AVN_TX_QUEUE = "avnTx" })
-        memory_size = optional(number, 128)
-        timeout     = optional(number, 30)
-      })
+        env_vars    = optional(map(any))
+        memory_size = optional(number)
+        timeout     = optional(number)
+        }
+      ),
+      {
+        env_vars    = { MQ_AVN_TX_QUEUE = "avnTx" }
+        memory_size = 256
+        timeout     = 30
+      }
     )
     tx_status_update_handler = optional(
       object({
-        env_vars    = optional(map(any), {})
-        memory_size = optional(number, 256)
-        timeout     = optional(number, 30)
-      })
+        env_vars    = optional(map(any))
+        memory_size = optional(number)
+        timeout     = optional(number)
+        }
+      ),
+      {
+        env_vars    = {}
+        memory_size = 256
+        timeout     = 30
+      }
     )
     vote_handler = optional(
       object({
-        env_vars    = optional(map(any), {})
-        memory_size = optional(number, 256)
-        timeout     = optional(number, 30)
-      })
+        env_vars    = optional(map(any))
+        memory_size = optional(number)
+        timeout     = optional(number)
+        }
+      ),
+      {
+        env_vars    = {}
+        memory_size = 256
+        timeout     = 30
+      }
     )
     lower_handler = optional(
       object({
-        env_vars    = optional(map(any), {})
-        memory_size = optional(number, 256)
-        timeout     = optional(number, 30)
-      })
+        env_vars    = optional(map(any))
+        memory_size = optional(number)
+        timeout     = optional(number)
+        }
+      ),
+      {
+        env_vars    = {}
+        memory_size = 256
+        timeout     = 30
+      }
     )
     split_fee_handler = optional(
       object({
-        env_vars    = optional(map(any), {})
-        memory_size = optional(number, 512)
-        timeout     = optional(number, 30)
-      })
+        env_vars    = optional(map(any))
+        memory_size = optional(number)
+        timeout     = optional(number)
+        }
+      ),
+      {
+        env_vars    = {}
+        memory_size = 512
+        timeout     = 30
+      }
     )
     tx_dispatch_handler = optional(
       object({
-        env_vars    = optional(map(any), { MQ_AVN_TX_QUEUE = "avnTx" })
-        memory_size = optional(number, 512)
-        timeout     = optional(number, 30)
-      })
+        env_vars    = optional(map(any))
+        memory_size = optional(number)
+        timeout     = optional(number)
+        }
+      ),
+      {
+        env_vars    = { MQ_AVN_TX_QUEUE = "avnTx" }
+        memory_size = 512
+        timeout     = 30
+      }
     )
     invalid_transaction_handler = optional(
       object({
-        env_vars    = optional(map(any), {})
-        memory_size = optional(number, 512)
-        timeout     = optional(number, 30)
-      })
+        env_vars    = optional(map(any))
+        memory_size = optional(number)
+        timeout     = optional(number)
+        }
+      ),
+      {
+        env_vars    = {}
+        memory_size = 512
+        timeout     = 30
+      }
     )
   })
   description = "Subset of AWS gateway lambdas and layers configurations used on 'terraform-aws-modules/lambda/aws' module."
@@ -278,7 +354,18 @@ variable "sqs" {
         metric_name         = optional(string, "NumberOfMessagesSent")
         statistic           = optional(string, "Sum")
         alarm_actions       = string
-      })
+        }
+      ),
+      {
+        comparison_operator = "GreaterThanOrEqualToThreshold"
+        evaluation_periods  = 1
+        threshold           = 20
+        period              = 300
+        unit                = "Count"
+        namespace           = "AWS/SQS"
+        metric_name         = "NumberOfMessagesSent"
+        statistic           = "Sum"
+      }
     )
   })
   description = "List of FIFO queue names to create and its global configurations. Alarms for more than 20 messages on the DLQ will also be created."
