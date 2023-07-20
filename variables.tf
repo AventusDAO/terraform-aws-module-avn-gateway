@@ -267,7 +267,7 @@ variable "sqs" {
         namespace           = optional(string, "AWS/SQS")
         metric_name         = optional(string, "NumberOfMessagesSent")
         statistic           = optional(string, "Sum")
-        alarm_actions       = (string)
+        alarm_actions       = string
       })
     )
   })
