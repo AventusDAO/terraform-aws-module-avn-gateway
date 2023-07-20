@@ -26,6 +26,7 @@ variable "route53_zone_id" {
 
 variable "amazon_mq" {
   type = object({
+    subnet_ids                 = list(string)
     override_name              = optional(string) #if not set, var.name is used
     apply_immediately          = optional(bool)
     auto_minor_version_upgrade = optional(bool)
@@ -37,7 +38,6 @@ variable "amazon_mq" {
     general_log_enabled        = optional(bool)
     audit_log_enabled          = optional(bool)
     encryption_enabled         = optional(bool)
-    subnet_ids                 = list(string)
   })
   description = "Subset of Amazon MQ cluster configurations used on 'cloudposse/mq-broker/aws' module."
 }
@@ -247,6 +247,9 @@ variable "sqs" {
     receive_wait_time_seconds     = optional(number)
     max_receive_count             = optional(number)
     alarms = object({
+      dimensions = object({
+        QueueName = string
+      })
       alarm_description   = optional(string)
       comparison_operator = optional(string)
       evaluation_periods  = optional(number)
@@ -256,10 +259,7 @@ variable "sqs" {
       namespace           = optional(string)
       metric_name         = optional(string)
       statistic           = optional(string)
-      dimensions = object({
-        QueueName = string
-      })
-      alarm_actions = optional(string)
+      alarm_actions       = optional(string)
     })
   })
   description = "List of FIFO queue names to create and its global configurations. Alarms for more than 20 messages on the DLQ will also be created."
