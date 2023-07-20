@@ -237,17 +237,17 @@ variable "lambdas" {
 }
 
 variable "sqs" {
-  type = optional(
-    object({
-      queue_names                   = optional(list(string))
-      fifo                          = optional(bool)
-      message_retention_seconds     = optional(number)
-      visibility_timeout_seconds    = optional(number)
-      create_dlq                    = optional(bool)
-      dlq_message_retention_seconds = optional(number)
-      receive_wait_time_seconds     = optional(number)
-      max_receive_count             = optional(number)
-      alarms = object({
+  type = object({
+    queue_names                   = optional(list(string))
+    fifo                          = optional(bool)
+    message_retention_seconds     = optional(number)
+    visibility_timeout_seconds    = optional(number)
+    create_dlq                    = optional(bool)
+    dlq_message_retention_seconds = optional(number)
+    receive_wait_time_seconds     = optional(number)
+    max_receive_count             = optional(number)
+    alarms = optional(
+      object({
         alarm_description   = optional(string)
         comparison_operator = optional(string)
         evaluation_periods  = optional(number)
@@ -259,8 +259,9 @@ variable "sqs" {
         statistic           = optional(string)
         alarm_actions       = optional(string)
       })
-    })
-  )
+    )
+  })
+  default     = {}
   description = "List of FIFO queue names to create and its global configurations. Alarms for more than 20 messages on the DLQ will also be created."
 }
 
