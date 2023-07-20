@@ -127,7 +127,7 @@ variable "api_gateway" {
         max_age           = optional(number)
       })
     )
-    default_stage_access_log_format = optional(map(any)) # more here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_stage#access_log_settings
+    default_stage_access_log_format = optional(map(string)) # more here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_stage#access_log_settings
     default_route_settings = optional(
       object({
         detailed_metrics_enabled = optional(bool)
