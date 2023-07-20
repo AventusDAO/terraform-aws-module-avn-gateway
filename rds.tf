@@ -5,7 +5,7 @@ module "rds" {
   source  = "terraform-aws-modules/rds/aws"
   version = "6.1.0"
 
-  identifier = "aaaa"
+  identifier = lookup(var.rds, "override_name", var.name)
 
   # All available versions: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html#PostgreSQL.Concepts
   engine                     = lookup(var.rds, "engine", "postgres")
