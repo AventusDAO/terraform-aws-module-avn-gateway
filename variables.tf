@@ -238,7 +238,6 @@ variable "lambdas" {
 
 variable "sqs" {
   type = object({
-    queue_names                   = optional(list(string))
     fifo                          = optional(bool)
     message_retention_seconds     = optional(number)
     visibility_timeout_seconds    = optional(number)

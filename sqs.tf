@@ -2,7 +2,7 @@ module "sqs_queues" {
   source  = "terraform-aws-modules/sqs/aws"
   version = "4.0.2"
 
-  name                          = lookup(var.sqs, "queue_names", ["gateway_default_queue", "gateway_payer_queue"])
+  name                          = each.key
   fifo_queue                    = lookup(var.sqs, "fifo_queue", true)
   message_retention_seconds     = lookup(var.sqs, "message_retention_seconds", 86400)
   visibility_timeout_seconds    = lookup(var.sqs, "visibility_timeout_seconds", 60)
@@ -16,7 +16,7 @@ module "sqs_queues" {
 
   tags = { Name = each.key }
 
-  for_each = toset(var.sqs.queue_names)
+  for_each = toset(["gateway_default_queue", "gateway_payer_queue"])
 }
 
 module "gateway_sqs_queues_alarms" {
@@ -36,5 +36,5 @@ module "gateway_sqs_queues_alarms" {
   dimensions          = { QueueName = each.key }
   alarm_actions       = [var.sqs.alarm.alarm_actions]
 
-  for_each = toset(var.sqs.queue_names)
+  for_each = toset(["gateway_default_queue", "gateway_payer_queue"])
 }

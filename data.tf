@@ -9,9 +9,9 @@ data "aws_vpc" "current" {
 # Gateway SM
 #
 data "aws_secretsmanager_secret_version" "gateway_amazonmq" {
-  secret_id = aws_secretsmanager_secret.gateway_amazonmq.id
+  secret_id = aws_secretsmanager_secret.amazonmq.id
 
-  depends_on = [aws_secretsmanager_secret_version.gateway_amazonmq]
+  depends_on = [aws_secretsmanager_secret_version.amazonmq]
 }
 
 #
@@ -27,8 +27,8 @@ data "aws_iam_policy_document" "gateway_send_handler_access" {
       "sqs:SendMessageBatch"
     ]
     resources = [
-      module.gateway_sqs_queues["gateway_default_queue"].queue_arn,
-      module.gateway_sqs_queues["gateway_payer_queue"].queue_arn
+      module.sqs_queues["gateway_default_queue"].queue_arn,
+      module.sqs_queues["gateway_payer_queue"].queue_arn
     ]
   }
 

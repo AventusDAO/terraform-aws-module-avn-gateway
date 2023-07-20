@@ -23,7 +23,7 @@ module "rds" {
   port     = lookup(var.rds, "port", 5432)
 
   multi_az               = lookup(var.rds, "multi_az", false)
-  db_subnet_group_name   = aws_db_subnet_group.gateway_rds.id
+  db_subnet_group_name   = aws_db_subnet_group.rds.id
   vpc_security_group_ids = [module.sg_rds.security_group_id]
 
   maintenance_window              = lookup(var.rds, "maintenance_window", "Tue:10:00-Tue:11:00")
