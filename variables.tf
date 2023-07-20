@@ -342,31 +342,18 @@ variable "sqs" {
     dlq_message_retention_seconds = optional(number, 1209600)
     receive_wait_time_seconds     = optional(number, 0)
     max_receive_count             = optional(number, 5)
-    alarm = optional(
-      object({
-        alarm_description   = optional(string)
-        comparison_operator = optional(string, "GreaterThanOrEqualToThreshold")
-        evaluation_periods  = optional(number, 1)
-        threshold           = optional(number, 20)
-        period              = optional(number, 300)
-        unit                = optional(string, "Count")
-        namespace           = optional(string, "AWS/SQS")
-        metric_name         = optional(string, "NumberOfMessagesSent")
-        statistic           = optional(string, "Sum")
-        alarm_actions       = string
-        }
-      ),
-      {
-        comparison_operator = "GreaterThanOrEqualToThreshold"
-        evaluation_periods  = 1
-        threshold           = 20
-        period              = 300
-        unit                = "Count"
-        namespace           = "AWS/SQS"
-        metric_name         = "NumberOfMessagesSent"
-        statistic           = "Sum"
-      }
-    )
+    alarm = object({
+      alarm_description   = optional(string)
+      comparison_operator = optional(string, "GreaterThanOrEqualToThreshold")
+      evaluation_periods  = optional(number, 1)
+      threshold           = optional(number, 20)
+      period              = optional(number, 300)
+      unit                = optional(string, "Count")
+      namespace           = optional(string, "AWS/SQS")
+      metric_name         = optional(string, "NumberOfMessagesSent")
+      statistic           = optional(string, "Sum")
+      alarm_actions       = string
+    })
   })
   description = "List of FIFO queue names to create and its global configurations. Alarms for more than 20 messages on the DLQ will also be created."
 }
