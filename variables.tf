@@ -73,38 +73,49 @@ variable "rds" {
   type = object({
     subnet_ids                            = list(string)
     override_name                         = optional(string) #if not set, var.name is used
-    engine                                = optional(string)
-    engine_version                        = optional(string)
-    family                                = optional(string)
-    major_engine_version                  = optional(string)
-    instance_class                        = optional(string)
-    auto_minor_version_upgrade            = optional(bool)
-    storage_type                          = optional(string)
-    allocated_storage                     = optional(number)
-    max_allocated_storage                 = optional(number)
-    username                              = optional(string)
-    port                                  = optional(number)
-    multi_az                              = optional(bool)
-    maintenance_window                    = optional(string)
-    backup_window                         = optional(string)
-    enabled_cloudwatch_logs_exports       = optional(list(string))
-    create_cloudwatch_log_group           = optional(bool)
-    backup_retention_period               = optional(number)
-    skip_final_snapshot                   = optional(bool)
-    deletion_protection                   = optional(bool)
-    performance_insights_enabled          = optional(bool)
-    performance_insights_retention_period = optional(number)
-    create_monitoring_role                = optional(bool)
-    monitoring_interval                   = optional(number)
-    monitoring_role_name                  = optional(string)
+    engine                                = optional(string, "postgres")
+    engine_version                        = optional(string, "14.5")
+    family                                = optional(string, "postgres14")
+    major_engine_version                  = optional(string, "14")
+    instance_class                        = optional(string, "db.t4g.small")
+    auto_minor_version_upgrade            = optional(bool, false)
+    storage_type                          = optional(string, "gp3")
+    allocated_storage                     = optional(number, 20)
+    max_allocated_storage                 = optional(number, 50)
+    username                              = optional(string, "root")
+    port                                  = optional(number, 5432)
+    multi_az                              = optional(bool, false)
+    maintenance_window                    = optional(string, "Tue:10:00-Tue:11:00")
+    backup_window                         = optional(string, "07:00-08:00")
+    enabled_cloudwatch_logs_exports       = optional(list(string), ["postgresql", "upgrade"])
+    create_cloudwatch_log_group           = optional(bool, true)
+    backup_retention_period               = optional(number, 7)
+    skip_final_snapshot                   = optional(bool, false)
+    deletion_protection                   = optional(bool, true)
+    performance_insights_enabled          = optional(bool, true)
+    performance_insights_retention_period = optional(number, 7)
+    create_monitoring_role                = optional(bool, true)
+    monitoring_interval                   = optional(number, 60)
+    monitoring_role_name                  = optional(string, "rds-gateway-db-monitoring")
     parameters = optional(
       list(
         object(
           {
             name  = string
-            value = number
+            value = any
           }
-    )))
+      )),
+      [
+        {
+          name  = "autovacuum"
+          value = 1
+        },
+        {
+          name  = "client_encoding"
+          value = "utf8"
+        }
+      ]
+    )
     tags = optional(map(any))
   })
   description = "Subset of AWS RDS configurations used on 'terraform-aws-modules/rds/aws' module."
