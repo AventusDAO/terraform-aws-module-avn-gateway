@@ -23,8 +23,6 @@ module "amazonmq" {
   associated_security_group_ids        = [module.sg_amazonmq.security_group_id]
   security_group_create_before_destroy = true
 
-  mq_admin_user     = [jsondecode(data.aws_secretsmanager_secret_version.amazonmq.secret_string)["admin_user"]]
-  mq_admin_password = [jsondecode(data.aws_secretsmanager_secret_version.amazonmq.secret_string)["admin_passw"]]
   # Lambda is connecting to amazonmq by fetching username and password keys
   mq_application_user     = [jsondecode(data.aws_secretsmanager_secret_version.amazonmq.secret_string)["username"]]
   mq_application_password = [jsondecode(data.aws_secretsmanager_secret_version.amazonmq.secret_string)["password"]]

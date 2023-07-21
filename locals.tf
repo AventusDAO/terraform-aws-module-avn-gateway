@@ -24,8 +24,6 @@ locals {
   amazonmq_secrets = {
     username    = ""
     password    = ""
-    admin_user  = ""
-    admin_passw = ""
     server      = ""
   }
 

@@ -118,6 +118,9 @@ module "dev_gateway" {
 - duly fill the secret manager facilities
 - Create user/passwords on the different database systems
 
+**NOTE2:** during the first apply, you should fill the amazonmq secret manager facility as soon as it's created.
+Otherwise, a random app user/passw will be created and saved on terraform state. 
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
