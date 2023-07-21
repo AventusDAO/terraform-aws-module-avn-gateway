@@ -22,9 +22,9 @@ locals {
   }
 
   amazonmq_secrets = {
-    username    = ""
-    password    = ""
-    server      = ""
+    username = ""
+    password = ""
+    server   = ""
   }
 
   # lambdas
