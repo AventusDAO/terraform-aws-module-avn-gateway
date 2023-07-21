@@ -45,8 +45,8 @@ locals {
           MQ_BROKER_AMQP_ENDPOINT = module.amazonmq.primary_amqp_ssl_endpoint
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
           SECRET_MANAGER_REGION   = data.aws_region.current.name
-          SQS_DEFAULT_QUEUE_URL   = module.sqs_queues["gateway_default_queue"].queue_url
-          SQS_PAYER_QUEUE_URL     = module.sqs_queues["gateway_payer_queue"].queue_url
+          SQS_DEFAULT_QUEUE_URL   = module.sqs_queues["${var.name}_default_queue"].queue_url
+          SQS_PAYER_QUEUE_URL     = module.sqs_queues["${var.name}_payer_queue"].queue_url
         }
       )
       memory_size      = var.lambdas.send_handler.memory_size
@@ -100,13 +100,13 @@ locals {
       env_vars = merge(var.lambdas.split_fee_handler.env_vars,
         {
           SECRET_MANAGER_REGION = data.aws_region.current.name
-          SQS_DEFAULT_QUEUE_URL = module.sqs_queues["gateway_default_queue"].queue_url
-          SQS_PAYER_QUEUE_URL   = module.sqs_queues["gateway_payer_queue"].queue_url
+          SQS_DEFAULT_QUEUE_URL = module.sqs_queues["${var.name}_default_queue"].queue_url
+          SQS_PAYER_QUEUE_URL   = module.sqs_queues["${var.name}_payer_queue"].queue_url
         }
       )
       event_source_mapping = {
         sqs_payer = {
-          event_source_arn        = module.sqs_queues["gateway_payer_queue"].queue_arn
+          event_source_arn        = module.sqs_queues["${var.name}_payer_queue"].queue_arn
           function_response_types = ["ReportBatchItemFailures"]
         }
       }
@@ -121,11 +121,11 @@ locals {
           MQ_BROKER_AMQP_ENDPOINT = module.amazonmq.primary_amqp_ssl_endpoint
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
           SECRET_MANAGER_REGION   = data.aws_region.current.name
-          SQS_DEFAULT_QUEUE_URL   = module.sqs_queues["gateway_default_queue"].queue_url
+          SQS_DEFAULT_QUEUE_URL   = module.sqs_queues["${var.name}_default_queue"].queue_url
       })
       event_source_mapping = {
         sqs_default = {
-          event_source_arn        = module.sqs_queues["gateway_default_queue"].queue_arn
+          event_source_arn        = module.sqs_queues["${var.name}_default_queue"].queue_arn
           function_response_types = ["ReportBatchItemFailures"]
         }
       }
@@ -139,10 +139,10 @@ locals {
 
       event_source_mapping = {
         sqs_default = {
-          event_source_arn = module.sqs_queues["gateway_default_queue"].queue_arn
+          event_source_arn = module.sqs_queues["${var.name}_default_queue"].queue_arn
         }
         sqs_payer = {
-          event_source_arn = module.sqs_queues["gateway_default_queue"].queue_arn
+          event_source_arn = module.sqs_queues["${var.name}_default_queue"].queue_arn
         }
       }
 
