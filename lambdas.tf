@@ -13,7 +13,7 @@ module "lambdas_layers" {
 
   s3_existing_package = {
     bucket = var.lambdas.zip_location.bucket
-    key    = "${var.lambdas.zip_location.key_prefix}/${each.key}/${each.key}-${var.lambda_version}.zip"
+    key    = "${var.lambdas.zip_location.key_prefix}/${replace(each.key, "_", "-")}/${replace(each.key, "_", "-")}-${var.lambda_version}.zip"
   }
 
   for_each = local.lambda_layers
@@ -57,7 +57,7 @@ module "lambdas" {
 
   s3_existing_package = {
     bucket = var.lambdas.zip_location.bucket
-    key    = "${var.lambdas.zip_location.key_prefix}/${each.key}/${each.key}-${var.lambda_version}.zip"
+    key    = "${var.lambdas.zip_location.key_prefix}/${replace(each.key, "_", "-")}/${replace(each.key, "_", "-")}-${var.lambda_version}.zip"
   }
 
   for_each = local.lambdas
