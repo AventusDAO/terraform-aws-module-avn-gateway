@@ -6,8 +6,8 @@ module "lambdas_layers" {
   version = "5.3.0"
 
   create_layer        = true
-  layer_name          = each.key
-  description         = "${each.key} - ${var.lambda_version} - Deployed by Terraform"
+  layer_name          = "${replace(var.name, "-", "_")}_${each.key}"
+  description         = "${replace(var.name, "-", "_")}_${each.key} - ${var.lambda_version} - Deployed by Terraform"
   compatible_runtimes = var.lambdas.layer_compatible_runtimes
   create_package      = false
 
@@ -29,11 +29,11 @@ module "lambdas" {
   vpc_subnet_ids         = var.lambdas.vpc_subnet_ids
   vpc_security_group_ids = [module.sg_lambdas.security_group_id]
 
-  function_name = each.key
-  description   = "${each.key} - ${var.lambda_version} - Deployed by Terraform"
+  function_name = "${replace(var.name, "-", "_")}_${each.key}"
+  description   = "${replace(var.name, "-", "_")}_${each.key} - ${var.lambda_version} - Deployed by Terraform"
   publish       = true
 
-  handler                           = "${each.key}.handler"
+  handler                           = "${replace(var.name, "-", "_")}_${each.key}.handler"
   runtime                           = var.lambdas.runtime
   environment_variables             = merge(each.value.env_vars, var.lambdas.common_env_vars)
   timeout                           = each.value.timeout
