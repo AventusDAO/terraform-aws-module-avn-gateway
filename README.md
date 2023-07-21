@@ -118,8 +118,6 @@ module "dev_gateway" {
 - duly fill the secret manager facilities
 - Create user/passwords on the different database systems
 
-**NOTE2:** during the first apply, the module will fail waiting for the amazonmq secret to be duly filled
-
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
