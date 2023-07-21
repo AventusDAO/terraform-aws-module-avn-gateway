@@ -37,7 +37,7 @@ module "rds" {
   performance_insights_retention_period = var.rds.performance_insights_retention_period
   create_monitoring_role                = var.rds.create_monitoring_role
   monitoring_interval                   = var.rds.monitoring_interval
-  monitoring_role_name                  = var.rds.monitoring_role_name
+  monitoring_role_name                  = coalesce(var.rds.monitoring_role_name, "rds-${coalesce(var.rds.override_name, var.name)}-db-monitoring")
 
   parameters = var.rds.parameters
 

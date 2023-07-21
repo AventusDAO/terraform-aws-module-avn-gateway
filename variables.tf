@@ -96,7 +96,7 @@ variable "rds" {
     performance_insights_retention_period = optional(number, 7)
     create_monitoring_role                = optional(bool, true)
     monitoring_interval                   = optional(number, 60)
-    monitoring_role_name                  = optional(string, "rds-gateway-db-monitoring")
+    monitoring_role_name                  = optional(string)
     parameters = optional(
       list(
         object(
