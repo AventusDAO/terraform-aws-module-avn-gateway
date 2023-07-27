@@ -144,7 +144,8 @@ data "aws_iam_policy_document" "gateway_admin_portal" {
     ]
     resources = [
       aws_secretsmanager_secret.cognito.arn,
-      aws_secretsmanager_secret.rds.arn
+      aws_secretsmanager_secret.rds.arn,
+      aws_secretsmanager_secret.vault.arn
     ]
   }
 }
