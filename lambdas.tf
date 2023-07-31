@@ -47,7 +47,7 @@ module "lambdas" {
       principal    = "apigateway.amazonaws.com"
       source_arn   = module.api_gateway.apigatewayv2_api_arn
     }
-    allow_event_bridge_rule = each.value.cw_event_rule_id ? {
+    allow_event_bridge_rule = contains(keys(each.value), "cw_event_rule_id") ? {
       statement_id = "AllowExecutionFromEventBridgeRule"
       principal    = "events.amazonaws.com"
       source_arn   = "arn:aws:events:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:rule/${each.value.cw_event_rule_id}"
