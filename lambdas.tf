@@ -72,5 +72,5 @@ resource "aws_cloudwatch_event_target" "lambdas" {
   arn  = module.lambdas[each.key].lambda_function_arn
   rule = each.value.cw_event_rule_id
 
-  for_each = { for k, v in local.lambdas : k => v if v.cw_event_rule_id != null }
+  for_each = { for k, v in local.lambdas : k => v if contains(keys(v), "cw_event_rule_id") }
 }
