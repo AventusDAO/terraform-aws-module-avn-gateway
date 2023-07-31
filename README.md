@@ -97,7 +97,7 @@ module "dev_gateway" {
 
   api_gateway = {
     override_name               = "gateway"
-    domain_name_suffix          = "dev.aventus.io"
+    custom_domain          = "dev.aventus.io"
     domain_name_certificate_arn = <acm cert arn>
   }
 

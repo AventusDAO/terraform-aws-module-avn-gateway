@@ -107,8 +107,8 @@ data "aws_iam_policy_document" "gateway_invalid_transaction_access" {
       "sqs:GetQueueAttributes"
     ]
     resources = [
-      module.sqs_queues["${var.name}_default_queue"].queue_arn,
-      module.sqs_queues["${var.name}_payer_queue"].queue_arn
+      module.sqs_queues["${var.name}_default_queue"].dead_letter_queue_arn,
+      module.sqs_queues["${var.name}_payer_queue"].dead_letter_queue_arn
     ]
   }
 

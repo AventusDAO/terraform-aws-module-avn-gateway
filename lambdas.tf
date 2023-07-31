@@ -47,6 +47,11 @@ module "lambdas" {
       principal    = "apigateway.amazonaws.com"
       source_arn   = module.api_gateway.apigatewayv2_api_arn
     }
+    allow_event_bridge_rule = each.value.cw_event_rule_id ? {
+      statement_id = "AllowExecutionFromEventBridgeRule"
+      principal    = "events.amazonaws.com"
+      source_arn   = "arn:aws:events:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:rule/${each.value.cw_event_rule_id}"
+    } : {}
   }
 
   event_source_mapping  = lookup(each.value, "event_source_mapping", {})
@@ -61,4 +66,11 @@ module "lambdas" {
   }
 
   for_each = local.lambdas
+}
+
+resource "aws_cloudwatch_event_target" "lambdas" {
+  arn  = module.lambdas[each.key].lambda_function_arn
+  rule = each.value.cw_event_rule_id
+
+  for_each = { for k, v in local.lambdas : k => v if v.cw_event_rule_id }
 }

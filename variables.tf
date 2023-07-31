@@ -126,7 +126,7 @@ variable "rds" {
 
 variable "api_gateway" {
   type = object({
-    domain_name_suffix          = string
+    custom_domain               = string
     domain_name_certificate_arn = string
     override_name               = optional(string) # if not set, var.name is used
     description                 = optional(string)

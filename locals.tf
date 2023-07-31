@@ -73,28 +73,16 @@ locals {
         }
       )
 
-      event_source_mapping = {
-        event_bridge = {
-          # eventBridge rule probably created and added manually on old gateway infra
-          event_source_arn = "arn:aws:events:eu-west-1:503742778456:rule/process-lifts"
-        }
-      }
-
-      memory_size = var.lambdas.lift_processing_handler.memory_size
-      timeout     = var.lambdas.lift_processing_handler.timeout
+      cw_event_rule_id = "process-lifts"
+      memory_size      = var.lambdas.lift_processing_handler.memory_size
+      timeout          = var.lambdas.lift_processing_handler.timeout
     }
 
     tx_status_update_handler = {
-      env_vars    = var.lambdas.tx_status_update_handler.env_vars
-      memory_size = var.lambdas.tx_status_update_handler.memory_size
-      timeout     = var.lambdas.tx_status_update_handler.timeout
-
-      event_source_mapping = {
-        event_bridge = {
-          # eventBridge rule probably created and added manually on old gateway infra
-          event_source_arn = "arn:aws:events:eu-west-1:503742778456:rule/resolve-pending-transactions"
-        }
-      }
+      env_vars         = var.lambdas.tx_status_update_handler.env_vars
+      memory_size      = var.lambdas.tx_status_update_handler.memory_size
+      timeout          = var.lambdas.tx_status_update_handler.timeout
+      cw_event_rule_id = "resolve-pending-transactions"
     }
 
     vote_handler = {
