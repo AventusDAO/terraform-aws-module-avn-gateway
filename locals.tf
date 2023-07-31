@@ -73,9 +73,9 @@ locals {
         }
       )
 
-      cw_event_rule_id = "process-lifts"
       memory_size      = var.lambdas.lift_processing_handler.memory_size
       timeout          = var.lambdas.lift_processing_handler.timeout
+      cw_event_rule_id = "process-lifts"
     }
 
     tx_status_update_handler = {
@@ -83,6 +83,7 @@ locals {
       memory_size      = var.lambdas.tx_status_update_handler.memory_size
       timeout          = var.lambdas.tx_status_update_handler.timeout
       cw_event_rule_id = "resolve-pending-transactions"
+
     }
 
     vote_handler = {
@@ -150,6 +151,13 @@ locals {
       memory_size      = var.lambdas.invalid_transaction_handler.memory_size
       timeout          = var.lambdas.invalid_transaction_handler.timeout
       extra_policy_arn = aws_iam_policy.gateway_invalid_transaction_access.arn
+    }
+  }
+  common_lambda_permissions = {
+    allow_api_gateway = {
+      statement_id = "AllowAPIgatewayInvocation"
+      principal    = "apigateway.amazonaws.com"
+      source_arn   = module.api_gateway.apigatewayv2_api_arn
     }
   }
 }
