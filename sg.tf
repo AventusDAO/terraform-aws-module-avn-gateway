@@ -28,6 +28,8 @@ module "sg_memorydb" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.1.0"
 
+  count = var.memory_db.create ? 1 : 0
+
   name        = coalesce(var.memory_db.override_name, "${var.name}-memorydb")
   description = "${coalesce(var.memory_db.override_name, "${var.name}-memorydb")} access"
   vpc_id      = var.vpc_id

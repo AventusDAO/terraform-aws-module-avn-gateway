@@ -5,6 +5,8 @@ module "memory_db" {
   source  = "terraform-aws-modules/memory-db/aws"
   version = "v1.1.2"
 
+  count = var.memory_db.create ? 1 : 0
+
   # Cluster
   name        = coalesce(var.memory_db.override_name, var.name)
   description = var.memory_db.description
@@ -17,7 +19,7 @@ module "memory_db" {
 
   port                     = var.memory_db.port
   tls_enabled              = var.memory_db.tls_enabled
-  security_group_ids       = [module.sg_memorydb.security_group_id]
+  security_group_ids       = [module.sg_memorydb[0].security_group_id]
   maintenance_window       = var.memory_db.maintenance_window
   sns_topic_arn            = var.memory_db.sns_topic_arn
   snapshot_retention_limit = var.memory_db.snapshot_retention_limit
