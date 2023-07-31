@@ -54,6 +54,8 @@ module "sg_amazonmq" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.1.0"
 
+  count = var.amazon_mq.create ? 1 : 0
+
   name                = coalesce(var.amazon_mq.override_name, "${var.name}-amq")
   description         = "${coalesce(var.amazon_mq.override_name, var.name)} amazon MQ access"
   vpc_id              = var.vpc_id

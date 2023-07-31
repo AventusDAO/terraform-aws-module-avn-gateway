@@ -22,7 +22,7 @@ module "amazonmq" {
   vpc_id                               = var.vpc_id
   subnet_ids                           = var.amazon_mq.subnet_ids
   create_security_group                = false
-  associated_security_group_ids        = [module.sg_amazonmq.security_group_id]
+  associated_security_group_ids        = [module.sg_amazonmq[0].security_group_id]
   security_group_create_before_destroy = true
 
   # Lambda is connecting to amazonmq by fetching username and password keys
