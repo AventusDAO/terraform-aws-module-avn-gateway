@@ -38,8 +38,8 @@ module "sg_memorydb" {
 
   ingress_with_cidr_blocks = [
     {
-      from_port   = module.memory_db.cluster_endpoint_port
-      to_port     = module.memory_db.cluster_endpoint_port
+      from_port   = module.memory_db[0].cluster_endpoint_port
+      to_port     = module.memory_db[0].cluster_endpoint_port
       protocol    = "tcp"
       description = "Allow traffic on gateway-memory db port"
       cidr_blocks = data.aws_vpc.current.cidr_block
