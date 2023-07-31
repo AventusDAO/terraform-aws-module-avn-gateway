@@ -17,7 +17,7 @@ locals {
     gateway_app_user          = ""
     gateway_app_database      = ""
     gateway_app_user_password = ""
-    gateway_rds_host          = module.rds.db_instance_address
+    gateway_rds_host          = var.rds.create ? module.rds.db_instance_address : ""
     gateway_app_schema_sync   = false
   }
 

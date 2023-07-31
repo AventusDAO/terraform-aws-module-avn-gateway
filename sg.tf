@@ -5,6 +5,8 @@ module "sg_rds" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.1.0"
 
+  count = var.rds.create ? 1 : 0
+
   name        = coalesce(var.rds.override_name, "${var.name}-rds")
   description = "${coalesce(var.rds.override_name, "${var.name}-rds")} access"
   vpc_id      = var.vpc_id

@@ -74,6 +74,7 @@ variable "memory_db" {
 variable "rds" {
   type = object({
     subnet_ids                            = list(string)
+    create                                = optional(bool, true)
     override_name                         = optional(string) #if not set, var.name is used
     engine                                = optional(string, "postgres")
     engine_version                        = optional(string, "14.5")

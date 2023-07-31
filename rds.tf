@@ -5,6 +5,8 @@ module "rds" {
   source  = "terraform-aws-modules/rds/aws"
   version = "6.1.0"
 
+  count = var.rds.create ? 1 : 0
+
   identifier = coalesce(var.rds.override_name, var.name)
 
   # All available versions: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html#PostgreSQL.Concepts
@@ -22,7 +24,7 @@ module "rds" {
 
   multi_az               = var.rds.multi_az
   db_subnet_group_name   = aws_db_subnet_group.rds.id
-  vpc_security_group_ids = [module.sg_rds.security_group_id]
+  vpc_security_group_ids = [module.sg_rds[0].security_group_id]
 
   maintenance_window              = var.rds.maintenance_window
   backup_window                   = var.rds.backup_window
