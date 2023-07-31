@@ -27,6 +27,7 @@ variable "route53_zone_id" {
 variable "amazon_mq" {
   type = object({
     subnet_ids                 = list(string)
+    create                     = optional(bool, true)
     override_name              = optional(string) #if not set, var.name is used
     apply_immediately          = optional(bool, false)
     auto_minor_version_upgrade = optional(bool, false)

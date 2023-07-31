@@ -5,6 +5,8 @@ module "amazonmq" {
   source  = "cloudposse/mq-broker/aws"
   version = "3.1.0"
 
+  count = var.amazon_mq.create ? 1 : 0
+
   name                                 = coalesce(var.amazon_mq.override_name, var.name)
   apply_immediately                    = var.amazon_mq.apply_immediately
   auto_minor_version_upgrade           = var.amazon_mq.auto_minor_version_upgrade

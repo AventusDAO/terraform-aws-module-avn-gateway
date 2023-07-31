@@ -40,7 +40,7 @@ locals {
     send_handler = {
       env_vars = merge(var.lambdas.send_handler.env_vars,
         {
-          MQ_BROKER_AMQP_ENDPOINT = module.amazonmq.primary_amqp_ssl_endpoint
+          MQ_BROKER_AMQP_ENDPOINT = var.amazon_mq.create ? module.amazonmq[0].primary_amqp_ssl_endpoint : null
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
           SECRET_MANAGER_REGION   = data.aws_region.current.name
           SQS_DEFAULT_QUEUE_URL   = module.sqs_queues["${var.name}_default_queue"].queue_url
@@ -67,7 +67,7 @@ locals {
     lift_processing_handler = {
       env_vars = merge(var.lambdas.lift_processing_handler.env_vars,
         {
-          MQ_BROKER_AMQP_ENDPOINT = module.amazonmq.primary_amqp_ssl_endpoint
+          MQ_BROKER_AMQP_ENDPOINT = var.amazon_mq.create ? module.amazonmq[0].primary_amqp_ssl_endpoint : null
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
           SECRET_MANAGER_REGION   = data.aws_region.current.name
         }
@@ -116,7 +116,7 @@ locals {
     tx_dispatch_handler = {
       env_vars = merge(var.lambdas.tx_dispatch_handler.env_vars,
         {
-          MQ_BROKER_AMQP_ENDPOINT = module.amazonmq.primary_amqp_ssl_endpoint
+          MQ_BROKER_AMQP_ENDPOINT = var.amazon_mq.create ? module.amazonmq[0].primary_amqp_ssl_endpoint : null
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
           SECRET_MANAGER_REGION   = data.aws_region.current.name
           SQS_DEFAULT_QUEUE_URL   = module.sqs_queues["${var.name}_default_queue"].queue_url
