@@ -29,3 +29,4 @@ resource "aws_route53_record" "admin_portal" {
     zone_id = "Z2FDTNDATAQYW2"
   }
 }
+
