@@ -17,7 +17,7 @@ locals {
     gateway_app_user          = ""
     gateway_app_database      = ""
     gateway_app_user_password = ""
-    gateway_rds_host          = var.rds.create ? module.rds.db_instance_address : ""
+    gateway_rds_host          = var.rds.create ? module.rds[0].db_instance_address : ""
     gateway_app_schema_sync   = false
   }
 
@@ -72,6 +72,14 @@ locals {
           SECRET_MANAGER_REGION   = data.aws_region.current.name
         }
       )
+
+      event_source_mapping = {
+        event_bridge = {
+          # eventBridge rule probably created and added manually on old gateway infra
+          event_source_arn = "arn:aws:events:eu-west-1:503742778456:rule/process-lifts"
+        }
+      }
+
       memory_size = var.lambdas.lift_processing_handler.memory_size
       timeout     = var.lambdas.lift_processing_handler.timeout
     }
@@ -80,6 +88,13 @@ locals {
       env_vars    = var.lambdas.tx_status_update_handler.env_vars
       memory_size = var.lambdas.tx_status_update_handler.memory_size
       timeout     = var.lambdas.tx_status_update_handler.timeout
+
+      event_source_mapping = {
+        event_bridge = {
+          # eventBridge rule probably created and added manually on old gateway infra
+          event_source_arn = "arn:aws:events:eu-west-1:503742778456:rule/resolve-pending-transactions"
+        }
+      }
     }
 
     vote_handler = {
@@ -137,10 +152,10 @@ locals {
 
       event_source_mapping = {
         sqs_default = {
-          event_source_arn = module.sqs_queues["${var.name}_default_queue"].queue_arn
+          event_source_arn = module.sqs_queues["${var.name}_default_queue"].dead_letter_queue_arn
         }
         sqs_payer = {
-          event_source_arn = module.sqs_queues["${var.name}_default_queue"].queue_arn
+          event_source_arn = module.sqs_queues["${var.name}_payer_queue"].dead_letter_queue_arn
         }
       }
 
