@@ -51,7 +51,7 @@ module "lambdas" {
       statement_id = "AllowExecutionFromEventBridgeRule"
       principal    = "events.amazonaws.com"
       source_arn   = "arn:aws:events:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:rule/${each.value.cw_event_rule_id}"
-    } : {}
+    } : null
   }
 
   event_source_mapping  = lookup(each.value, "event_source_mapping", {})
