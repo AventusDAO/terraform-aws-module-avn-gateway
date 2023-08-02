@@ -41,13 +41,12 @@ module "lambdas" {
   layers                            = [for layer in module.lambdas_layers : layer.lambda_layer_arn]
   cloudwatch_logs_retention_in_days = var.lambdas.cloudwatch_logs_retention_in_days
 
-  allowed_triggers = {
-    allow_api_gateway = {
-      statement_id = "AllowAPIgatewayInvocation"
-      principal    = "apigateway.amazonaws.com"
-      source_arn   = module.api_gateway.apigatewayv2_api_arn
-    }
-  }
+  allowed_triggers = contains(keys(each.value), "cw_event_rule_id") ? merge(local.common_lambda_permissions, {
+    allow_event_bridge_rule = {
+      statement_id = "AllowExecutionFromEventBridgeRule"
+      principal    = "events.amazonaws.com"
+      source_arn   = "arn:aws:events:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:rule/${each.value.cw_event_rule_id}"
+  } }) : local.common_lambda_permissions
 
   event_source_mapping  = lookup(each.value, "event_source_mapping", {})
   attach_network_policy = true
@@ -61,4 +60,11 @@ module "lambdas" {
   }
 
   for_each = local.lambdas
+}
+
+resource "aws_cloudwatch_event_target" "lambdas" {
+  arn  = module.lambdas[each.key].lambda_function_arn
+  rule = each.value.cw_event_rule_id
+
+  for_each = { for k, v in local.lambdas : k => v if contains(keys(v), "cw_event_rule_id") }
 }

@@ -5,6 +5,8 @@ module "sg_rds" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.1.0"
 
+  count = var.rds.create ? 1 : 0
+
   name        = coalesce(var.rds.override_name, "${var.name}-rds")
   description = "${coalesce(var.rds.override_name, "${var.name}-rds")} access"
   vpc_id      = var.vpc_id
@@ -28,14 +30,16 @@ module "sg_memorydb" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.1.0"
 
+  count = var.memory_db.create ? 1 : 0
+
   name        = coalesce(var.memory_db.override_name, "${var.name}-memorydb")
   description = "${coalesce(var.memory_db.override_name, "${var.name}-memorydb")} access"
   vpc_id      = var.vpc_id
 
   ingress_with_cidr_blocks = [
     {
-      from_port   = module.memory_db.cluster_endpoint_port
-      to_port     = module.memory_db.cluster_endpoint_port
+      from_port   = module.memory_db[0].cluster_endpoint_port
+      to_port     = module.memory_db[0].cluster_endpoint_port
       protocol    = "tcp"
       description = "Allow traffic on gateway-memory db port"
       cidr_blocks = data.aws_vpc.current.cidr_block
@@ -51,6 +55,8 @@ module "sg_memorydb" {
 module "sg_amazonmq" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.1.0"
+
+  count = var.amazon_mq.create ? 1 : 0
 
   name                = coalesce(var.amazon_mq.override_name, "${var.name}-amq")
   description         = "${coalesce(var.amazon_mq.override_name, var.name)} amazon MQ access"

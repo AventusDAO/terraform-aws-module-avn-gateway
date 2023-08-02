@@ -3,7 +3,7 @@
 #
 resource "aws_route53_record" "api_gateway" {
   zone_id = var.route53_zone_id
-  name    = lookup(var.api_gateway, "override_name", var.name)
+  name    = coalesce(var.api_gateway.override_name, var.name)
   type    = "A"
 
   alias {

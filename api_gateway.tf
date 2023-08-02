@@ -19,7 +19,7 @@ module "api_gateway" {
   }
 
   # Custom domain
-  domain_name                 = "${coalesce(var.api_gateway.override_name, var.name)}.${var.api_gateway.domain_name_suffix}"
+  domain_name                 = var.api_gateway.custom_domain
   domain_name_certificate_arn = var.api_gateway.domain_name_certificate_arn
 
   # Access logs
