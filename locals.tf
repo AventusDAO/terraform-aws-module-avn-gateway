@@ -38,7 +38,7 @@ locals {
     }
 
     send_handler = {
-      env_vars = merge(var.lambdas.send_handler.env_vars,
+      env_vars = var.lambdas.extra_envs ? merge(var.lambdas.send_handler.env_vars,
         {
           MQ_BROKER_AMQP_ENDPOINT = var.amazon_mq.create ? module.amazonmq[0].primary_amqp_ssl_endpoint : null
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
@@ -46,7 +46,8 @@ locals {
           SQS_DEFAULT_QUEUE_URL   = module.sqs_queues["${var.name}_default_queue"].queue_url
           SQS_PAYER_QUEUE_URL     = module.sqs_queues["${var.name}_payer_queue"].queue_url
         }
-      )
+      ) : var.lambdas.send_handler.env_vars
+
       memory_size      = var.lambdas.send_handler.memory_size
       timeout          = var.lambdas.send_handler.timeout
       extra_policy_arn = aws_iam_policy.gateway_send_handler_access.arn
@@ -65,13 +66,13 @@ locals {
     }
 
     lift_processing_handler = {
-      env_vars = merge(var.lambdas.lift_processing_handler.env_vars,
+      env_vars =  var.lambdas.extra_envs ? merge(var.lambdas.lift_processing_handler.env_vars,
         {
           MQ_BROKER_AMQP_ENDPOINT = var.amazon_mq.create ? module.amazonmq[0].primary_amqp_ssl_endpoint : null
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
           SECRET_MANAGER_REGION   = data.aws_region.current.name
         }
-      )
+      ) : var.lambdas.lift_processing_handler.env_vars
 
       memory_size      = var.lambdas.lift_processing_handler.memory_size
       timeout          = var.lambdas.lift_processing_handler.timeout
@@ -99,13 +100,14 @@ locals {
     }
 
     split_fee_handler = {
-      env_vars = merge(var.lambdas.split_fee_handler.env_vars,
+      env_vars = var.lambdas.extra_envs ? merge(var.lambdas.split_fee_handler.env_vars,
         {
           SECRET_MANAGER_REGION = data.aws_region.current.name
           SQS_DEFAULT_QUEUE_URL = module.sqs_queues["${var.name}_default_queue"].queue_url
           SQS_PAYER_QUEUE_URL   = module.sqs_queues["${var.name}_payer_queue"].queue_url
         }
-      )
+      ) : var.lambdas.split_fee_handler.env_vars
+
       event_source_mapping = {
         sqs_payer = {
           event_source_arn        = module.sqs_queues["${var.name}_payer_queue"].queue_arn
@@ -118,13 +120,14 @@ locals {
     }
 
     tx_dispatch_handler = {
-      env_vars = merge(var.lambdas.tx_dispatch_handler.env_vars,
+      env_vars = var.lambdas.extra_envs ? merge(var.lambdas.tx_dispatch_handler.env_vars,
         {
           MQ_BROKER_AMQP_ENDPOINT = var.amazon_mq.create ? module.amazonmq[0].primary_amqp_ssl_endpoint : null
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
           SECRET_MANAGER_REGION   = data.aws_region.current.name
           SQS_DEFAULT_QUEUE_URL   = module.sqs_queues["${var.name}_default_queue"].queue_url
-      })
+      }) : var.lambdas.tx_dispatch_handler.env_vars
+
       event_source_mapping = {
         sqs_default = {
           event_source_arn        = module.sqs_queues["${var.name}_default_queue"].queue_arn
@@ -153,6 +156,7 @@ locals {
       extra_policy_arn = aws_iam_policy.gateway_invalid_transaction_access.arn
     }
   }
+
   common_lambda_permissions = {
     allow_api_gateway = {
       statement_id = "AllowAPIgatewayInvocation"
