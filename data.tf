@@ -161,8 +161,6 @@ data "aws_iam_policy_document" "gateway_invalid_transaction_access_merged" {
 
 # vote-handler S3 access
 data "aws_iam_policy_document" "gateway_vote_access" {
-  count = var.lambdas.vote_handler.vote_bucket != null ? 1 : 0
-
   statement {
     effect = "Allow"
     actions = [

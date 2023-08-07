@@ -271,17 +271,12 @@ variable "lambdas" {
     )
     vote_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
-        vote_bucket = optional(string)
+        env_vars    = optional(map(any), {})
+        memory_size = optional(number, 256)
+        timeout     = optional(number, 30)
+        vote_bucket = string
         }
-      ),
-      {
-        env_vars    = {}
-        memory_size = 256
-        timeout     = 30
-      }
+      )
     )
     lower_handler = optional(
       object({

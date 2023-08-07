@@ -26,9 +26,7 @@ resource "aws_iam_policy" "gateway_invalid_transaction_access" {
 }
 
 resource "aws_iam_policy" "gateway_vote_access" {
-  count = var.lambdas.vote_handler.vote_bucket != null ? 1 : 0
-
   name        = "${var.name}-vote-handler-access"
   description = "allow access to vote s3 bucket"
-  policy      = data.aws_iam_policy_document.gateway_vote_access[0].json
+  policy      = data.aws_iam_policy_document.gateway_vote_access.json
 }
