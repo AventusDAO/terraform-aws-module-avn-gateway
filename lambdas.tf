@@ -33,7 +33,7 @@ module "lambdas" {
   description   = "${replace(var.name, "-", "_")}_${each.key} - ${var.lambda_version} - Deployed by Terraform"
   publish       = true
 
-  handler                           = replace(each.key, "_", "-")
+  handler                           = "${replace(each.key, "_", "-")}.handler"
   runtime                           = var.lambdas.runtime
   environment_variables             = merge(each.value.env_vars, var.lambdas.common_env_vars)
   timeout                           = each.value.timeout
