@@ -174,6 +174,7 @@ variable "api_gateway" {
 variable "lambdas" {
   type = object({
     vpc_subnet_ids            = list(string)
+    extra_envs                = optional(bool, true)
     layer_compatible_runtimes = optional(list(string), ["nodejs14.x"])
     runtime                   = optional(string, "nodejs14.x")
     zip_location = optional(
@@ -204,9 +205,10 @@ variable "lambdas" {
     )
     send_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars              = optional(map(any))
+        extra_policy_document = optional(string)
+        memory_size           = optional(number)
+        timeout               = optional(number)
         }
       ),
       {
@@ -269,16 +271,12 @@ variable "lambdas" {
     )
     vote_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars    = optional(map(any), {})
+        memory_size = optional(number, 256)
+        timeout     = optional(number, 30)
+        vote_bucket = string
         }
-      ),
-      {
-        env_vars    = {}
-        memory_size = 256
-        timeout     = 30
-      }
+      )
     )
     lower_handler = optional(
       object({
@@ -295,9 +293,10 @@ variable "lambdas" {
     )
     split_fee_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars              = optional(map(any))
+        extra_policy_document = optional(string)
+        memory_size           = optional(number)
+        timeout               = optional(number)
         }
       ),
       {
@@ -308,9 +307,10 @@ variable "lambdas" {
     )
     tx_dispatch_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars              = optional(map(any))
+        extra_policy_document = optional(string)
+        memory_size           = optional(number)
+        timeout               = optional(number)
         }
       ),
       {
@@ -321,9 +321,10 @@ variable "lambdas" {
     )
     invalid_transaction_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars              = optional(map(any))
+        extra_policy_document = optional(string)
+        memory_size           = optional(number)
+        timeout               = optional(number)
         }
       ),
       {

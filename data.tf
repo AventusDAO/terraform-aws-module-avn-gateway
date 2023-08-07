@@ -43,6 +43,15 @@ data "aws_iam_policy_document" "gateway_send_handler_access" {
   }
 }
 
+data "aws_iam_policy_document" "gateway_send_handler_access_merged" {
+  count = var.lambdas.send_handler.extra_policy_document != null ? 1 : 0
+
+  source_policy_documents = [
+    data.aws_iam_policy_document.gateway_send_handler_access.json,
+    var.lambdas.send_handler.extra_policy_document
+  ]
+}
+
 # split-fee-handler SQS access
 data "aws_iam_policy_document" "gateway_split_fee_access" {
   statement {
@@ -68,6 +77,15 @@ data "aws_iam_policy_document" "gateway_split_fee_access" {
       module.sqs_queues["${var.name}_default_queue"].queue_arn
     ]
   }
+}
+
+data "aws_iam_policy_document" "gateway_split_fee_access_merged" {
+  count = var.lambdas.split_fee_handler.extra_policy_document != null ? 1 : 0
+
+  source_policy_documents = [
+    data.aws_iam_policy_document.gateway_split_fee_access.json,
+    var.lambdas.split_fee_handler.extra_policy_document
+  ]
 }
 
 # tx-dispatch-handler SQS access
@@ -96,6 +114,15 @@ data "aws_iam_policy_document" "gateway_tx_dispatch_access" {
   }
 }
 
+data "aws_iam_policy_document" "gateway_tx_dispatch_merged" {
+  count = var.lambdas.tx_dispatch_handler.extra_policy_document != null ? 1 : 0
+
+  source_policy_documents = [
+    data.aws_iam_policy_document.gateway_tx_dispatch_access.json,
+    var.lambdas.tx_dispatch_handler.extra_policy_document
+  ]
+}
+
 # invalid-transaction-handler DLQ access
 data "aws_iam_policy_document" "gateway_invalid_transaction_access" {
   statement {
@@ -119,6 +146,39 @@ data "aws_iam_policy_document" "gateway_invalid_transaction_access" {
     ]
     resources = [
       aws_secretsmanager_secret.amazonmq.arn
+    ]
+  }
+}
+
+data "aws_iam_policy_document" "gateway_invalid_transaction_access_merged" {
+  count = var.lambdas.invalid_transaction_handler.extra_policy_document != null ? 1 : 0
+
+  source_policy_documents = [
+    data.aws_iam_policy_document.gateway_tx_dispatch_access.json,
+    var.lambdas.invalid_transaction_handler.extra_policy_document
+  ]
+}
+
+# vote-handler S3 access
+data "aws_iam_policy_document" "gateway_vote_access" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:ListBucket"
+    ]
+    resources = [
+      "arn:aws:s3:::${var.lambdas.vote_handler.vote_bucket}}",
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject"
+    ]
+    resources = [
+      "arn:aws:s3:::${var.lambdas.vote_handler.vote_bucket}}/*",
     ]
   }
 }
