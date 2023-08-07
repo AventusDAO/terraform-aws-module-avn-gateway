@@ -105,7 +105,7 @@ module "api_gateway" {
       payload_format_version = "2.0"
     }
 
-    "GET /lower" = {
+    "GET /lowers" = {
       integration_type       = "AWS_PROXY"
       connection_type        = "INTERNET"
       description            = "Lower handler integration"
