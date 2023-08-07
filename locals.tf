@@ -91,7 +91,7 @@ locals {
       env_vars         = var.lambdas.vote_handler.env_vars
       memory_size      = var.lambdas.vote_handler.memory_size
       timeout          = var.lambdas.vote_handler.timeout
-      extra_policy_arn = aws_iam_policy.gateway_send_handler_access.arn
+      extra_policy_arn = aws_iam_policy.gateway_vote_access.arn
     }
 
     lower_handler = {
