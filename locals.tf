@@ -88,9 +88,10 @@ locals {
     }
 
     vote_handler = {
-      env_vars    = var.lambdas.vote_handler.env_vars
-      memory_size = var.lambdas.vote_handler.memory_size
-      timeout     = var.lambdas.vote_handler.timeout
+      env_vars         = var.lambdas.vote_handler.env_vars
+      memory_size      = var.lambdas.vote_handler.memory_size
+      timeout          = var.lambdas.vote_handler.timeout
+      extra_policy_arn = var.lambdas.vote_handler.vote_bucket != null ? aws_iam_policy.gateway_send_handler_access.arn : null
     }
 
     lower_handler = {
@@ -160,7 +161,7 @@ locals {
   common_lambda_permissions = {
     allow_api_gateway = {
       statement_id = "AllowAPIgatewayInvocation"
-      service    = "apigateway"
+      service      = "apigateway"
       source_arn   = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${module.api_gateway.apigatewayv2_api_id}/*"
     }
   }

@@ -274,6 +274,7 @@ variable "lambdas" {
         env_vars    = optional(map(any))
         memory_size = optional(number)
         timeout     = optional(number)
+        vote_bucket = optional(string)
         }
       ),
       {

@@ -24,3 +24,11 @@ resource "aws_iam_policy" "gateway_invalid_transaction_access" {
   description = "allow access to SQS and SM"
   policy      = var.lambdas.invalid_transaction_handler.extra_policy_document != null ? data.aws_iam_policy_document.gateway_invalid_transaction_access_merged[0].json : data.aws_iam_policy_document.gateway_invalid_transaction_access.json
 }
+
+resource "aws_iam_policy" "gateway_vote_access" {
+  count = var.lambdas.vote_handler.vote_bucket != null ? 1 : 0
+
+  name        = "${var.name}-vote-handler-access"
+  description = "allow access to vote s3 bucket"
+  policy      = data.aws_iam_policy_document.gateway_vote_access[0].json
+}

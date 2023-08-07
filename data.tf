@@ -159,6 +159,32 @@ data "aws_iam_policy_document" "gateway_invalid_transaction_access_merged" {
   ]
 }
 
+# vote-handler S3 access
+data "aws_iam_policy_document" "gateway_vote_access" {
+  count = var.lambdas.vote_handler.vote_bucket != null ? 1 : 0
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:ListBucket"
+    ]
+    resources = [
+      "arn:aws:s3:::${var.lambdas.vote_handler.vote_bucket}}",
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject"
+    ]
+    resources = [
+      "arn:aws:s3:::${var.lambdas.vote_handler.vote_bucket}}/*",
+    ]
+  }
+}
+
 # gateway-admin-portal
 data "aws_iam_policy_document" "gateway_admin_portal" {
   statement {
