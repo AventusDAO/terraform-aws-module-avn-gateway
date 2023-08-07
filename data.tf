@@ -44,7 +44,7 @@ data "aws_iam_policy_document" "gateway_send_handler_access" {
 }
 
 data "aws_iam_policy_document" "gateway_send_handler_access_merged" {
-  count = var.lambdas.send_handler.extra_policy_document ? 1 : 0
+  count = var.lambdas.send_handler.extra_policy_document != null ? 1 : 0
 
   source_policy_documents = [
     data.aws_iam_policy_document.gateway_send_handler_access.json,
@@ -80,7 +80,7 @@ data "aws_iam_policy_document" "gateway_split_fee_access" {
 }
 
 data "aws_iam_policy_document" "gateway_split_fee_access_merged" {
-  count = var.lambdas.split_fee_handler.extra_policy_document ? 1 : 0
+  count = var.lambdas.split_fee_handler.extra_policy_document != null ? 1 : 0
 
   source_policy_documents = [
     data.aws_iam_policy_document.gateway_split_fee_access.json,
@@ -115,7 +115,7 @@ data "aws_iam_policy_document" "gateway_tx_dispatch_access" {
 }
 
 data "aws_iam_policy_document" "gateway_tx_dispatch_merged" {
-  count = var.lambdas.tx_dispatch_handler.extra_policy_document ? 1 : 0
+  count = var.lambdas.tx_dispatch_handler.extra_policy_document != null ? 1 : 0
 
   source_policy_documents = [
     data.aws_iam_policy_document.gateway_tx_dispatch_access.json,
@@ -151,7 +151,7 @@ data "aws_iam_policy_document" "gateway_invalid_transaction_access" {
 }
 
 data "aws_iam_policy_document" "gateway_invalid_transaction_access_merged" {
-  count = var.lambdas.invalid_transaction_handler.extra_policy_document ? 1 : 0
+  count = var.lambdas.invalid_transaction_handler.extra_policy_document != null ? 1 : 0
 
   source_policy_documents = [
     data.aws_iam_policy_document.gateway_tx_dispatch_access.json,
