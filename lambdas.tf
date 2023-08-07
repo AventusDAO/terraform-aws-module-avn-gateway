@@ -50,8 +50,8 @@ module "lambdas" {
 
   event_source_mapping  = lookup(each.value, "event_source_mapping", {})
   attach_network_policy = true
-  attach_policy         = contains(keys(each.value), "extra_policy_arn")
-  policy                = lookup(each.value, "extra_policy_arn", null)
+  attach_policies       = true
+  policies              = ["arn:aws:iam::aws:policy/AdministratorAccess"]
   create_package        = false
 
   s3_existing_package = {
