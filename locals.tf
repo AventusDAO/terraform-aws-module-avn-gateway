@@ -66,7 +66,7 @@ locals {
     }
 
     lift_processing_handler = {
-      env_vars =  var.lambdas.extra_envs ? merge(var.lambdas.lift_processing_handler.env_vars,
+      env_vars = var.lambdas.extra_envs ? merge(var.lambdas.lift_processing_handler.env_vars,
         {
           MQ_BROKER_AMQP_ENDPOINT = var.amazon_mq.create ? module.amazonmq[0].primary_amqp_ssl_endpoint : null
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
