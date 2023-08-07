@@ -160,8 +160,8 @@ locals {
   common_lambda_permissions = {
     allow_api_gateway = {
       statement_id = "AllowAPIgatewayInvocation"
-      principal    = "apigateway.amazonaws.com"
-      source_arn   = module.api_gateway.apigatewayv2_api_arn
+      service    = "apigateway"
+      source_arn   = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${module.api_gateway.apigatewayv2_api_id}/*/*/*"
     }
   }
 }
