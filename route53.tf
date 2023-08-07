@@ -3,7 +3,7 @@
 #
 resource "aws_route53_record" "api_gateway" {
   zone_id = var.route53_zone_id
-  name    = coalesce(var.api_gateway.override_name, var.name)
+  name    = coalesce(trimsuffix(var.api_gateway.custom_domain, ".gateway.aventus.io"))
   type    = "A"
 
   alias {
