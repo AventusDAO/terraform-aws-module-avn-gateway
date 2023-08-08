@@ -32,9 +32,10 @@ locals {
 
   lambdas = {
     authorisation_handler = {
-      env_vars    = var.lambdas.authorisation_handler.env_vars
-      memory_size = var.lambdas.authorisation_handler.memory_size
-      timeout     = var.lambdas.authorisation_handler.timeout
+      env_vars                      = var.lambdas.authorisation_handler.env_vars
+      memory_size                   = var.lambdas.authorisation_handler.memory_size
+      timeout                       = var.lambdas.authorisation_handler.timeout
+      override_event_source_mapping = var.lambdas.authorisation_handler.override_event_source_mapping
     }
 
     send_handler = {
@@ -48,21 +49,24 @@ locals {
         }
       ) : var.lambdas.send_handler.env_vars
 
-      memory_size      = var.lambdas.send_handler.memory_size
-      timeout          = var.lambdas.send_handler.timeout
-      extra_policy_arn = aws_iam_policy.gateway_send_handler_access.arn
+      memory_size                   = var.lambdas.send_handler.memory_size
+      timeout                       = var.lambdas.send_handler.timeout
+      extra_policy_arn              = aws_iam_policy.gateway_send_handler_access.arn
+      override_event_source_mapping = var.lambdas.send_handler.override_event_source_mapping
     }
 
     poll_handler = {
-      env_vars    = var.lambdas.poll_handler.env_vars
-      memory_size = var.lambdas.poll_handler.memory_size
-      timeout     = var.lambdas.poll_handler.timeout
+      env_vars                      = var.lambdas.poll_handler.env_vars
+      memory_size                   = var.lambdas.poll_handler.memory_size
+      timeout                       = var.lambdas.poll_handler.timeout
+      override_event_source_mapping = var.lambdas.poll_handler.override_event_source_mapping
     }
 
     query_handler = {
-      env_vars    = var.lambdas.query_handler.env_vars
-      memory_size = var.lambdas.query_handler.memory_size
-      timeout     = var.lambdas.query_handler.timeout
+      env_vars                      = var.lambdas.query_handler.env_vars
+      memory_size                   = var.lambdas.query_handler.memory_size
+      timeout                       = var.lambdas.query_handler.timeout
+      override_event_source_mapping = var.lambdas.query_handler.override_event_source_mapping
     }
 
     lift_processing_handler = {
@@ -74,30 +78,33 @@ locals {
         }
       ) : var.lambdas.lift_processing_handler.env_vars
 
-      memory_size      = var.lambdas.lift_processing_handler.memory_size
-      timeout          = var.lambdas.lift_processing_handler.timeout
-      cw_event_rule_id = "process-lifts"
+      memory_size                   = var.lambdas.lift_processing_handler.memory_size
+      timeout                       = var.lambdas.lift_processing_handler.timeout
+      override_event_source_mapping = var.lambdas.lift_processing_handler.override_event_source_mapping
+      cw_event_rule_id              = "process-lifts"
     }
 
     tx_status_update_handler = {
-      env_vars         = var.lambdas.tx_status_update_handler.env_vars
-      memory_size      = var.lambdas.tx_status_update_handler.memory_size
-      timeout          = var.lambdas.tx_status_update_handler.timeout
-      cw_event_rule_id = "resolve-pending-transactions"
-
+      env_vars                      = var.lambdas.tx_status_update_handler.env_vars
+      memory_size                   = var.lambdas.tx_status_update_handler.memory_size
+      timeout                       = var.lambdas.tx_status_update_handler.timeout
+      override_event_source_mapping = var.lambdas.tx_status_update_handler.override_event_source_mapping
+      cw_event_rule_id              = "resolve-pending-transactions"
     }
 
     vote_handler = {
-      env_vars         = var.lambdas.vote_handler.env_vars
-      memory_size      = var.lambdas.vote_handler.memory_size
-      timeout          = var.lambdas.vote_handler.timeout
-      extra_policy_arn = aws_iam_policy.gateway_vote_access.arn
+      env_vars                      = var.lambdas.vote_handler.env_vars
+      memory_size                   = var.lambdas.vote_handler.memory_size
+      timeout                       = var.lambdas.vote_handler.timeout
+      override_event_source_mapping = var.lambdas.vote_handler.override_event_source_mapping
+      extra_policy_arn              = aws_iam_policy.gateway_vote_access.arn
     }
 
     lower_handler = {
       env_vars    = var.lambdas.lower_handler.env_vars
       memory_size = var.lambdas.vote_handler.memory_size
       timeout     = var.lambdas.vote_handler.timeout
+      override_event_source_mapping = var.lambdas.lower_handler.override_event_source_mapping
     }
 
     split_fee_handler = {
@@ -109,12 +116,13 @@ locals {
         }
       ) : var.lambdas.split_fee_handler.env_vars
 
-      event_source_mapping = {
+      event_source_mapping = coalesce(var.lambdas.split_fee_handler.override_event_source_mapping, {
         sqs_payer = {
           event_source_arn        = module.sqs_queues["${var.name}_payer_queue"].queue_arn
           function_response_types = ["ReportBatchItemFailures"]
         }
-      }
+      })
+
       memory_size      = var.lambdas.split_fee_handler.memory_size
       timeout          = var.lambdas.split_fee_handler.timeout
       extra_policy_arn = aws_iam_policy.gateway_split_fee_access.arn
@@ -129,12 +137,12 @@ locals {
           SQS_DEFAULT_QUEUE_URL   = module.sqs_queues["${var.name}_default_queue"].queue_url
       }) : var.lambdas.tx_dispatch_handler.env_vars
 
-      event_source_mapping = {
+      event_source_mapping = coalesce(var.lambdas.tx_dispatch_handler.override_event_source_mapping,{
         sqs_default = {
           event_source_arn        = module.sqs_queues["${var.name}_default_queue"].queue_arn
           function_response_types = ["ReportBatchItemFailures"]
         }
-      }
+      })
       memory_size      = var.lambdas.tx_dispatch_handler.memory_size
       timeout          = var.lambdas.tx_dispatch_handler.timeout
       extra_policy_arn = aws_iam_policy.gateway_tx_dispatch_access.arn
@@ -143,14 +151,14 @@ locals {
     invalid_transaction_handler = {
       env_vars = var.lambdas.invalid_transaction_handler.env_vars
 
-      event_source_mapping = {
+      event_source_mapping = coalesce(var.lambdas.invalid_transaction_handler.override_event_source_mapping,{
         sqs_default = {
           event_source_arn = module.sqs_queues["${var.name}_default_queue"].dead_letter_queue_arn
         }
         sqs_payer = {
           event_source_arn = module.sqs_queues["${var.name}_payer_queue"].dead_letter_queue_arn
         }
-      }
+      })
 
       memory_size      = var.lambdas.invalid_transaction_handler.memory_size
       timeout          = var.lambdas.invalid_transaction_handler.timeout

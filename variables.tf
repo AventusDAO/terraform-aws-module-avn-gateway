@@ -192,9 +192,10 @@ variable "lambdas" {
     cloudwatch_logs_retention_in_days = optional(number, 14)
     authorisation_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars                      = optional(map(any))
+        memory_size                   = optional(number)
+        timeout                       = optional(number)
+        override_event_source_mapping = optional(map(any), null)
         }
       ),
       {
@@ -205,10 +206,11 @@ variable "lambdas" {
     )
     send_handler = optional(
       object({
-        env_vars              = optional(map(any))
-        extra_policy_document = optional(string)
-        memory_size           = optional(number)
-        timeout               = optional(number)
+        env_vars                      = optional(map(any))
+        extra_policy_document         = optional(string)
+        memory_size                   = optional(number)
+        timeout                       = optional(number)
+        override_event_source_mapping = optional(map(any), null)
         }
       ),
       {
@@ -219,9 +221,10 @@ variable "lambdas" {
     )
     poll_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars                      = optional(map(any))
+        memory_size                   = optional(number)
+        timeout                       = optional(number)
+        override_event_source_mapping = optional(map(any), null)
         }
       ),
       {
@@ -232,9 +235,10 @@ variable "lambdas" {
     )
     query_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars                      = optional(map(any))
+        memory_size                   = optional(number)
+        timeout                       = optional(number)
+        override_event_source_mapping = optional(map(any), null)
         }
       ),
       {
@@ -245,9 +249,10 @@ variable "lambdas" {
     )
     lift_processing_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars                      = optional(map(any))
+        memory_size                   = optional(number)
+        timeout                       = optional(number)
+        override_event_source_mapping = optional(map(any), null)
         }
       ),
       {
@@ -258,9 +263,10 @@ variable "lambdas" {
     )
     tx_status_update_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars                      = optional(map(any))
+        memory_size                   = optional(number)
+        timeout                       = optional(number)
+        override_event_source_mapping = optional(map(any), null)
         }
       ),
       {
@@ -271,18 +277,20 @@ variable "lambdas" {
     )
     vote_handler = optional(
       object({
-        env_vars    = optional(map(any), {})
-        memory_size = optional(number, 256)
-        timeout     = optional(number, 30)
-        vote_bucket = string
+        env_vars                      = optional(map(any), {})
+        memory_size                   = optional(number, 256)
+        timeout                       = optional(number, 30)
+        override_event_source_mapping = optional(map(any), null)
+        vote_bucket                   = string
         }
       )
     )
     lower_handler = optional(
       object({
-        env_vars    = optional(map(any))
-        memory_size = optional(number)
-        timeout     = optional(number)
+        env_vars                      = optional(map(any))
+        memory_size                   = optional(number)
+        timeout                       = optional(number)
+        override_event_source_mapping = optional(map(any), null)
         }
       ),
       {
@@ -293,10 +301,11 @@ variable "lambdas" {
     )
     split_fee_handler = optional(
       object({
-        env_vars              = optional(map(any))
-        extra_policy_document = optional(string)
-        memory_size           = optional(number)
-        timeout               = optional(number)
+        env_vars                      = optional(map(any))
+        extra_policy_document         = optional(string)
+        memory_size                   = optional(number)
+        timeout                       = optional(number)
+        override_event_source_mapping = optional(map(any), null)
         }
       ),
       {
@@ -307,10 +316,11 @@ variable "lambdas" {
     )
     tx_dispatch_handler = optional(
       object({
-        env_vars              = optional(map(any))
-        extra_policy_document = optional(string)
-        memory_size           = optional(number)
-        timeout               = optional(number)
+        env_vars                      = optional(map(any))
+        extra_policy_document         = optional(string)
+        memory_size                   = optional(number)
+        timeout                       = optional(number)
+        override_event_source_mapping = optional(map(any), null)
         }
       ),
       {
@@ -321,10 +331,11 @@ variable "lambdas" {
     )
     invalid_transaction_handler = optional(
       object({
-        env_vars              = optional(map(any))
-        extra_policy_document = optional(string)
-        memory_size           = optional(number)
-        timeout               = optional(number)
+        env_vars                      = optional(map(any))
+        extra_policy_document         = optional(string)
+        memory_size                   = optional(number)
+        timeout                       = optional(number)
+        override_event_source_mapping = optional(map(any), null)
         }
       ),
       {
