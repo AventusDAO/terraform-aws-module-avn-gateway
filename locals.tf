@@ -101,9 +101,9 @@ locals {
     }
 
     lower_handler = {
-      env_vars    = var.lambdas.lower_handler.env_vars
-      memory_size = var.lambdas.vote_handler.memory_size
-      timeout     = var.lambdas.vote_handler.timeout
+      env_vars                      = var.lambdas.lower_handler.env_vars
+      memory_size                   = var.lambdas.vote_handler.memory_size
+      timeout                       = var.lambdas.vote_handler.timeout
       override_event_source_mapping = var.lambdas.lower_handler.override_event_source_mapping
     }
 
@@ -137,7 +137,7 @@ locals {
           SQS_DEFAULT_QUEUE_URL   = module.sqs_queues["${var.name}_default_queue"].queue_url
       }) : var.lambdas.tx_dispatch_handler.env_vars
 
-      event_source_mapping = coalesce(var.lambdas.tx_dispatch_handler.override_event_source_mapping,{
+      event_source_mapping = coalesce(var.lambdas.tx_dispatch_handler.override_event_source_mapping, {
         sqs_default = {
           event_source_arn        = module.sqs_queues["${var.name}_default_queue"].queue_arn
           function_response_types = ["ReportBatchItemFailures"]
@@ -151,7 +151,7 @@ locals {
     invalid_transaction_handler = {
       env_vars = var.lambdas.invalid_transaction_handler.env_vars
 
-      event_source_mapping = coalesce(var.lambdas.invalid_transaction_handler.override_event_source_mapping,{
+      event_source_mapping = coalesce(var.lambdas.invalid_transaction_handler.override_event_source_mapping, {
         sqs_default = {
           event_source_arn = module.sqs_queues["${var.name}_default_queue"].dead_letter_queue_arn
         }
