@@ -167,7 +167,7 @@ data "aws_iam_policy_document" "gateway_vote_access" {
       "s3:ListBucket"
     ]
     resources = [
-      "arn:aws:s3:::${var.lambdas.vote_handler.vote_bucket}}",
+      "arn:aws:s3:::${var.lambdas.vote_handler.vote_bucket}",
     ]
   }
 
@@ -178,7 +178,7 @@ data "aws_iam_policy_document" "gateway_vote_access" {
       "s3:PutObject"
     ]
     resources = [
-      "arn:aws:s3:::${var.lambdas.vote_handler.vote_bucket}}/*",
+      "arn:aws:s3:::${var.lambdas.vote_handler.vote_bucket}/*",
     ]
   }
 }
