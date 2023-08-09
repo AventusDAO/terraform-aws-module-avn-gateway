@@ -25,6 +25,12 @@ resource "aws_iam_policy" "gateway_invalid_transaction_access" {
   policy      = var.lambdas.invalid_transaction_handler.extra_policy_document != null ? data.aws_iam_policy_document.gateway_invalid_transaction_access_merged[0].json : data.aws_iam_policy_document.gateway_invalid_transaction_access.json
 }
 
+resource "aws_iam_policy" "gateway_lift_processing_access" {
+  name        = "${var.name}-lift-processing-handler-access"
+  description = "Allow lift processing handler to access amazon MQ SM"
+  policy      = data.aws_iam_policy_document.gateway_lift_processing_access.json
+}
+
 resource "aws_iam_policy" "gateway_vote_access" {
   name        = "${var.name}-vote-handler-access"
   description = "allow access to vote s3 bucket"

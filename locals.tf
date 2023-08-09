@@ -82,6 +82,7 @@ locals {
       timeout                       = var.lambdas.lift_processing_handler.timeout
       override_event_source_mapping = var.lambdas.lift_processing_handler.override_event_source_mapping
       cw_event_rule_id              = "process-lifts"
+      extra_policy_arn              = aws_iam_policy.gateway_lift_processing_access.arn
     }
 
     tx_status_update_handler = {

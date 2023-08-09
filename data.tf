@@ -183,6 +183,19 @@ data "aws_iam_policy_document" "gateway_vote_access" {
   }
 }
 
+# lift processing handler access
+data "aws_iam_policy_document" "gateway_lift_processing_access" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "secretsmanager:GetSecretValue"
+    ]
+    resources = [
+      aws_secretsmanager_secret.amazonmq.arn
+    ]
+  }
+}
+
 # gateway-admin-portal
 data "aws_iam_policy_document" "gateway_admin_portal" {
   statement {
