@@ -274,7 +274,7 @@ data "aws_iam_policy_document" "gateway_connector" {
       "lambda:InvokeFunction"
     ]
     resources = [
-      module.lambdas["tx_status_update_handler"].lambda_function_invoke_arn,
+      module.lambdas["tx_status_update_handler"].lambda_function_arn,
     ]
   }
 }
