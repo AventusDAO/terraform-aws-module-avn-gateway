@@ -83,4 +83,11 @@ resource "aws_cognito_user_pool_client" "admin_portal" {
   logout_urls                          = var.cognito.pool_client.logout_urls
   prevent_user_existence_errors        = var.cognito.pool_client.prevent_user_existence_errors
   supported_identity_providers         = var.cognito.pool_client.supported_identity_providers
+
+  # included while https://github.com/hashicorp/terraform-provider-aws/issues/20298 is not addressed
+  lifecycle {
+    ignore_changes = [
+      generate_secret
+    ]
+  }
 }
