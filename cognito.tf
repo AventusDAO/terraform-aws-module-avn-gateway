@@ -5,7 +5,7 @@
 # for now, the email used to send the temp password to users will be no-reply@verificationemail.com
 # This is limited to 50emails/day and aws recommend to use AMAZON SES
 resource "aws_cognito_user_pool" "admin_portal" {
-  name = "${coalesce(var.cognito.override_name, var.name)}-admin-portal"
+  name = coalesce(var.cognito.override_name, "${var.name}-admin-portal")
 
   account_recovery_setting {
     dynamic "recovery_mechanism" {
@@ -72,7 +72,7 @@ resource "aws_cognito_user_pool_domain" "admin_portal" {
 }
 
 resource "aws_cognito_user_pool_client" "admin_portal" {
-  name                                 = "${coalesce(var.cognito.override_name, var.name)}-admin-portal"
+  name                                 = coalesce(var.cognito.override_name, "${var.name}-admin-portal")
   user_pool_id                         = aws_cognito_user_pool.admin_portal.id
   generate_secret                      = var.cognito.pool_client.generate_secret
   allowed_oauth_flows_user_pool_client = var.cognito.pool_client.allowed_oauth_flows_user_pool_client
@@ -83,4 +83,11 @@ resource "aws_cognito_user_pool_client" "admin_portal" {
   logout_urls                          = var.cognito.pool_client.logout_urls
   prevent_user_existence_errors        = var.cognito.pool_client.prevent_user_existence_errors
   supported_identity_providers         = var.cognito.pool_client.supported_identity_providers
+
+  # included while https://github.com/hashicorp/terraform-provider-aws/issues/20298 is not addressed
+  lifecycle {
+    ignore_changes = [
+      generate_secret
+    ]
+  }
 }
