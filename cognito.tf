@@ -93,7 +93,8 @@ resource "aws_cognito_user_pool_client" "admin_portal" {
   # included while https://github.com/hashicorp/terraform-provider-aws/issues/20298 is not addressed
   lifecycle {
     ignore_changes = [
-      generate_secret
+      generate_secret,
+      token_validity_units #https://github.com/hashicorp/terraform-provider-aws/issues/32504
     ]
   }
 }
