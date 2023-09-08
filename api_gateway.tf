@@ -41,9 +41,9 @@ module "api_gateway" {
   )
 
   default_route_settings = {
-    detailed_metrics_enabled = lookup(var.api_gateway.default_route_settings, "detailed_metrics_enabled", true)
-    throttling_burst_limit   = lookup(var.api_gateway.default_route_settings, "throttling_burst_limit", 100)
-    throttling_rate_limit    = lookup(var.api_gateway.default_route_settings, "throttling_burst_limit", 100)
+    detailed_metrics_enabled = var.api_gateway.default_route_settings.detailed_metrics_enabled
+    throttling_burst_limit   = var.api_gateway.default_route_settings.throttling_burst_limit
+    throttling_rate_limit    = var.api_gateway.default_route_settings.throttling_burst_limit
   }
 
   authorizers = {
@@ -93,6 +93,8 @@ module "api_gateway" {
       integration_uri        = module.lambdas["query_handler"].lambda_function_invoke_arn
       passthrough_behavior   = "WHEN_NO_MATCH"
       payload_format_version = "2.0"
+      throttling_rate_limit  = 500
+      throttling_burst_limit = 400
     }
 
     "ANY /vote" = {
