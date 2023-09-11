@@ -21,6 +21,7 @@ module "rds" {
   max_allocated_storage      = var.rds.max_allocated_storage
   username                   = var.rds.username
   port                       = var.rds.port
+  snapshot_identifier        = var.rds.snapshot_identifier
 
   multi_az               = var.rds.multi_az
   db_subnet_group_name   = aws_db_subnet_group.rds.id
