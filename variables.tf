@@ -97,7 +97,7 @@ variable "rds" {
     skip_final_snapshot                   = optional(bool, false)
     deletion_protection                   = optional(bool, true)
     performance_insights_enabled          = optional(bool, true)
-    performance_insights_retention_period = optional(number, 14)
+    performance_insights_retention_period = optional(number, 7)
     create_monitoring_role                = optional(bool, true)
     monitoring_interval                   = optional(number, 60)
     monitoring_role_name                  = optional(string)
