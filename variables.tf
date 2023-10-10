@@ -88,6 +88,7 @@ variable "rds" {
     username                              = optional(string, "root")
     port                                  = optional(number, 5432)
     snapshot_identifier                   = optional(string)
+    ca_cert_identifier                    = optional(string, "rds-ca-rsa2048-g1")
     multi_az                              = optional(bool, false)
     maintenance_window                    = optional(string, "Tue:10:00-Tue:11:00")
     backup_window                         = optional(string, "07:00-08:00")
