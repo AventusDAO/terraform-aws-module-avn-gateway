@@ -2,7 +2,7 @@
 # gateway cognito pool and app
 #
 
-# for now, the email used to send the temp password to users will be no-reply@verificationemail.com
+# For now, the email used to send the temp password to users will be no-reply@verificationemail.com
 # This is limited to 50emails/day and aws recommend to use AMAZON SES
 resource "aws_cognito_user_pool" "admin_portal" {
   name = coalesce(var.cognito.override_name, "${var.name}-admin-portal")
