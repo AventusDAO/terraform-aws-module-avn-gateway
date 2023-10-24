@@ -24,7 +24,7 @@ module "gateway_sqs_queues_alarms" {
   source  = "terraform-aws-modules/cloudwatch/aws//modules/metric-alarm"
   version = "4.3.0"
 
-  alarm_name          = replace("${each.key}_dlq_alarm", "-", "_")
+  alarm_name          = replace("${each.key}-dlq-alarm", "_", "-")
   alarm_description   = coalesce(var.sqs.alarm.alarm_description, "Warning: DLQ queue [${each.key}] has more than 20 messages in the queue. Please investigate and take appropriate actions to avoid service disruption.")
   comparison_operator = var.sqs.alarm.comparison_operator
   evaluation_periods  = var.sqs.alarm.evaluation_periods
@@ -34,7 +34,7 @@ module "gateway_sqs_queues_alarms" {
   namespace           = var.sqs.alarm.namespace
   metric_name         = var.sqs.alarm.metric_name
   statistic           = var.sqs.alarm.statistic
-  dimensions          = { QueueName = each.key }
+  dimensions          = { QueueName = "${each.key}-dlq.fifo" }
   alarm_actions       = [var.sqs.alarm.alarm_actions]
 
   for_each = toset([var.sqs.default_queue_name, var.sqs.payer_queue_name])
