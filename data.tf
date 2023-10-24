@@ -27,8 +27,8 @@ data "aws_iam_policy_document" "gateway_send_handler_access" {
       "sqs:SendMessageBatch"
     ]
     resources = [
-      module.sqs_queues["${var.name}_default_queue"].queue_arn,
-      module.sqs_queues["${var.name}_payer_queue"].queue_arn
+      module.sqs_queues[var.sqs.default_queue_name].queue_arn,
+      module.sqs_queues[var.sqs.payer_queue_name].queue_arn
     ]
   }
 
@@ -63,7 +63,7 @@ data "aws_iam_policy_document" "gateway_split_fee_access" {
       "sqs:GetQueueAttributes",
     ]
     resources = [
-      module.sqs_queues["${var.name}_payer_queue"].queue_arn
+      module.sqs_queues[var.sqs.payer_queue_name].queue_arn
     ]
   }
 
@@ -74,7 +74,7 @@ data "aws_iam_policy_document" "gateway_split_fee_access" {
       "sqs:SendMessageBatch"
     ]
     resources = [
-      module.sqs_queues["${var.name}_default_queue"].queue_arn
+      module.sqs_queues[var.sqs.default_queue_name].queue_arn
     ]
   }
 }
@@ -99,7 +99,7 @@ data "aws_iam_policy_document" "gateway_tx_dispatch_access" {
       "sqs:GetQueueAttributes",
     ]
     resources = [
-      module.sqs_queues["${var.name}_default_queue"].queue_arn
+      module.sqs_queues[var.sqs.default_queue_name].queue_arn
     ]
   }
 
@@ -134,8 +134,8 @@ data "aws_iam_policy_document" "gateway_invalid_transaction_access" {
       "sqs:GetQueueAttributes"
     ]
     resources = [
-      module.sqs_queues["${var.name}_default_queue"].dead_letter_queue_arn,
-      module.sqs_queues["${var.name}_payer_queue"].dead_letter_queue_arn
+      module.sqs_queues[var.sqs.default_queue_name].dead_letter_queue_arn,
+      module.sqs_queues[var.sqs.payer_queue_name].dead_letter_queue_arn
     ]
   }
 

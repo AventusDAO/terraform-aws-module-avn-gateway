@@ -17,7 +17,7 @@ module "sqs_queues" {
 
   tags = { Name = each.key }
 
-  for_each = toset(["${var.name}_default_queue", "${var.name}_payer_queue"])
+  for_each = toset([var.sqs.default_queue_name, var.sqs.payer_queue_name])
 }
 
 module "gateway_sqs_queues_alarms" {
@@ -37,5 +37,5 @@ module "gateway_sqs_queues_alarms" {
   dimensions          = { QueueName = each.key }
   alarm_actions       = [var.sqs.alarm.alarm_actions]
 
-  for_each = toset(["${var.name}_default_queue", "${var.name}_payer_queue"])
+  for_each = toset([var.sqs.default_queue_name, var.sqs.payer_queue_name])
 }
