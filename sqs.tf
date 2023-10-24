@@ -9,7 +9,7 @@ module "sqs_queues" {
   create_dlq                    = var.sqs.create_dlq
   dlq_message_retention_seconds = var.sqs.dlq_message_retention_seconds
   receive_wait_time_seconds     = var.sqs.receive_wait_time_seconds
-  delay_seconds                 = var.sqs.delay_seconds
+  delay_seconds                 = each.key == var.sqs.default_queue_name ? var.sqs.delay_seconds : var.sqs.delay_seconds + 1
 
   redrive_policy = {
     maxReceiveCount = var.sqs.max_receive_count
