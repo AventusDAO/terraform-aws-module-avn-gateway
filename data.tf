@@ -154,7 +154,7 @@ data "aws_iam_policy_document" "gateway_invalid_transaction_access_merged" {
   count = var.lambdas.invalid_transaction_handler.extra_policy_document != null ? 1 : 0
 
   source_policy_documents = [
-    data.aws_iam_policy_document.gateway_tx_dispatch_access.json,
+    data.aws_iam_policy_document.gateway_invalid_transaction_access.json,
     var.lambdas.invalid_transaction_handler.extra_policy_document
   ]
 }
