@@ -362,6 +362,7 @@ variable "sqs" {
     receive_wait_time_seconds     = optional(number, 10)
     max_receive_count             = optional(number, 3)
     delay_seconds                 = optional(number, 1)
+    dlq_delay_seconds             = optional(number, 0)
     alarm = object({
       alarm_description   = optional(string)
       comparison_operator = optional(string, "GreaterThanOrEqualToThreshold")
