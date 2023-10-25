@@ -39,14 +39,14 @@ locals {
     }
 
     send_handler = {
-      env_vars = var.lambdas.extra_envs ? merge(var.lambdas.send_handler.env_vars,
+      env_vars = var.lambdas.extra_envs ? merge(
         {
           MQ_BROKER_AMQP_ENDPOINT = var.amazon_mq.create ? module.amazonmq[0].primary_amqp_ssl_endpoint : null
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
           SECRET_MANAGER_REGION   = data.aws_region.current.name
-          SQS_DEFAULT_QUEUE_URL   = module.sqs_queues["${var.name}_default_queue"].queue_url
-          SQS_PAYER_QUEUE_URL     = module.sqs_queues["${var.name}_payer_queue"].queue_url
-        }
+          SQS_DEFAULT_QUEUE_URL   = module.sqs_queues[var.sqs.default_queue_name].queue_url
+          SQS_PAYER_QUEUE_URL     = module.sqs_queues[var.sqs.payer_queue_name].queue_url
+        }, var.lambdas.send_handler.env_vars
       ) : var.lambdas.send_handler.env_vars
 
       memory_size                   = var.lambdas.send_handler.memory_size
@@ -70,12 +70,12 @@ locals {
     }
 
     lift_processing_handler = {
-      env_vars = var.lambdas.extra_envs ? merge(var.lambdas.lift_processing_handler.env_vars,
+      env_vars = var.lambdas.extra_envs ? merge(
         {
           MQ_BROKER_AMQP_ENDPOINT = var.amazon_mq.create ? module.amazonmq[0].primary_amqp_ssl_endpoint : null
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
           SECRET_MANAGER_REGION   = data.aws_region.current.name
-        }
+        }, var.lambdas.lift_processing_handler.env_vars
       ) : var.lambdas.lift_processing_handler.env_vars
 
       memory_size                   = var.lambdas.lift_processing_handler.memory_size
@@ -103,23 +103,23 @@ locals {
 
     lower_handler = {
       env_vars                      = var.lambdas.lower_handler.env_vars
-      memory_size                   = var.lambdas.vote_handler.memory_size
-      timeout                       = var.lambdas.vote_handler.timeout
+      memory_size                   = var.lambdas.lower_handler.memory_size
+      timeout                       = var.lambdas.lower_handler.timeout
       override_event_source_mapping = var.lambdas.lower_handler.override_event_source_mapping
     }
 
     split_fee_handler = {
-      env_vars = var.lambdas.extra_envs ? merge(var.lambdas.split_fee_handler.env_vars,
+      env_vars = var.lambdas.extra_envs ? merge(
         {
           SECRET_MANAGER_REGION = data.aws_region.current.name
-          SQS_DEFAULT_QUEUE_URL = module.sqs_queues["${var.name}_default_queue"].queue_url
-          SQS_PAYER_QUEUE_URL   = module.sqs_queues["${var.name}_payer_queue"].queue_url
-        }
+          SQS_DEFAULT_QUEUE_URL = module.sqs_queues[var.sqs.default_queue_name].queue_url
+          SQS_PAYER_QUEUE_URL   = module.sqs_queues[var.sqs.payer_queue_name].queue_url
+        }, var.lambdas.split_fee_handler.env_vars
       ) : var.lambdas.split_fee_handler.env_vars
 
       event_source_mapping = coalesce(var.lambdas.split_fee_handler.override_event_source_mapping, {
         sqs_payer = {
-          event_source_arn        = module.sqs_queues["${var.name}_payer_queue"].queue_arn
+          event_source_arn        = module.sqs_queues[var.sqs.payer_queue_name].queue_arn
           function_response_types = ["ReportBatchItemFailures"]
         }
       })
@@ -130,17 +130,18 @@ locals {
     }
 
     tx_dispatch_handler = {
-      env_vars = var.lambdas.extra_envs ? merge(var.lambdas.tx_dispatch_handler.env_vars,
+      env_vars = var.lambdas.extra_envs ? merge(
         {
           MQ_BROKER_AMQP_ENDPOINT = var.amazon_mq.create ? module.amazonmq[0].primary_amqp_ssl_endpoint : null
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
           SECRET_MANAGER_REGION   = data.aws_region.current.name
-          SQS_DEFAULT_QUEUE_URL   = module.sqs_queues["${var.name}_default_queue"].queue_url
-      }) : var.lambdas.tx_dispatch_handler.env_vars
+          SQS_DEFAULT_QUEUE_URL   = module.sqs_queues[var.sqs.default_queue_name].queue_url
+        }, var.lambdas.tx_dispatch_handler.env_vars
+      ) : var.lambdas.tx_dispatch_handler.env_vars
 
       event_source_mapping = coalesce(var.lambdas.tx_dispatch_handler.override_event_source_mapping, {
         sqs_default = {
-          event_source_arn        = module.sqs_queues["${var.name}_default_queue"].queue_arn
+          event_source_arn        = module.sqs_queues[var.sqs.default_queue_name].queue_arn
           function_response_types = ["ReportBatchItemFailures"]
         }
       })
@@ -154,10 +155,10 @@ locals {
 
       event_source_mapping = coalesce(var.lambdas.invalid_transaction_handler.override_event_source_mapping, {
         sqs_default = {
-          event_source_arn = module.sqs_queues["${var.name}_default_queue"].dead_letter_queue_arn
+          event_source_arn = module.sqs_queues[var.sqs.default_queue_name].dead_letter_queue_arn
         }
         sqs_payer = {
-          event_source_arn = module.sqs_queues["${var.name}_payer_queue"].dead_letter_queue_arn
+          event_source_arn = module.sqs_queues[var.sqs.payer_queue_name].dead_letter_queue_arn
         }
       })
 

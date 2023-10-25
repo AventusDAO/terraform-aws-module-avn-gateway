@@ -1,5 +1,5 @@
 #
-# gateway lambdas policies
+# Gateway lambdas policies
 #
 resource "aws_iam_policy" "gateway_send_handler_access" {
   name        = "${var.name}-send-handler-access"
