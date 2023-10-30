@@ -8,7 +8,7 @@ module "amazonmq" {
   count = var.amazon_mq.create ? 1 : 0
 
   name                                 = coalesce(var.amazon_mq.override_name, var.name)
-  replacement                          = "-"
+  regex_replace_chars                  = "/[^a-zA-Z0-9-_]/"
   apply_immediately                    = var.amazon_mq.apply_immediately
   auto_minor_version_upgrade           = var.amazon_mq.auto_minor_version_upgrade
   deployment_mode                      = var.amazon_mq.deployment_mode
