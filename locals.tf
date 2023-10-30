@@ -24,7 +24,7 @@ locals {
   amazonmq_secrets = {
     username = ""
     password = ""
-    server   = var.amazon_mq.create ? module.amazonmq[0].primary_amqp_ssl_endpoint : null
+    server   = ""
   }
 
   # lambdas
