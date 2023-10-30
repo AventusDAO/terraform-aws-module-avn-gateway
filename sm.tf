@@ -18,7 +18,7 @@ resource "aws_secretsmanager_secret_version" "rds" {
 # gateway amazonmq (rabbitmq)
 #
 resource "aws_secretsmanager_secret" "amazonmq" {
-  name = "${var.name}_amazonmq_logins"
+  name = replace("${var.name}_amazonmq_logins", "-", "_")
 }
 
 resource "aws_secretsmanager_secret_version" "amazonmq" {
