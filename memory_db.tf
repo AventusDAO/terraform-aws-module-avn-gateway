@@ -16,6 +16,7 @@ module "memory_db" {
   node_type                  = var.memory_db.node_type
   num_shards                 = var.memory_db.num_shards
   num_replicas_per_shard     = var.memory_db.num_replicas_per_shard
+  snapshot_name              = var.memory_db.snapshot_name
 
   port                     = var.memory_db.port
   tls_enabled              = var.memory_db.tls_enabled
