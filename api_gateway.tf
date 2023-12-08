@@ -93,8 +93,8 @@ module "api_gateway" {
       integration_uri        = module.lambdas["query_handler"].lambda_function_invoke_arn
       passthrough_behavior   = "WHEN_NO_MATCH"
       payload_format_version = "2.0"
-      throttling_rate_limit  = 500
-      throttling_burst_limit = 400
+      throttling_rate_limit  = 0
+      throttling_burst_limit = 0
     }
 
     "ANY /vote" = {
