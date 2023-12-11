@@ -58,6 +58,7 @@ variable "memory_db" {
     port                       = optional(number, 6379)
     tls_enabled                = optional(bool, false)
     maintenance_window         = optional(string, "tue:09:00-tue:10:00")
+    snapshot_name              = optional(string)
     snapshot_retention_limit   = optional(number, 14)
     snapshot_window            = optional(string, "06:00-07:00")
     create_parameter_group     = optional(bool, false)
