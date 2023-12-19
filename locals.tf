@@ -166,6 +166,14 @@ locals {
       timeout          = var.lambdas.invalid_transaction_handler.timeout
       extra_policy_arn = aws_iam_policy.gateway_invalid_transaction_access.arn
     }
+
+    autolower_handler = {
+      env_vars                      = var.lambdas.autolower_handler.env_vars
+      memory_size                   = var.lambdas.autolower_handler.memory_size
+      timeout                       = var.lambdas.autolower_handler.timeout
+      override_event_source_mapping = var.lambdas.autolower_handler.override_event_source_mapping
+      cw_event_rule_id              = var.lambdas.autolower_handler.cw_event_rule_id
+    }
   }
 
   common_lambda_permissions = {
