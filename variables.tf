@@ -354,7 +354,7 @@ variable "lambdas" {
         memory_size                   = optional(number)
         timeout                       = optional(number)
         override_event_source_mapping = optional(map(any), null)
-        cw_event_rule_id              = optional(string)
+        cw_event_rule_id              = optional(string, null)
         }
       ),
       {
