@@ -24,6 +24,10 @@ variable "route53_zone_id" {
   description = "Zone id where to create gateway api record and admin portal record"
 }
 
+variable "monitoring_sns_topic_arn" {
+  type        = string
+  description = "SNS topic ARN where to send alarms"
+}
 variable "amazon_mq" {
   type = object({
     subnet_ids                 = list(string)
