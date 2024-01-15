@@ -51,6 +51,7 @@ variable "memory_db" {
   type = object({
     subnet_ids                 = list(string)
     sns_topic_arn              = string
+    monitoring                 = optional(bool, true)
     create                     = optional(bool, true)
     override_name              = optional(string) #if not set, var.name is used
     description                = optional(string, "Gateway MemoryDB cluster (redis)")

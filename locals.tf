@@ -175,4 +175,8 @@ locals {
       source_arn   = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${module.api_gateway.apigatewayv2_api_id}/*"
     }
   }
+
+  memorydb = {
+    monitoring_sns_topic_arn = var.memory_db.monitoring ? var.monitoring_sns_topic_arn : null
+  }
 }
