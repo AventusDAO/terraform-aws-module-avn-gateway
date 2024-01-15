@@ -60,7 +60,7 @@ module "rds_monitoring" {
   source = "git@github.com:Aventus-Network-Services/terraform-aws-rds-monitoring?ref=v0.1.0"
 
   sns_topic         = [var.monitoring_sns_topic_arn]
-  alarm_name_prefix = module.rds[0].db_instance_identifier
+  alarm_name_prefix = title(module.rds[0].db_instance_identifier)
   db_instance_id    = module.rds[0].db_instance_identifier
   tags              = var.rds.tags
 }

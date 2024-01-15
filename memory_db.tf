@@ -22,7 +22,6 @@ module "memory_db" {
   tls_enabled              = var.memory_db.tls_enabled
   security_group_ids       = [module.sg_memorydb[0].security_group_id]
   maintenance_window       = var.memory_db.maintenance_window
-  sns_topic_arn            = local.memorydb.monitoring_sns_topic_arn
   snapshot_retention_limit = var.memory_db.snapshot_retention_limit
   snapshot_window          = var.memory_db.snapshot_window
 
