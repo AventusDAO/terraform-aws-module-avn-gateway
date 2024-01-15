@@ -222,5 +222,7 @@ Otherwise, a random app user/passw will be created and saved on terraform state.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_rds"></a> [rds](#output\_rds) | RDS outputs |
 <!-- END_TF_DOCS -->
