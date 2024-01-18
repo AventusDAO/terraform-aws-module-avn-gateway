@@ -49,7 +49,7 @@ module "memory_db" {
 }
 
 module "memory_db_monitoring" {
-  source = "git@github.com:Aventus-Network-Services/terraform-aws-memorydb-monitoring?ref=DEVOPS-342-improve-prometheus-monitoring-and-add-grafana-dashboards"
+  source = "git@github.com:Aventus-Network-Services/terraform-aws-memorydb-monitoring?ref=DEVOPS-621-create-monitoring-and-alerting-for-memory-db-redis"
 
   sns_topic         = [var.monitoring_sns_topic_arn]
   alarm_name_prefix = title(module.memory_db.cluster_id)
