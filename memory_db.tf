@@ -47,3 +47,12 @@ module "memory_db" {
 
   tags = merge(var.memory_db.tags, { Name = coalesce(var.memory_db.override_name, var.name) })
 }
+
+module "memory_db_monitoring" {
+  source = "git@github.com:Aventus-Network-Services/terraform-aws-rds-monitoring?ref=DEVOPS-342-improve-prometheus-monitoring-and-add-grafana-dashboards"
+
+  sns_topic         = [var.monitoring_sns_topic_arn]
+  alarm_name_prefix = title(module.memory_db.cluster_id)
+  db_instance_id    = module.memory_db.cluster_id
+  tags              = var.memory_db.tags
+}
