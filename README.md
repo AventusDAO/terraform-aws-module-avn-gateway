@@ -148,6 +148,7 @@ Otherwise, a random app user/passw will be created and saved on terraform state.
 | <a name="module_lambdas"></a> [lambdas](#module\_lambdas) | terraform-aws-modules/lambda/aws | 5.3.0 |
 | <a name="module_lambdas_layers"></a> [lambdas\_layers](#module\_lambdas\_layers) | terraform-aws-modules/lambda/aws | 5.3.0 |
 | <a name="module_memory_db"></a> [memory\_db](#module\_memory\_db) | terraform-aws-modules/memory-db/aws | v1.1.2 |
+| <a name="module_memory_db_monitoring"></a> [memory\_db\_monitoring](#module\_memory\_db\_monitoring) | git@github.com:Aventus-Network-Services/terraform-aws-memorydb-monitoring | v0.1.0 |
 | <a name="module_rds"></a> [rds](#module\_rds) | terraform-aws-modules/rds/aws | 6.1.0 |
 | <a name="module_rds_monitoring"></a> [rds\_monitoring](#module\_rds\_monitoring) | git@github.com:Aventus-Network-Services/terraform-aws-rds-monitoring | v0.1.0 |
 | <a name="module_sg_amazonmq"></a> [sg\_amazonmq](#module\_sg\_amazonmq) | terraform-aws-modules/security-group/aws | 5.1.0 |
