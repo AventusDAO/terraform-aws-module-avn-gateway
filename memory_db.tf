@@ -53,6 +53,6 @@ module "memory_db_monitoring" {
 
   sns_topic         = [var.monitoring_sns_topic_arn]
   alarm_name_prefix = "${title(module.memory_db[0].cluster_id)}-MemoryDB"
-  db_instance_id    = module.memory_db[0].cluster_id
+  cluster_name      = module.memory_db[0].cluster_id
   tags              = var.memory_db.tags
 }
