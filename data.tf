@@ -106,6 +106,17 @@ data "aws_iam_policy_document" "gateway_tx_dispatch_access" {
   statement {
     effect = "Allow"
     actions = [
+      "sqs:SendMessage",
+      "sqs:GetQueueAttributes"
+    ]
+    resources = [
+      module.sqs_queues[var.sqs.tx_queue_name].dead_letter_queue_arn,
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
       "secretsmanager:GetSecretValue"
     ]
     resources = [
@@ -194,6 +205,17 @@ data "aws_iam_policy_document" "gateway_lift_processing_access" {
       aws_secretsmanager_secret.amazonmq.arn
     ]
   }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "sqs:SendMessage",
+      "sqs:GetQueueAttributes"
+    ]
+    resources = [
+      module.sqs_queues[var.sqs.tx_queue_name].dead_letter_queue_arn,
+    ]
+  }
 }
 
 # gateway-admin-portal
@@ -275,6 +297,19 @@ data "aws_iam_policy_document" "gateway_connector" {
     ]
     resources = [
       module.lambdas["tx_status_update_handler"].lambda_function_arn,
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "sqs:ReceiveMessage",
+      "sqs:DeleteMessage",
+      "sqs:DeleteMessageBatch",
+      "sqs:GetQueueAttributes",
+    ]
+    resources = [
+      module.sqs_queues[var.sqs.tx_queue_name].queue_arn
     ]
   }
 }
