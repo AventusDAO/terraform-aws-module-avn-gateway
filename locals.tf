@@ -44,7 +44,6 @@ locals {
           MQ_BROKER_AMQP_ENDPOINT = var.amazon_mq.create ? module.amazonmq[0].primary_ssl_endpoint : null
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
           SECRET_MANAGER_REGION   = data.aws_region.current.name
-          AWS_REGION              = data.aws_region.current.name
           SQS_DEFAULT_QUEUE_URL   = module.sqs_queues[var.sqs.default_queue_name].queue_url
           SQS_PAYER_QUEUE_URL     = module.sqs_queues[var.sqs.payer_queue_name].queue_url
         }, var.lambdas.send_handler.env_vars
@@ -57,22 +56,14 @@ locals {
     }
 
     poll_handler = {
-      env_vars = merge(
-        {
-          AWS_REGION = data.aws_region.current.name
-        }, var.lambdas.poll_handler.env_vars
-      )
+      env_vars                      = var.lambdas.poll_handler.env_vars
       memory_size                   = var.lambdas.poll_handler.memory_size
       timeout                       = var.lambdas.poll_handler.timeout
       override_event_source_mapping = var.lambdas.poll_handler.override_event_source_mapping
     }
 
     query_handler = {
-      env_vars = merge(
-        {
-          AWS_REGION = data.aws_region.current.name
-        }, var.lambdas.query_handler.env_vars
-      )
+      env_vars                      = var.lambdas.query_handler.env_vars
       memory_size                   = var.lambdas.query_handler.memory_size
       timeout                       = var.lambdas.query_handler.timeout
       override_event_source_mapping = var.lambdas.query_handler.override_event_source_mapping
@@ -82,7 +73,6 @@ locals {
       env_vars = var.lambdas.extra_envs ? merge(
         {
           MQ_BROKER_AMQP_ENDPOINT = var.amazon_mq.create ? module.amazonmq[0].primary_ssl_endpoint : null
-          AWS_REGION              = data.aws_region.current.name
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
           SECRET_MANAGER_REGION   = data.aws_region.current.name
           SQS_AVN_TX_QUEUE_URL    = module.sqs_queues[var.sqs.tx_queue_name].queue_url
@@ -97,11 +87,7 @@ locals {
     }
 
     tx_status_update_handler = {
-      env_vars = merge(
-        {
-          AWS_REGION = data.aws_region.current.name
-        }, var.lambdas.tx_status_update_handler.env_vars
-      )
+      env_vars                      = var.lambdas.tx_status_update_handler.env_vars
       memory_size                   = var.lambdas.tx_status_update_handler.memory_size
       timeout                       = var.lambdas.tx_status_update_handler.timeout
       override_event_source_mapping = var.lambdas.tx_status_update_handler.override_event_source_mapping
@@ -109,11 +95,7 @@ locals {
     }
 
     vote_handler = {
-      env_vars = merge(
-        {
-          AWS_REGION = data.aws_region.current.name
-        }, var.lambdas.vote_handler.env_vars
-      )
+      env_vars                      = var.lambdas.vote_handler.env_vars
       memory_size                   = var.lambdas.vote_handler.memory_size
       timeout                       = var.lambdas.vote_handler.timeout
       override_event_source_mapping = var.lambdas.vote_handler.override_event_source_mapping
@@ -121,11 +103,7 @@ locals {
     }
 
     lower_handler = {
-      env_vars = merge(
-        {
-          AWS_REGION = data.aws_region.current.name
-        }, var.lambdas.lower_handler.env_vars
-      )
+      env_vars                      = var.lambdas.lower_handler.env_vars
       memory_size                   = var.lambdas.lower_handler.memory_size
       timeout                       = var.lambdas.lower_handler.timeout
       override_event_source_mapping = var.lambdas.lower_handler.override_event_source_mapping
@@ -134,7 +112,6 @@ locals {
     split_fee_handler = {
       env_vars = var.lambdas.extra_envs ? merge(
         {
-          AWS_REGION            = data.aws_region.current.name
           SECRET_MANAGER_REGION = data.aws_region.current.name
           SQS_DEFAULT_QUEUE_URL = module.sqs_queues[var.sqs.default_queue_name].queue_url
           SQS_PAYER_QUEUE_URL   = module.sqs_queues[var.sqs.payer_queue_name].queue_url
@@ -156,7 +133,6 @@ locals {
     tx_dispatch_handler = {
       env_vars = var.lambdas.extra_envs ? merge(
         {
-          AWS_REGION              = data.aws_region.current.name
           MQ_BROKER_AMQP_ENDPOINT = var.amazon_mq.create ? module.amazonmq[0].primary_ssl_endpoint : null
           MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
           SECRET_MANAGER_REGION   = data.aws_region.current.name
