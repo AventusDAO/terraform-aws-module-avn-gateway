@@ -110,7 +110,7 @@ data "aws_iam_policy_document" "gateway_tx_dispatch_access" {
       "sqs:GetQueueAttributes"
     ]
     resources = [
-      module.sqs_queues[var.sqs.tx_queue_name].dead_letter_queue_arn,
+      module.sqs_queues[var.sqs.tx_queue_name].queue_arn,
     ]
   }
 
@@ -213,7 +213,7 @@ data "aws_iam_policy_document" "gateway_lift_processing_access" {
       "sqs:GetQueueAttributes"
     ]
     resources = [
-      module.sqs_queues[var.sqs.tx_queue_name].dead_letter_queue_arn,
+      module.sqs_queues[var.sqs.tx_queue_name].queue_arn,
     ]
   }
 }
