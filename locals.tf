@@ -28,7 +28,7 @@ locals {
   }
 
   # lambdas
-  lambda_layers = toset(["common", "queue"])
+  lambda_layers = toset(["common"])
 
   lambdas = {
     authorisation_handler = {
