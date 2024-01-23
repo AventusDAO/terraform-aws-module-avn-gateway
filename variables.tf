@@ -82,7 +82,7 @@ variable "rds" {
     create                                = optional(bool, true)
     override_name                         = optional(string) #if not set, var.name is used
     engine                                = optional(string, "postgres")
-    engine_version                        = optional(string, "14.5")
+    engine_version                        = optional(string, "14.10")
     family                                = optional(string, "postgres14")
     major_engine_version                  = optional(string, "14")
     instance_class                        = optional(string, "db.t4g.small")
