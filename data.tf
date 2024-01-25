@@ -243,6 +243,17 @@ data "aws_iam_policy_document" "gateway_admin_portal" {
       aws_secretsmanager_secret.vault.arn
     ]
   }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:StartQuery",
+      "logs:GetQueryResults"
+    ]
+    resources = [
+      "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:*:*"
+    ]
+  }
 }
 
 #
