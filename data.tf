@@ -323,15 +323,4 @@ data "aws_iam_policy_document" "gateway_connector" {
       module.sqs_queues[var.sqs.tx_queue_name].queue_arn
     ]
   }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "logs:StartQuery",
-      "logs:GetQueryResults"
-    ]
-    resources = [
-      "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:*:*"
-    ]
-  }
 }
