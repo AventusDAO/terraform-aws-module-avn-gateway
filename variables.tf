@@ -331,6 +331,20 @@ variable "lambdas" {
         timeout     = 30
       }
     )
+    autolower_handler = optional(
+      object({
+        env_vars                      = optional(map(any))
+        memory_size                   = optional(number)
+        timeout                       = optional(number)
+        override_event_source_mapping = optional(map(any), null)
+        }
+      ),
+      {
+        env_vars    = {}
+        memory_size = 512
+        timeout     = 30
+      }
+    )
   })
   description = "Subset of AWS gateway lambdas and layers configurations used on 'terraform-aws-modules/lambda/aws' module."
 }
