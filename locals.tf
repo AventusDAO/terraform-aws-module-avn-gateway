@@ -165,4 +165,31 @@ locals {
       source_arn   = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${module.api_gateway.apigatewayv2_api_id}/*"
     }
   }
+
+  defaults_cognito_user_groups = [
+    {
+      name        = "admin",
+      description = "Group to grant admin permission to users of the admin portal."
+    },
+    {
+      name        = "ops",
+      description = "Group for users who maintain the infra and infra level configurations."
+    },
+    {
+      name        = "payer",
+      description = "Group for payers of the AvN Gateway."
+    },
+    {
+      name        = "read",
+      description = "Group to grant read permission to users of the admin portal."
+    },
+    {
+      name        = "relayer",
+      description = "Group for relayers of the AvN Gateway."
+    },
+    {
+      name        = "write",
+      description = "Group to grant write permission to users of the admin portal."
+    }
+  ]
 }

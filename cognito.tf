@@ -22,10 +22,14 @@ resource "aws_cognito_user_pool" "admin_portal" {
 
     invite_message_template {
       email_message = <<EOT
-    <h3>Welcome to the ${title(replace(var.name, "-", " "))}</h3>
-    <p>You have successfully registered as a payer on the ${title(replace(var.name, "-", " "))}.</p>
-    Your username is <b>{username}</b> and temporary password is <b>{####}</b>
-    <p>You will be prompted to change your password when you first log in, this password will expire in 1 day.</p>
+    <div style="font-family: Mona Sans,sans-serif;">
+      <h3>Welcome to the ${title(replace(var.name, "-", " "))}</h3>
+      <p>You have successfully registered on the ${title(replace(var.name, "-", " "))}.</p>
+      Your username is <b>{username}</b> and temporary password is <b>{####}</b>
+      <p>To log in, browse to <span style="color: #5100ff;">https://admin-gateway-internal.dev.aventus.io/</span></p> <p>You will be prompted to change your password when you first log in, this password will expire in 1 day.</p>
+      <br/><br/> <br/>
+      <h4>Powered by Aventus (www.aventus.io)</h4>
+    </div>
 EOT
       email_subject = "${title(replace(var.name, "-", " "))} registration - your temporary password"
       sms_message   = "Your username is {username} and temporary password is {####}."
@@ -62,7 +66,23 @@ EOT
   mfa_configuration   = var.cognito.mfa_configuration
   username_attributes = var.cognito.username_attributes
 
+  schema {
+    attribute_data_type      = "String"
+    name                     = "groups"
+    developer_only_attribute = false
+    mutable                  = true
+    required                 = false
+    string_attribute_constraints {
+      max_length = 100
+      min_length = 1
+    }
+  }
+
   tags = merge(var.cognito.tags, { Name = coalesce(var.cognito.override_name, var.name) })
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_cognito_user_pool_domain" "admin_portal" {
@@ -97,4 +117,11 @@ resource "aws_cognito_user_pool_client" "admin_portal" {
       token_validity_units #https://github.com/hashicorp/terraform-provider-aws/issues/32504
     ]
   }
+}
+resource "aws_cognito_user_group" "main" {
+  name         = each.key
+  user_pool_id = aws_cognito_user_pool.admin_portal.id
+  description  = each.value
+
+  for_each = { for k, v in concat(local.defaults_cognito_user_groups, var.cognito.extra_user_groups) : v.name => v.description }
 }
