@@ -429,7 +429,7 @@ variable "cognito" {
     extra_user_groups = optional(list(object({
       name        = string
       description = optional(string)
-    })))
+    })), [])
     tags = optional(map(any), {})
   })
 }
