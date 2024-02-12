@@ -426,7 +426,7 @@ variable "cognito" {
       prevent_user_existence_errors = optional(string, "ENABLED")
       supported_identity_providers  = optional(list(string), ["COGNITO"])
       extra_user_groups = optional(list(object({
-        name = string
+        name        = string
         description = optional(string)
       })))
     })
