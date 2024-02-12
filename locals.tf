@@ -21,12 +21,6 @@ locals {
     gateway_app_schema_sync   = false
   }
 
-  amazonmq_secrets = {
-    username = ""
-    password = ""
-    server   = ""
-  }
-
   # lambdas
   lambda_layers = toset(["common"])
 
@@ -41,11 +35,9 @@ locals {
     send_handler = {
       env_vars = var.lambdas.extra_envs ? merge(
         {
-          MQ_BROKER_AMQP_ENDPOINT = var.amazon_mq.create ? module.amazonmq[0].primary_ssl_endpoint : null
-          MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
-          SECRET_MANAGER_REGION   = data.aws_region.current.name
-          SQS_DEFAULT_QUEUE_URL   = module.sqs_queues[var.sqs.default_queue_name].queue_url
-          SQS_PAYER_QUEUE_URL     = module.sqs_queues[var.sqs.payer_queue_name].queue_url
+          SECRET_MANAGER_REGION = data.aws_region.current.name
+          SQS_DEFAULT_QUEUE_URL = module.sqs_queues[var.sqs.default_queue_name].queue_url
+          SQS_PAYER_QUEUE_URL   = module.sqs_queues[var.sqs.payer_queue_name].queue_url
         }, var.lambdas.send_handler.env_vars
       ) : var.lambdas.send_handler.env_vars
 
@@ -72,10 +64,8 @@ locals {
     lift_processing_handler = {
       env_vars = var.lambdas.extra_envs ? merge(
         {
-          MQ_BROKER_AMQP_ENDPOINT = var.amazon_mq.create ? module.amazonmq[0].primary_ssl_endpoint : null
-          MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
-          SECRET_MANAGER_REGION   = data.aws_region.current.name
-          SQS_TX_QUEUE_URL        = module.sqs_queues[var.sqs.tx_queue_name].queue_url
+          SECRET_MANAGER_REGION = data.aws_region.current.name
+          SQS_TX_QUEUE_URL      = module.sqs_queues[var.sqs.tx_queue_name].queue_url
         }, var.lambdas.lift_processing_handler.env_vars
       ) : var.lambdas.lift_processing_handler.env_vars
 
@@ -133,11 +123,9 @@ locals {
     tx_dispatch_handler = {
       env_vars = var.lambdas.extra_envs ? merge(
         {
-          MQ_BROKER_AMQP_ENDPOINT = var.amazon_mq.create ? module.amazonmq[0].primary_ssl_endpoint : null
-          MQ_SECRET_ARN           = aws_secretsmanager_secret.amazonmq.arn
-          SECRET_MANAGER_REGION   = data.aws_region.current.name
-          SQS_DEFAULT_QUEUE_URL   = module.sqs_queues[var.sqs.default_queue_name].queue_url
-          SQS_TX_QUEUE_URL        = module.sqs_queues[var.sqs.tx_queue_name].queue_url
+          SECRET_MANAGER_REGION = data.aws_region.current.name
+          SQS_DEFAULT_QUEUE_URL = module.sqs_queues[var.sqs.default_queue_name].queue_url
+          SQS_TX_QUEUE_URL      = module.sqs_queues[var.sqs.tx_queue_name].queue_url
         }, var.lambdas.tx_dispatch_handler.env_vars
       ) : var.lambdas.tx_dispatch_handler.env_vars
 

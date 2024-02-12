@@ -6,15 +6,6 @@ data "aws_vpc" "current" {
 }
 
 #
-# Gateway SM
-#
-data "aws_secretsmanager_secret_version" "amazonmq" {
-  secret_id = aws_secretsmanager_secret.amazonmq.id
-
-  depends_on = [aws_secretsmanager_secret_version.amazonmq]
-}
-
-#
 # Gateway policies
 #
 
@@ -29,16 +20,6 @@ data "aws_iam_policy_document" "gateway_send_handler_access" {
     resources = [
       module.sqs_queues[var.sqs.default_queue_name].queue_arn,
       module.sqs_queues[var.sqs.payer_queue_name].queue_arn
-    ]
-  }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "secretsmanager:GetSecretValue"
-    ]
-    resources = [
-      aws_secretsmanager_secret.amazonmq.arn
     ]
   }
 }
@@ -113,16 +94,6 @@ data "aws_iam_policy_document" "gateway_tx_dispatch_access" {
       module.sqs_queues[var.sqs.tx_queue_name].queue_arn,
     ]
   }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "secretsmanager:GetSecretValue"
-    ]
-    resources = [
-      aws_secretsmanager_secret.amazonmq.arn
-    ]
-  }
 }
 
 data "aws_iam_policy_document" "gateway_tx_dispatch_merged" {
@@ -147,16 +118,6 @@ data "aws_iam_policy_document" "gateway_invalid_transaction_access" {
     resources = [
       module.sqs_queues[var.sqs.default_queue_name].dead_letter_queue_arn,
       module.sqs_queues[var.sqs.payer_queue_name].dead_letter_queue_arn
-    ]
-  }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "secretsmanager:GetSecretValue"
-    ]
-    resources = [
-      aws_secretsmanager_secret.amazonmq.arn
     ]
   }
 }
@@ -196,15 +157,6 @@ data "aws_iam_policy_document" "gateway_vote_access" {
 
 # lift processing handler access
 data "aws_iam_policy_document" "gateway_lift_processing_access" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "secretsmanager:GetSecretValue"
-    ]
-    resources = [
-      aws_secretsmanager_secret.amazonmq.arn
-    ]
-  }
 
   statement {
     effect = "Allow"
@@ -294,7 +246,6 @@ data "aws_iam_policy_document" "gateway_connector" {
       "secretsmanager:DescribeSecret"
     ]
     resources = [
-      aws_secretsmanager_secret.amazonmq.arn,
       aws_secretsmanager_secret.rds.arn,
       aws_secretsmanager_secret.vault.arn,
       aws_secretsmanager_secret.connector.arn

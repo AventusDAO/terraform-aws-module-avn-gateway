@@ -15,22 +15,6 @@ resource "aws_secretsmanager_secret_version" "rds" {
 }
 
 #
-# gateway amazonmq (rabbitmq)
-#
-resource "aws_secretsmanager_secret" "amazonmq" {
-  name = replace("${coalesce(var.amazon_mq.override_name, var.name)}_amazonmq_logins", "-", "_")
-}
-
-resource "aws_secretsmanager_secret_version" "amazonmq" {
-  secret_id     = aws_secretsmanager_secret.amazonmq.id
-  secret_string = jsonencode(local.amazonmq_secrets)
-
-  lifecycle {
-    ignore_changes = [secret_string]
-  }
-}
-
-#
 # gateway cognito secret
 #
 resource "aws_secretsmanager_secret" "cognito" {
