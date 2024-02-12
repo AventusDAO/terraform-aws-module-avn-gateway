@@ -425,11 +425,11 @@ variable "cognito" {
       allowed_oauth_scopes          = optional(list(string), ["email", "openid"])
       prevent_user_existence_errors = optional(string, "ENABLED")
       supported_identity_providers  = optional(list(string), ["COGNITO"])
-      extra_user_groups = optional(list(object({
-        name        = string
-        description = optional(string)
-      })))
     })
+    extra_user_groups = optional(list(object({
+      name        = string
+      description = optional(string)
+    })))
     tags = optional(map(any), {})
   })
 }
