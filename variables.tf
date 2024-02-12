@@ -29,25 +29,6 @@ variable "monitoring_sns_topic_arn" {
   description = "SNS topic ARN where to send alarms"
 }
 
-variable "amazon_mq" {
-  type = object({
-    subnet_ids                 = list(string)
-    create                     = optional(bool, true)
-    override_name              = optional(string) #if not set, var.name is used
-    apply_immediately          = optional(bool, false)
-    auto_minor_version_upgrade = optional(bool, false)
-    deployment_mode            = optional(string, "CLUSTER_MULTI_AZ")
-    engine_type                = optional(string, "RabbitMQ")
-    engine_version             = optional(string, "3.10.20")
-    host_instance_type         = optional(string, "mq.m5.large")
-    publicly_accessible        = optional(bool, false)
-    general_log_enabled        = optional(bool, true)
-    audit_log_enabled          = optional(bool, false)
-    encryption_enabled         = optional(bool, true)
-  })
-  description = "Subset of Amazon MQ cluster configurations used on 'cloudposse/mq-broker/aws' module."
-}
-
 variable "memory_db" {
   type = object({
     subnet_ids                 = list(string)
