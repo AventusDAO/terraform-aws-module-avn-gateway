@@ -73,8 +73,8 @@ EOT
     mutable                  = true
     required                 = false
     string_attribute_constraints {
-      max_length = 100
-      min_length = 1
+      max_length = 2048
+      min_length = 0
     }
   }
 
