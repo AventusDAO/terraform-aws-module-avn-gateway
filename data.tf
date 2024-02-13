@@ -179,7 +179,8 @@ data "aws_iam_policy_document" "gateway_admin_portal" {
       "cognito-idp:AdminGetUser",
       "cognito-idp:ListUsers",
       "cognito-idp:AdminListGroupsForUser",
-      "cognito-idp:AdminAddUserToGroup"
+      "cognito-idp:AdminAddUserToGroup",
+      "cognito-idp:AdminRemoveUserFromGroup"
     ]
     resources = [
       "arn:aws:cognito-idp:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:userpool/${aws_cognito_user_pool.admin_portal.id}"
