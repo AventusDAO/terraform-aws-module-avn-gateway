@@ -332,7 +332,7 @@ variable "lambdas" {
       }
     )
 
-    webhook_handler = optional(
+    webhooks_handler = optional(
       object({
         env_vars                      = optional(map(any))
         extra_policy_document         = optional(string)

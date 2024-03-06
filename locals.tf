@@ -140,11 +140,11 @@ locals {
       extra_policy_arn = aws_iam_policy.gateway_tx_dispatch_access.arn
     }
 
-    webhook_handler = {
-      env_vars         = var.lambdas.webhook_handler.env_vars
-      memory_size      = var.lambdas.webhook_handler.memory_size
-      timeout          = var.lambdas.webhook_handler.timeout
-      extra_policy_arn = aws_iam_policy.webhook_handler.arn
+    webhooks_handler = {
+      env_vars         = var.lambdas.webhooks_handler.env_vars
+      memory_size      = var.lambdas.webhooks_handler.memory_size
+      timeout          = var.lambdas.webhooks_handler.timeout
+      extra_policy_arn = aws_iam_policy.webhooks_handler.arn
     }
 
     invalid_transaction_handler = {

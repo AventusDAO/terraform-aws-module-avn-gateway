@@ -171,7 +171,7 @@ data "aws_iam_policy_document" "gateway_lift_processing_access" {
 }
 
 # webhook handler
-data "aws_iam_policy_document" "webhook_handler" {
+data "aws_iam_policy_document" "webhooks_handler" {
 
   statement {
     effect = "Allow"

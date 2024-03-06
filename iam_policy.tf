@@ -37,8 +37,8 @@ resource "aws_iam_policy" "gateway_vote_access" {
   policy      = data.aws_iam_policy_document.gateway_vote_access.json
 }
 
-resource "aws_iam_policy" "webhook_handler" {
+resource "aws_iam_policy" "webhooks_handler" {
   name        = "${var.name}-webhook-handler-access"
   description = "allow access to SNS"
-  policy      = data.aws_iam_policy_document.webhook_handler.json
+  policy      = data.aws_iam_policy_document.webhooks_handler.json
 }
