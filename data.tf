@@ -257,7 +257,7 @@ data "aws_iam_policy_document" "gateway_admin_portal" {
       "lambda:InvokeFunction",
     ]
     resources = [
-      module.lambdas["webhook_handler"].lambda_function_arn
+      module.lambdas["webhooks_handler"].lambda_function_arn
     ]
   }
 }
