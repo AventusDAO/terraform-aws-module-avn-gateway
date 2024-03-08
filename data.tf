@@ -170,46 +170,6 @@ data "aws_iam_policy_document" "gateway_lift_processing_access" {
   }
 }
 
-# webhook handler
-data "aws_iam_policy_document" "webhooks_handler" {
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "sns:CreateTopic",
-      "sns:SetTopicAttributes",
-      "sns:DeleteTopic",
-    ]
-    resources = [
-      "arn:aws:sns:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:gateway_webhook_*",
-    ]
-  }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "sns:Subscribe",
-      "sns:Unsubscribe",
-    ]
-    resources = [
-      "arn:aws:sns:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:gateway_webhook_*",
-    ]
-  }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "sns:GetTopicAttributes",
-      "sns:ListSubscriptionsByTopic",
-      "sns:ListTagsForResource",
-      "sns:ListTopics",
-    ]
-    resources = [
-      "*",
-    ]
-  }
-}
-
 # gateway-admin-portal
 data "aws_iam_policy_document" "gateway_admin_portal" {
   statement {
@@ -248,16 +208,6 @@ data "aws_iam_policy_document" "gateway_admin_portal" {
     ]
     resources = [
       "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:*:*"
-    ]
-  }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "lambda:InvokeFunction",
-    ]
-    resources = [
-      module.lambdas["webhooks_handler"].lambda_function_arn
     ]
   }
 }
@@ -325,30 +275,8 @@ data "aws_iam_policy_document" "gateway_connector" {
       "sqs:GetQueueAttributes",
     ]
     resources = [
-      module.sqs_queues[var.sqs.tx_queue_name].queue_arn
-    ]
-  }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "sns:Publish",
-    ]
-    resources = [
-      "arn:aws:sns:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:gateway_webhook_*"
-    ]
-  }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "sns:GetTopicAttributes",
-      "sns:ListSubscriptionsByTopic",
-      "sns:ListTagsForResource",
-      "sns:ListTopics",
-    ]
-    resources = [
-      "*",
+      module.sqs_queues[var.sqs.tx_queue_name].queue_arn,
+      module.sqs_queues[var.sqs.webhooks_queue_name].queue_arn,
     ]
   }
 }

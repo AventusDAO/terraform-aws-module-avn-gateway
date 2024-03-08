@@ -243,7 +243,7 @@ variable "lambdas" {
         }
       ),
       {
-        env_vars    = { MQ_AVN_TX_QUEUE = "avnTx" }
+        env_vars    = {}
         memory_size = 256
         timeout     = 30
       }
@@ -311,7 +311,7 @@ variable "lambdas" {
         }
       ),
       {
-        env_vars    = { MQ_AVN_TX_QUEUE = "avnTx" }
+        env_vars    = {}
         memory_size = 512
         timeout     = 30
       }
@@ -332,7 +332,7 @@ variable "lambdas" {
       }
     )
 
-    webhooks_handler = optional(
+    webhooks_event_emitter_handler = optional(
       object({
         env_vars                      = optional(map(any))
         extra_policy_document         = optional(string)

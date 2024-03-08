@@ -35,7 +35,6 @@ locals {
     send_handler = {
       env_vars = var.lambdas.extra_envs ? merge(
         {
-          SECRET_MANAGER_REGION = data.aws_region.current.name
           SQS_DEFAULT_QUEUE_URL = module.sqs_queues[var.sqs.default_queue_name].queue_url
           SQS_PAYER_QUEUE_URL   = module.sqs_queues[var.sqs.payer_queue_name].queue_url
         }, var.lambdas.send_handler.env_vars
@@ -64,8 +63,7 @@ locals {
     lift_processing_handler = {
       env_vars = var.lambdas.extra_envs ? merge(
         {
-          SECRET_MANAGER_REGION = data.aws_region.current.name
-          SQS_TX_QUEUE_URL      = module.sqs_queues[var.sqs.tx_queue_name].queue_url
+          SQS_TX_QUEUE_URL = module.sqs_queues[var.sqs.tx_queue_name].queue_url
         }, var.lambdas.lift_processing_handler.env_vars
       ) : var.lambdas.lift_processing_handler.env_vars
 
@@ -102,7 +100,6 @@ locals {
     split_fee_handler = {
       env_vars = var.lambdas.extra_envs ? merge(
         {
-          SECRET_MANAGER_REGION = data.aws_region.current.name
           SQS_DEFAULT_QUEUE_URL = module.sqs_queues[var.sqs.default_queue_name].queue_url
           SQS_PAYER_QUEUE_URL   = module.sqs_queues[var.sqs.payer_queue_name].queue_url
         }, var.lambdas.split_fee_handler.env_vars
@@ -123,7 +120,6 @@ locals {
     tx_dispatch_handler = {
       env_vars = var.lambdas.extra_envs ? merge(
         {
-          SECRET_MANAGER_REGION = data.aws_region.current.name
           SQS_DEFAULT_QUEUE_URL = module.sqs_queues[var.sqs.default_queue_name].queue_url
           SQS_TX_QUEUE_URL      = module.sqs_queues[var.sqs.tx_queue_name].queue_url
         }, var.lambdas.tx_dispatch_handler.env_vars
@@ -140,11 +136,17 @@ locals {
       extra_policy_arn = aws_iam_policy.gateway_tx_dispatch_access.arn
     }
 
-    webhooks_handler = {
-      env_vars         = var.lambdas.webhooks_handler.env_vars
-      memory_size      = var.lambdas.webhooks_handler.memory_size
-      timeout          = var.lambdas.webhooks_handler.timeout
-      extra_policy_arn = aws_iam_policy.webhooks_handler.arn
+    webhooks_event_emitter_handler = {
+      env_vars    = var.lambdas.webhooks_event_emitter_handler.env_vars
+      memory_size = var.lambdas.webhooks_event_emitter_handler.memory_size
+      timeout     = var.lambdas.webhooks_event_emitter_handler.timeout
+
+      event_source_mapping = {
+        sqs_webhooks = {
+          event_source_arn        = module.sqs_queues[var.sqs.webhooks_queue_name].queue_arn
+          function_response_types = ["ReportBatchItemFailures"]
+        }
+      }
     }
 
     invalid_transaction_handler = {
