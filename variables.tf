@@ -356,6 +356,7 @@ variable "sqs" {
     default_queue_name            = string
     payer_queue_name              = string
     tx_queue_name                 = string
+    webhooks_queue_name           = string
     fifo                          = optional(bool, true)
     message_retention_seconds     = optional(number, 86400)
     visibility_timeout_seconds    = optional(number, 60)
