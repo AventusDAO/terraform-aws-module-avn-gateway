@@ -23,7 +23,7 @@ module "sqs_queues" {
       var.sqs.default_queue_name,
       var.sqs.payer_queue_name,
       var.sqs.tx_queue_name,
-      var.sqs.webhooks_queue_name,
+      var.sqs.webhooks_queue_name
     ]
   )
 }
@@ -50,7 +50,7 @@ module "gateway_sqs_queues_alarms" {
       var.sqs.default_queue_name,
       var.sqs.payer_queue_name,
       var.sqs.tx_queue_name,
-      var.sqs.webhooks_queue_name,
+      var.sqs.webhooks_queue_name
     ]
   )
 }
