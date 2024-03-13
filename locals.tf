@@ -30,6 +30,7 @@ locals {
       memory_size                   = var.lambdas.authorisation_handler.memory_size
       timeout                       = var.lambdas.authorisation_handler.timeout
       override_event_source_mapping = var.lambdas.authorisation_handler.override_event_source_mapping
+      allowed_triggers              = local.common_lambda_permissions
     }
 
     send_handler = {
@@ -44,6 +45,7 @@ locals {
       timeout                       = var.lambdas.send_handler.timeout
       extra_policy_arn              = aws_iam_policy.gateway_send_handler_access.arn
       override_event_source_mapping = var.lambdas.send_handler.override_event_source_mapping
+      allowed_triggers              = local.common_lambda_permissions
     }
 
     poll_handler = {
@@ -51,6 +53,7 @@ locals {
       memory_size                   = var.lambdas.poll_handler.memory_size
       timeout                       = var.lambdas.poll_handler.timeout
       override_event_source_mapping = var.lambdas.poll_handler.override_event_source_mapping
+      allowed_triggers              = local.common_lambda_permissions
     }
 
     query_handler = {
@@ -58,6 +61,7 @@ locals {
       memory_size                   = var.lambdas.query_handler.memory_size
       timeout                       = var.lambdas.query_handler.timeout
       override_event_source_mapping = var.lambdas.query_handler.override_event_source_mapping
+      allowed_triggers              = local.common_lambda_permissions
     }
 
     lift_processing_handler = {
@@ -70,8 +74,17 @@ locals {
       memory_size                   = var.lambdas.lift_processing_handler.memory_size
       timeout                       = var.lambdas.lift_processing_handler.timeout
       override_event_source_mapping = var.lambdas.lift_processing_handler.override_event_source_mapping
-      cw_event_rule_id              = "process-lifts"
       extra_policy_arn              = aws_iam_policy.gateway_lift_processing_access.arn
+      allowed_triggers = merge(
+        local.common_lambda_permissions,
+        {
+          allow_event_bridge_rule = {
+            statement_id = "AllowExecutionFromEventBridgeRule"
+            principal    = "events.amazonaws.com"
+            source_arn   = "arn:aws:events:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:rule/process-lifts"
+          }
+        }
+      )
     }
 
     tx_status_update_handler = {
@@ -79,7 +92,16 @@ locals {
       memory_size                   = var.lambdas.tx_status_update_handler.memory_size
       timeout                       = var.lambdas.tx_status_update_handler.timeout
       override_event_source_mapping = var.lambdas.tx_status_update_handler.override_event_source_mapping
-      cw_event_rule_id              = "resolve-pending-transactions"
+      allowed_triggers = merge(
+        local.common_lambda_permissions,
+        {
+          allow_event_bridge_rule = {
+            statement_id = "AllowExecutionFromEventBridgeRule"
+            principal    = "events.amazonaws.com"
+            source_arn   = "arn:aws:events:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:rule/resolve-pending-transactions"
+          }
+        }
+      )
     }
 
     vote_handler = {
@@ -88,6 +110,7 @@ locals {
       timeout                       = var.lambdas.vote_handler.timeout
       override_event_source_mapping = var.lambdas.vote_handler.override_event_source_mapping
       extra_policy_arn              = aws_iam_policy.gateway_vote_access.arn
+      allowed_triggers              = local.common_lambda_permissions
     }
 
     lower_handler = {
@@ -95,6 +118,7 @@ locals {
       memory_size                   = var.lambdas.lower_handler.memory_size
       timeout                       = var.lambdas.lower_handler.timeout
       override_event_source_mapping = var.lambdas.lower_handler.override_event_source_mapping
+      allowed_triggers              = local.common_lambda_permissions
     }
 
     split_fee_handler = {
@@ -115,6 +139,7 @@ locals {
       memory_size      = var.lambdas.split_fee_handler.memory_size
       timeout          = var.lambdas.split_fee_handler.timeout
       extra_policy_arn = aws_iam_policy.gateway_split_fee_access.arn
+      allowed_triggers = local.common_lambda_permissions
     }
 
     tx_dispatch_handler = {
@@ -134,13 +159,20 @@ locals {
       memory_size      = var.lambdas.tx_dispatch_handler.memory_size
       timeout          = var.lambdas.tx_dispatch_handler.timeout
       extra_policy_arn = aws_iam_policy.gateway_tx_dispatch_access.arn
+      allowed_triggers = local.common_lambda_permissions
     }
 
     webhooks_event_emitter_handler = {
       env_vars    = var.lambdas.webhooks_event_emitter_handler.env_vars
       memory_size = var.lambdas.webhooks_event_emitter_handler.memory_size
       timeout     = var.lambdas.webhooks_event_emitter_handler.timeout
-
+      allowed_triggers = {
+        sqs_webhooks_event_emitter = {
+          statement_id = "sqs"
+          principal    = "sqs.amazonaws.com"
+          source_arn   = module.sqs_queues[var.sqs.webhooks_queue_name].queue_arn
+        }
+      }
       event_source_mapping = {
         sqs_webhooks = {
           event_source_arn        = module.sqs_queues[var.sqs.webhooks_queue_name].queue_arn
@@ -151,7 +183,6 @@ locals {
 
     invalid_transaction_handler = {
       env_vars = var.lambdas.invalid_transaction_handler.env_vars
-
       event_source_mapping = coalesce(var.lambdas.invalid_transaction_handler.override_event_source_mapping, {
         sqs_default = {
           event_source_arn = module.sqs_queues[var.sqs.default_queue_name].dead_letter_queue_arn
@@ -164,6 +195,7 @@ locals {
       memory_size      = var.lambdas.invalid_transaction_handler.memory_size
       timeout          = var.lambdas.invalid_transaction_handler.timeout
       extra_policy_arn = aws_iam_policy.gateway_invalid_transaction_access.arn
+      allowed_triggers = local.common_lambda_permissions
     }
   }
 
