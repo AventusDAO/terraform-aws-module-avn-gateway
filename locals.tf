@@ -168,9 +168,8 @@ locals {
       timeout     = var.lambdas.webhooks_event_emitter_handler.timeout
       allowed_triggers = {
         sqs_webhooks_event_emitter = {
-          statement_id = "sqs"
-          principal    = "sqs.amazonaws.com"
-          source_arn   = module.sqs_queues[var.sqs.webhooks_queue_name].queue_arn
+          principal  = "sqs.amazonaws.com"
+          source_arn = module.sqs_queues[var.sqs.webhooks_queue_name].queue_arn
         }
       }
       event_source_mapping = {
