@@ -243,7 +243,7 @@ variable "lambdas" {
         }
       ),
       {
-        env_vars    = { MQ_AVN_TX_QUEUE = "avnTx" }
+        env_vars    = {}
         memory_size = 256
         timeout     = 30
       }
@@ -311,12 +311,28 @@ variable "lambdas" {
         }
       ),
       {
-        env_vars    = { MQ_AVN_TX_QUEUE = "avnTx" }
+        env_vars    = {}
         memory_size = 512
         timeout     = 30
       }
     )
     invalid_transaction_handler = optional(
+      object({
+        env_vars                      = optional(map(any))
+        extra_policy_document         = optional(string)
+        memory_size                   = optional(number)
+        timeout                       = optional(number)
+        override_event_source_mapping = optional(map(any), null)
+        }
+      ),
+      {
+        env_vars    = {}
+        memory_size = 512
+        timeout     = 30
+      }
+    )
+
+    webhooks_event_emitter_handler = optional(
       object({
         env_vars                      = optional(map(any))
         extra_policy_document         = optional(string)
@@ -340,6 +356,7 @@ variable "sqs" {
     default_queue_name            = string
     payer_queue_name              = string
     tx_queue_name                 = string
+    webhooks_queue_name           = string
     fifo                          = optional(bool, true)
     message_retention_seconds     = optional(number, 86400)
     visibility_timeout_seconds    = optional(number, 60)

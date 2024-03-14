@@ -275,7 +275,18 @@ data "aws_iam_policy_document" "gateway_connector" {
       "sqs:GetQueueAttributes",
     ]
     resources = [
-      module.sqs_queues[var.sqs.tx_queue_name].queue_arn
+      module.sqs_queues[var.sqs.tx_queue_name].queue_arn,
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "sqs:SendMessage",
+      "sqs:GetQueueAttributes"
+    ]
+    resources = [
+      module.sqs_queues[var.sqs.webhooks_queue_name].queue_arn,
     ]
   }
 }

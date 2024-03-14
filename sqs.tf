@@ -18,7 +18,14 @@ module "sqs_queues" {
 
   tags = { Name = each.key }
 
-  for_each = toset([var.sqs.default_queue_name, var.sqs.payer_queue_name, var.sqs.tx_queue_name])
+  for_each = toset(
+    [
+      var.sqs.default_queue_name,
+      var.sqs.payer_queue_name,
+      var.sqs.tx_queue_name,
+      var.sqs.webhooks_queue_name
+    ]
+  )
 }
 
 module "gateway_sqs_queues_alarms" {
@@ -38,5 +45,12 @@ module "gateway_sqs_queues_alarms" {
   dimensions          = { QueueName = "${each.key}-dlq.fifo" }
   alarm_actions       = [var.sqs.alarm.alarm_actions]
 
-  for_each = toset([var.sqs.default_queue_name, var.sqs.payer_queue_name, var.sqs.tx_queue_name])
+  for_each = toset(
+    [
+      var.sqs.default_queue_name,
+      var.sqs.payer_queue_name,
+      var.sqs.tx_queue_name,
+      var.sqs.webhooks_queue_name
+    ]
+  )
 }
