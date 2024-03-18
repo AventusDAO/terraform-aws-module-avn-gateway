@@ -183,7 +183,7 @@ locals {
     webhooks_verification_handler = {
       env_vars = var.lambdas.extra_envs ? merge(
         {
-          WEBHOOKS_SIGNER_KMS_KEY_ID = aws_kms_key.gateway_key.id
+          WEBHOOKS_SIGNER_KMS_KEY_ID = aws_kms_key.gateway_webhooks.key_id
         },
         var.lambdas.webhooks_verification_handler.env_vars
       ) : var.lambdas.webhooks_verification_handler.env_vars
