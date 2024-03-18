@@ -180,6 +180,18 @@ locals {
       }
     }
 
+    webhooks_verification_handler = {
+      env_vars = var.lambdas.extra_envs ? merge(
+        {
+          WEBHOOKS_SIGNER_KMS_KEY_ID = aws_kms_key.gateway_key.id
+        },
+        var.lambdas.webhooks_verification_handler.env_vars
+      ) : var.lambdas.webhooks_verification_handler.env_vars
+      memory_size      = var.lambdas.webhooks_verification_handler.memory_size
+      timeout          = var.lambdas.webhooks_verification_handler.timeout
+      allowed_triggers = local.common_lambda_permissions
+    }
+
     invalid_transaction_handler = {
       env_vars = var.lambdas.invalid_transaction_handler.env_vars
       event_source_mapping = coalesce(var.lambdas.invalid_transaction_handler.override_event_source_mapping, {

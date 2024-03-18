@@ -36,3 +36,9 @@ resource "aws_iam_policy" "gateway_vote_access" {
   description = "allow access to vote s3 bucket"
   policy      = data.aws_iam_policy_document.gateway_vote_access.json
 }
+
+resource "aws_iam_policy" "gateway_webhooks_verification_access" {
+  name        = "${var.name}-webhooks-verification-handler-access"
+  description = "allow access to to KMS"
+  policy      = data.aws_iam_policy_document.gateway_webhooks_verification_access.json
+}
