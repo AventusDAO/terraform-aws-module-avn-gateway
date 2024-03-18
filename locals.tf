@@ -163,9 +163,15 @@ locals {
     }
 
     webhooks_event_emitter_handler = {
-      env_vars    = var.lambdas.webhooks_event_emitter_handler.env_vars
-      memory_size = var.lambdas.webhooks_event_emitter_handler.memory_size
-      timeout     = var.lambdas.webhooks_event_emitter_handler.timeout
+      env_vars = var.lambdas.extra_envs ? merge(
+        {
+          WEBHOOKS_SIGNER_KMS_KEY_ID = aws_kms_key.gateway_webhooks.key_id
+        },
+        var.lambdas.webhooks_event_emitter_handler.env_vars
+      ) : var.lambdas.webhooks_event_emitter_handler.env_vars
+      memory_size      = var.lambdas.webhooks_event_emitter_handler.memory_size
+      timeout          = var.lambdas.webhooks_event_emitter_handler.timeout
+      extra_policy_arn = aws_iam_policy.gateway_webhooks_event_emitter_access.arn
       allowed_triggers = {
         sqs_webhooks_event_emitter = {
           principal  = "sqs.amazonaws.com"

@@ -42,3 +42,9 @@ resource "aws_iam_policy" "gateway_webhooks_verification_access" {
   description = "allow access to to KMS"
   policy      = data.aws_iam_policy_document.gateway_webhooks_verification_access.json
 }
+
+resource "aws_iam_policy" "gateway_webhooks_event_emitter_access" {
+  name        = "${var.name}-webhooks-event-emitter-handler-access"
+  description = "allow access to to KMS"
+  policy      = data.aws_iam_policy_document.gateway_webhooks_event_emitter_access.json
+}
