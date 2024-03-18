@@ -190,6 +190,7 @@ locals {
       memory_size      = var.lambdas.webhooks_verification_handler.memory_size
       timeout          = var.lambdas.webhooks_verification_handler.timeout
       allowed_triggers = local.common_lambda_permissions
+      extra_policy_arn = aws_iam_policy.gateway_webhooks_verification_access.arn
     }
 
     invalid_transaction_handler = {
