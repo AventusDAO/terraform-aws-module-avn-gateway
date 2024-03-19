@@ -80,7 +80,7 @@ locals {
         {
           allow_event_bridge_rule = {
             principal  = "events.amazonaws.com"
-            source_arn = module.eventbridge.eventbridge_rule_arn["lift_processing_handler"]
+            source_arn = module.eventbridge.eventbridge_rule_arns["lift_processing_handler"]
           }
         }
       )
@@ -96,7 +96,7 @@ locals {
         {
           allow_event_bridge_rule = {
             principal  = "events.amazonaws.com"
-            source_arn = module.eventbridge.eventbridge_rule_arn["tx_status_update_handler"]
+            source_arn = module.eventbridge.eventbridge_rule_arns["tx_status_update_handler"]
           }
         }
       )
