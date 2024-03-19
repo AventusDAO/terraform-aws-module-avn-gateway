@@ -19,7 +19,7 @@ module "eventbridge" {
     tx_status_update_handler = [
       {
         name = "tx-status-update cron"
-        arn  = module.lambdas["poll_handler"].lambda_function_invoke_arn
+        arn  = module.lambdas["tx_status_update_handler"].lambda_function_invoke_arn
       }
     ]
     lift_processing_handler = [
