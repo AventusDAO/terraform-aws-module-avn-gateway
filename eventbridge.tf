@@ -18,13 +18,13 @@ module "eventbridge" {
   targets = {
     tx_status_update_handler = [
       {
-        name = "tx-status-update cron"
+        name = "tx_status_update_handler"
         arn  = module.lambdas["tx_status_update_handler"].lambda_function_invoke_arn
       }
     ]
     lift_processing_handler = [
       {
-        name = "lift-processing cron"
+        name = "lift_processing_handler"
         arn  = module.lambdas["lift_processing_handler"].lambda_function_invoke_arn
       }
     ]
