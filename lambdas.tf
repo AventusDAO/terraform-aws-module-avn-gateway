@@ -3,7 +3,7 @@
 #
 module "lambdas_layers" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "5.3.0"
+  version = "7.2.2"
 
   create_layer        = true
   layer_name          = "${replace(var.name, "-", "_")}_${each.key}"
@@ -24,7 +24,7 @@ module "lambdas_layers" {
 #
 module "lambdas" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "5.3.0"
+  version = "7.2.2"
 
   vpc_subnet_ids         = var.lambdas.vpc_subnet_ids
   vpc_security_group_ids = [module.sg_lambdas.security_group_id]
