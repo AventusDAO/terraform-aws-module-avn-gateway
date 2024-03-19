@@ -79,9 +79,8 @@ locals {
         local.common_lambda_permissions,
         {
           allow_event_bridge_rule = {
-            statement_id = "AllowExecutionFromEventBridgeRule"
-            principal    = "events.amazonaws.com"
-            source_arn   = "arn:aws:events:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:rule/process-lifts"
+            principal  = "events.amazonaws.com"
+            source_arn = module.eventbridge.eventbridge_rule_arns["lift_processing_handler"]
           }
         }
       )
@@ -96,9 +95,8 @@ locals {
         local.common_lambda_permissions,
         {
           allow_event_bridge_rule = {
-            statement_id = "AllowExecutionFromEventBridgeRule"
-            principal    = "events.amazonaws.com"
-            source_arn   = "arn:aws:events:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:rule/resolve-pending-transactions"
+            principal  = "events.amazonaws.com"
+            source_arn = module.eventbridge.eventbridge_rule_arns["tx_status_update_handler"]
           }
         }
       )
