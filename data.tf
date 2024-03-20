@@ -290,3 +290,28 @@ data "aws_iam_policy_document" "gateway_connector" {
     ]
   }
 }
+
+data "aws_iam_policy_document" "gateway_webhooks_verification_access" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "kms:GetPublicKey",
+    ]
+    resources = [
+      aws_kms_key.gateway_webhooks.arn
+    ]
+  }
+}
+
+
+data "aws_iam_policy_document" "gateway_webhooks_event_emitter_access" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "kms:Sign",
+    ]
+    resources = [
+      aws_kms_key.gateway_webhooks.arn
+    ]
+  }
+}

@@ -79,9 +79,8 @@ locals {
         local.common_lambda_permissions,
         {
           allow_event_bridge_rule = {
-            statement_id = "AllowExecutionFromEventBridgeRule"
-            principal    = "events.amazonaws.com"
-            source_arn   = "arn:aws:events:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:rule/process-lifts"
+            principal  = "events.amazonaws.com"
+            source_arn = module.eventbridge.eventbridge_rule_arns["lift_processing_handler"]
           }
         }
       )
@@ -96,9 +95,8 @@ locals {
         local.common_lambda_permissions,
         {
           allow_event_bridge_rule = {
-            statement_id = "AllowExecutionFromEventBridgeRule"
-            principal    = "events.amazonaws.com"
-            source_arn   = "arn:aws:events:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:rule/resolve-pending-transactions"
+            principal  = "events.amazonaws.com"
+            source_arn = module.eventbridge.eventbridge_rule_arns["tx_status_update_handler"]
           }
         }
       )
@@ -163,9 +161,15 @@ locals {
     }
 
     webhooks_event_emitter_handler = {
-      env_vars    = var.lambdas.webhooks_event_emitter_handler.env_vars
-      memory_size = var.lambdas.webhooks_event_emitter_handler.memory_size
-      timeout     = var.lambdas.webhooks_event_emitter_handler.timeout
+      env_vars = var.lambdas.extra_envs ? merge(
+        {
+          WEBHOOKS_SIGNER_KMS_KEY_ID = aws_kms_key.gateway_webhooks.key_id
+        },
+        var.lambdas.webhooks_event_emitter_handler.env_vars
+      ) : var.lambdas.webhooks_event_emitter_handler.env_vars
+      memory_size      = var.lambdas.webhooks_event_emitter_handler.memory_size
+      timeout          = var.lambdas.webhooks_event_emitter_handler.timeout
+      extra_policy_arn = aws_iam_policy.gateway_webhooks_event_emitter_access.arn
       allowed_triggers = {
         sqs_webhooks_event_emitter = {
           principal  = "sqs.amazonaws.com"
@@ -178,6 +182,19 @@ locals {
           function_response_types = ["ReportBatchItemFailures"]
         }
       }
+    }
+
+    webhooks_verification_handler = {
+      env_vars = var.lambdas.extra_envs ? merge(
+        {
+          WEBHOOKS_SIGNER_KMS_KEY_ID = aws_kms_key.gateway_webhooks.key_id
+        },
+        var.lambdas.webhooks_verification_handler.env_vars
+      ) : var.lambdas.webhooks_verification_handler.env_vars
+      memory_size      = var.lambdas.webhooks_verification_handler.memory_size
+      timeout          = var.lambdas.webhooks_verification_handler.timeout
+      allowed_triggers = local.common_lambda_permissions
+      extra_policy_arn = aws_iam_policy.gateway_webhooks_verification_access.arn
     }
 
     invalid_transaction_handler = {
