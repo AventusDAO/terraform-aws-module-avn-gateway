@@ -164,6 +164,7 @@ locals {
       env_vars = var.lambdas.extra_envs ? merge(
         {
           WEBHOOKS_SIGNER_KMS_KEY_ID = aws_kms_key.gateway_webhooks.key_id
+          SQS_WEBHOOKS_QUEUE_URL     = module.sqs_queues[var.sqs.webhooks_queue_name].queue_url
         },
         var.lambdas.webhooks_event_emitter_handler.env_vars
       ) : var.lambdas.webhooks_event_emitter_handler.env_vars
