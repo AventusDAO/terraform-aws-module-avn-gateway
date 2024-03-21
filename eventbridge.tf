@@ -6,12 +6,12 @@ module "eventbridge" {
 
   rules = {
     tx_status_update_handler = {
-      description         = "Job to update transaction state by checking block indexer resolve-pending-transactions"
+      description         = "trigger lambda tx_status_update_handler"
       schedule_expression = "rate(1 minute)"
     }
     lift_processing_handler = {
-      description         = "process-lifts trigger lambda lift_processing_handler"
-      schedule_expression = "rate(3 minutes)"
+      description         = "trigger lambda lift_processing_handler"
+      schedule_expression = "rate(10 minute)"
     }
   }
 
