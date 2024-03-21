@@ -117,12 +117,12 @@ module "api_gateway" {
       payload_format_version = "2.0"
     }
 
-    "GET /webhook-verification-key" = {
+    "GET /verification/webhooks/signer-sha256-public" = {
       integration_type       = "AWS_PROXY"
       connection_type        = "INTERNET"
-      description            = "webhooks verification handler"
+      description            = "webhooks verification key handler"
       integration_method     = "POST"
-      integration_uri        = module.lambdas["webhooks_verification_handler"].lambda_function_invoke_arn
+      integration_uri        = module.lambdas["webhooks_verification_key_handler"].lambda_function_invoke_arn
       passthrough_behavior   = "WHEN_NO_MATCH"
       payload_format_version = "2.0"
     }
