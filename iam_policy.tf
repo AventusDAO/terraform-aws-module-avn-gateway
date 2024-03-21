@@ -37,10 +37,10 @@ resource "aws_iam_policy" "gateway_vote_access" {
   policy      = data.aws_iam_policy_document.gateway_vote_access.json
 }
 
-resource "aws_iam_policy" "gateway_webhooks_verification_access" {
-  name        = "${var.name}-webhooks-verification-handler-access"
+resource "aws_iam_policy" "gateway_webhooks_verification_key_access" {
+  name        = "${var.name}-webhooks-verification-key-handler-access"
   description = "allow access to to KMS"
-  policy      = data.aws_iam_policy_document.gateway_webhooks_verification_access.json
+  policy      = data.aws_iam_policy_document.gateway_webhooks_verification_key_access.json
 }
 
 resource "aws_iam_policy" "gateway_webhooks_event_emitter_access" {

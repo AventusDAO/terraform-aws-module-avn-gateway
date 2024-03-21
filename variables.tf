@@ -348,7 +348,7 @@ variable "lambdas" {
       }
     )
 
-    webhooks_verification_handler = optional(
+    webhooks_verification_key_handler = optional(
       object({
         env_vars                      = optional(map(any))
         extra_policy_document         = optional(string)

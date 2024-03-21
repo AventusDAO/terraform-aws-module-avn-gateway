@@ -291,7 +291,7 @@ data "aws_iam_policy_document" "gateway_connector" {
   }
 }
 
-data "aws_iam_policy_document" "gateway_webhooks_verification_access" {
+data "aws_iam_policy_document" "gateway_webhooks_verification_key_access" {
   statement {
     effect = "Allow"
     actions = [
