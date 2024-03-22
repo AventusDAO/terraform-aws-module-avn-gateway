@@ -314,4 +314,17 @@ data "aws_iam_policy_document" "gateway_webhooks_event_emitter_access" {
       aws_kms_key.gateway_webhooks.arn
     ]
   }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "sqs:ReceiveMessage",
+      "sqs:DeleteMessage",
+      "sqs:DeleteMessageBatch",
+      "sqs:GetQueueAttributes",
+    ]
+    resources = [
+      module.sqs_queues[var.sqs.webhooks_queue_name].queue_arn,
+    ]
+  }
 }
