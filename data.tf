@@ -320,7 +320,6 @@ data "aws_iam_policy_document" "gateway_webhooks_event_emitter_access" {
     actions = [
       "sqs:ReceiveMessage",
       "sqs:DeleteMessage",
-      "sqs:DeleteMessageBatch",
       "sqs:GetQueueAttributes",
     ]
     resources = [
