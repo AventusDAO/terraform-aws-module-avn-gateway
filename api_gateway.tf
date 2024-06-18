@@ -148,7 +148,7 @@ module "api_gateway" {
 
 #TODO: delete all below after domain migration
 resource "aws_apigatewayv2_domain_name" "api_gateway_deprecated" {
-  domain_name = var.api_gateway.old_domain_name
+  domain_name = var.api_gateway.old_custom_domain
 
   domain_name_configuration {
     certificate_arn = var.api_gateway.old_domain_name_certificate_arn
