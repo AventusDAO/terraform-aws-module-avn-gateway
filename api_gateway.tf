@@ -19,7 +19,8 @@ module "api_gateway" {
   }
 
   # Custom domain
-  domain_name                 = var.api_gateway.custom_domain
+  domain_name                 = var.api_gateway.domain_name
+  subdomains                  = var.api_gateway.subdomains
   domain_name_certificate_arn = var.api_gateway.domain_name_certificate_arn
   create_domain_records       = true
   create_certificate          = false
