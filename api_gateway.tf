@@ -151,18 +151,18 @@ resource "aws_apigatewayv2_domain_name" "api_gateway_deprecated" {
   domain_name = var.api_gateway.old_domain_name
 
   domain_name_configuration {
-    certificate_arn                        = var.api_gateway.old_domain_name_certificate_arn
-    endpoint_type                          = "REGIONAL"
-    security_policy                        = "TLS_1_2"
+    certificate_arn = var.api_gateway.old_domain_name_certificate_arn
+    endpoint_type   = "REGIONAL"
+    security_policy = "TLS_1_2"
   }
 
   tags = var.api_gateway.tags
 }
 
 resource "aws_apigatewayv2_api_mapping" "this" {
-  api_id          = module.api_gateway.api_id
-  domain_name     = module.api_gateway.domain_name_id
-  stage           = module.api_gateway.stage_id
+  api_id      = module.api_gateway.api_id
+  domain_name = module.api_gateway.domain_name_id
+  stage       = module.api_gateway.stage_id
 }
 
 resource "aws_route53_record" "api_gateway" {

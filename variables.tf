@@ -163,7 +163,6 @@ variable "api_gateway" {
     retention_in_days = optional(number, 14)
     tags              = optional(map(any), {})
   })
-
   description = "Subset of AWS API gateway configurations used on 'terraform-aws-modules/apigateway-v2/aws' module."
 }
 
@@ -473,4 +472,5 @@ variable "cognito" {
     })), [])
     tags = optional(map(any), {})
   })
+  description = "Subset of AWS Cognito configurations used on 'terraform-aws-modules/apigateway-v2/aws' module."
 }
