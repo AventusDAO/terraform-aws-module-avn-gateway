@@ -52,7 +52,7 @@ module "api_gateway" {
   authorizers = {
     "authorisation_handler_lambda" = {
       authorizer_type                   = "REQUEST"
-      identity_sources                  = "$request.header.Authorization"
+      identity_sources                  = ["$request.header.Authorization"]
       name                              = "authorisation-handler"
       authorizer_uri                    = module.lambdas["authorisation_handler"].lambda_function_invoke_arn
       enable_simple_responses           = true
