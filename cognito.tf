@@ -26,9 +26,9 @@ resource "aws_cognito_user_pool" "admin_portal" {
       <h3>Welcome to the ${title(replace(var.name, "-", " "))}</h3>
       <p>You have successfully registered on the ${title(replace(var.name, "-", " "))}.</p>
       Your username is <b>{username}</b> and temporary password is <b>{####}</b>
-      <p>To log in, browse to <span style="color: #5100ff;">https://admin-portal.${(replace(var.name, "-gateway", ""))}.aventus.io/</span></p> <p>You will be prompted to change your password when you first log in, this password will expire in 1 day.</p>
+      <p>To log in, browse to <span style="color: #5100ff;">https://admin-portal.${(replace(var.name, "-gateway", ""))}.aventus.network/</span></p> <p>You will be prompted to change your password when you first log in, this password will expire in 1 day.</p>
       <br/><br/> <br/>
-      <h4>Powered by Aventus (www.aventus.io)</h4>
+      <h4>Powered by Aventus (www.aventus.network)</h4>
     </div>
 EOT
       email_subject = "${title(replace(var.name, "-", " "))} registration - your temporary password"

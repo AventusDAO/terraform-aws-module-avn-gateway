@@ -33,7 +33,7 @@ module "gateway_cognito_acm" {
   source  = "terraform-aws-modules/acm/aws"
   version = "4.3.2"
 
-  domain_name = "*.dev.aventus.io"
+  domain_name = "*.dev.aventus.network"
   zone_id     = data.aws_route53_zone.dev_zone.id
 
   wait_for_validation = true
@@ -97,12 +97,12 @@ module "dev_gateway" {
 
   api_gateway = {
     override_name               = "gateway"
-    custom_domain          = "dev.aventus.io"
+    custom_domain          = "dev.aventus.network"
     domain_name_certificate_arn = <acm cert arn>
   }
 
   cognito = {
-    domain          = "auth-gateway.dev.aventus.io"
+    domain          = "auth-gateway.dev.aventus.network"
     certificate_arn = module.gateway_cognito_acm.acm_certificate_arn
 
     pool_client = {
