@@ -3,7 +3,7 @@
 #
 module "api_gateway" {
   source  = "terraform-aws-modules/apigateway-v2/aws"
-  version = "2.2.2"
+  version = "5.0.0"
 
   name          = coalesce(var.api_gateway.override_name, var.name)
   description   = coalesce(var.api_gateway.description, "API Gateway for the ${replace(coalesce(var.api_gateway.override_name, var.name), "-", " ")}")
@@ -23,27 +23,30 @@ module "api_gateway" {
   domain_name_certificate_arn = var.api_gateway.domain_name_certificate_arn
 
   # Access logs
-  default_stage_access_log_destination_arn = aws_cloudwatch_log_group.api_gateway.arn
-
-  default_stage_access_log_format = coalesce(var.api_gateway.default_stage_access_log_format,
-    jsonencode(
-      {
-        httpMethod     = "$context.httpMethod"
-        ip             = "$context.identity.sourceIp"
-        protocol       = "$context.protocol"
-        requestId      = "$context.requestId"
-        requestTime    = "$context.requestTime"
-        responseLength = "$context.responseLength"
-        routeKey       = "$context.routeKey"
-        status         = "$context.status"
-      }
+  stage_access_log_settings = {
+    create_log_group            = true
+    log_group_name              = coalesce(var.api_gateway.override_name, var.name)
+    log_group_retention_in_days = var.api_gateway.retention_in_days
+    format = coalesce(var.api_gateway.default_stage_access_log_format,
+      jsonencode(
+        {
+          httpMethod     = "$context.httpMethod"
+          ip             = "$context.identity.sourceIp"
+          protocol       = "$context.protocol"
+          requestId      = "$context.requestId"
+          requestTime    = "$context.requestTime"
+          responseLength = "$context.responseLength"
+          routeKey       = "$context.routeKey"
+          status         = "$context.status"
+        }
+      )
     )
-  )
+  }
 
-  default_route_settings = {
-    detailed_metrics_enabled = var.api_gateway.default_route_settings.detailed_metrics_enabled
-    throttling_burst_limit   = var.api_gateway.default_route_settings.throttling_burst_limit
-    throttling_rate_limit    = var.api_gateway.default_route_settings.throttling_burst_limit
+  stage_default_route_settings = {
+    detailed_metrics_enabled = var.api_gateway.stage_default_route_settings.detailed_metrics_enabled
+    throttling_burst_limit   = var.api_gateway.stage_default_route_settings.throttling_burst_limit
+    throttling_rate_limit    = var.api_gateway.stage_default_route_settings.throttling_burst_limit
   }
 
   authorizers = {
@@ -59,82 +62,84 @@ module "api_gateway" {
   }
 
   # Routes and integrations
-  integrations = {
+  routes = {
     "POST /poll" = {
-      authorizer_key         = "authorisation_handler_lambda"
-      authorization_type     = "CUSTOM"
-      integration_type       = "AWS_PROXY"
-      description            = "Poll handler integration"
-      integration_method     = "POST"
-      integration_uri        = module.lambdas["poll_handler"].lambda_function_invoke_arn
-      passthrough_behavior   = "WHEN_NO_MATCH"
-      payload_format_version = "2.0"
+      authorizer_key     = "authorisation_handler_lambda"
+      authorization_type = "CUSTOM"
+
+      integration = {
+        description            = "Poll handler integration"
+        method                 = "POST"
+        uri                    = module.lambdas["poll_handler"].lambda_function_invoke_arn
+        passthrough_behavior   = "WHEN_NO_MATCH"
+        payload_format_version = "2.0"
+      }
     }
 
     "POST /send" = {
-      authorizer_key         = "authorisation_handler_lambda"
-      authorization_type     = "CUSTOM"
-      integration_type       = "AWS_PROXY"
-      connection_type        = "INTERNET"
-      description            = "Send handler integration"
-      integration_method     = "POST"
-      integration_uri        = module.lambdas["send_handler"].lambda_function_invoke_arn
-      passthrough_behavior   = "WHEN_NO_MATCH"
-      payload_format_version = "2.0"
+      authorizer_key     = "authorisation_handler_lambda"
+      authorization_type = "CUSTOM"
+
+      integration = {
+        description            = "Send handler integration"
+        method                 = "POST"
+        uri                    = module.lambdas["send_handler"].lambda_function_invoke_arn
+        passthrough_behavior   = "WHEN_NO_MATCH"
+        payload_format_version = "2.0"
+        connection_type        = "INTERNET"
+      }
     }
 
     "POST /query" = {
       authorizer_key         = "authorisation_handler_lambda"
       authorization_type     = "CUSTOM"
-      integration_type       = "AWS_PROXY"
-      connection_type        = "INTERNET"
-      description            = "Query handler integration"
-      integration_method     = "POST"
-      integration_uri        = module.lambdas["query_handler"].lambda_function_invoke_arn
-      passthrough_behavior   = "WHEN_NO_MATCH"
-      payload_format_version = "2.0"
       throttling_rate_limit  = 500
       throttling_burst_limit = 400
+
+      integration = {
+        description            = "Query handler integration"
+        method                 = "POST"
+        uri                    = module.lambdas["query_handler"].lambda_function_invoke_arn
+        passthrough_behavior   = "WHEN_NO_MATCH"
+        payload_format_version = "2.0"
+        connection_type        = "INTERNET"
+      }
     }
 
     "ANY /vote" = {
-      integration_type       = "AWS_PROXY"
-      connection_type        = "INTERNET"
-      description            = "Vote handler integration"
-      integration_method     = "POST"
-      integration_uri        = module.lambdas["vote_handler"].lambda_function_invoke_arn
-      passthrough_behavior   = "WHEN_NO_MATCH"
-      payload_format_version = "2.0"
+      integration = {
+        description            = "Vote handler integration"
+        method                 = "POST"
+        uri                    = module.lambdas["vote_handler"].lambda_function_invoke_arn
+        passthrough_behavior   = "WHEN_NO_MATCH"
+        payload_format_version = "2.0"
+        connection_type        = "INTERNET"
+      }
     }
 
     "GET /lowers" = {
-      integration_type       = "AWS_PROXY"
-      connection_type        = "INTERNET"
-      description            = "Lower handler integration"
-      integration_method     = "POST"
-      integration_uri        = module.lambdas["lower_handler"].lambda_function_invoke_arn
-      passthrough_behavior   = "WHEN_NO_MATCH"
-      payload_format_version = "2.0"
+      integration = {
+        description            = "Lower handler integration"
+        method                 = "POST"
+        uri                    = module.lambdas["lower_handler"].lambda_function_invoke_arn
+        passthrough_behavior   = "WHEN_NO_MATCH"
+        payload_format_version = "2.0"
+        connection_type        = "INTERNET"
+      }
     }
 
     "GET /verification/webhooks/signer-sha256-public" = {
-      integration_type       = "AWS_PROXY"
-      connection_type        = "INTERNET"
-      description            = "webhooks verification key handler"
-      integration_method     = "POST"
-      integration_uri        = module.lambdas["webhooks_verification_key_handler"].lambda_function_invoke_arn
-      passthrough_behavior   = "WHEN_NO_MATCH"
-      payload_format_version = "2.0"
+      integration = {
+        description            = "webhooks verification key handler"
+        method                 = "POST"
+        uri                    = module.lambdas["webhooks_verification_key_handler"].lambda_function_invoke_arn
+        passthrough_behavior   = "WHEN_NO_MATCH"
+        payload_format_version = "2.0"
+        connection_type        = "INTERNET"
+      }
+
     }
   }
 
   tags = merge(var.api_gateway.tags, { Name = coalesce(var.api_gateway.override_name, var.name) })
-}
-
-#
-# gateway api gateway log group
-#
-resource "aws_cloudwatch_log_group" "api_gateway" {
-  name              = coalesce(var.api_gateway.override_name, var.name)
-  retention_in_days = var.api_gateway.retention_in_days
 }

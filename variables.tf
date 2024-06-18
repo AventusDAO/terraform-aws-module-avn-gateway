@@ -139,7 +139,7 @@ variable "api_gateway" {
       }
     )
     default_stage_access_log_format = optional(string) # more here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_stage#access_log_settings
-    default_route_settings = optional(
+    stage_default_route_settings = optional(
       object({
         detailed_metrics_enabled = optional(bool)
         throttling_burst_limit   = optional(number)
