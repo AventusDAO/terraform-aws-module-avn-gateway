@@ -21,6 +21,8 @@ module "api_gateway" {
   # Custom domain
   domain_name                 = var.api_gateway.custom_domain
   domain_name_certificate_arn = var.api_gateway.domain_name_certificate_arn
+  create_domain_records       = false
+  create_certificate          = false
 
   # Access logs
   stage_access_log_settings = {
