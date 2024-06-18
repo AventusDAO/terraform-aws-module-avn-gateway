@@ -25,7 +25,7 @@ variable "route53_zone_id" {
 }
 
 #TODO: to be deleted when domain migration is finalised
-variable "deprecated_route53_zone_id" {
+variable "old_route53_zone_id" {
   type        = string
   description = "Zone id where to create the deprecated gateway api record and admin portal record."
 }

@@ -166,7 +166,7 @@ resource "aws_apigatewayv2_api_mapping" "this" {
 }
 
 resource "aws_route53_record" "api_gateway" {
-  zone_id = var.deprecated_route53_zone_id
+  zone_id = var.old_route53_zone_id
   name    = var.api_gateway.old_custom_domain
   type    = "A"
 
