@@ -160,7 +160,7 @@ resource "aws_apigatewayv2_domain_name" "api_gateway" {
 
 resource "aws_apigatewayv2_api_mapping" "api_gateway" {
   api_id      = module.api_gateway.api_id
-  domain_name = module.api_gateway.domain_name_id
+  domain_name = aws_apigatewayv2_domain_name.api_gateway.id
   stage       = module.api_gateway.stage_id
 }
 
@@ -191,7 +191,7 @@ resource "aws_apigatewayv2_domain_name" "api_gateway_deprecated" {
 
 resource "aws_apigatewayv2_api_mapping" "api_gateway_deprecated" {
   api_id      = module.api_gateway.api_id
-  domain_name = module.api_gateway.domain_name_id
+  domain_name = aws_apigatewayv2_domain_name.api_gateway_deprecated.id
   stage       = module.api_gateway.stage_id
 }
 
