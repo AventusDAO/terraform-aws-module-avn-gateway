@@ -19,10 +19,12 @@ module "api_gateway" {
   }
 
   # Custom domain
-  domain_name                 = var.api_gateway.domain_name
-  subdomains                  = var.api_gateway.subdomains
-  domain_name_certificate_arn = var.api_gateway.domain_name_certificate_arn
-  create_domain_records       = true
+  #domain_name                 = var.api_gateway.domain_name
+  #subdomains                  = var.api_gateway.subdomains
+  #domain_name_certificate_arn = var.api_gateway.domain_name_certificate_arn
+  # removed custom domain creation from module because it creates domains with "*." or needs it's own hosted zone
+  create_domain_name          = false
+  create_domain_records       = false
   create_certificate          = false
 
   # Access logs
@@ -145,6 +147,40 @@ module "api_gateway" {
   }
 
   tags = merge(var.api_gateway.tags, { Name = coalesce(var.api_gateway.override_name, var.name) })
+}
+
+resource "aws_apigatewayv2_domain_name" "api_gateway" {
+  domain_name = var.api_gateway.custom_domain
+
+  domain_name_configuration {
+    certificate_arn = var.api_gateway.domain_name_certificate_arn
+    endpoint_type   = "REGIONAL"
+    security_policy = "TLS_1_2"
+  }
+
+  tags = var.api_gateway.tags
+}
+
+resource "aws_apigatewayv2_api_mapping" "this" {
+  api_id      = module.api_gateway.api_id
+  domain_name = module.api_gateway.domain_name_id
+  stage       = module.api_gateway.stage_id
+
+  tags = var.api_gateway.tags
+}
+
+resource "aws_route53_record" "api_gateway" {
+  zone_id = var.route53_zone_id
+  name    = var.api_gateway.custom_domain
+  type    = "A"
+
+  alias {
+    name                   = module.api_gateway.domain_name_target_domain_name
+    zone_id                = module.api_gateway.domain_name_hosted_zone_id
+    evaluate_target_health = false
+  }
+
+  tags = var.api_gateway.tags
 }
 
 #TODO: delete all below after domain migration
