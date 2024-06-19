@@ -158,7 +158,7 @@ resource "aws_apigatewayv2_domain_name" "api_gateway" {
   tags = var.api_gateway.tags
 }
 
-resource "aws_apigatewayv2_api_mapping" "this" {
+resource "aws_apigatewayv2_api_mapping" "api_gateway" {
   api_id      = module.api_gateway.api_id
   domain_name = module.api_gateway.domain_name_id
   stage       = module.api_gateway.stage_id
