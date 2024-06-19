@@ -193,13 +193,13 @@ resource "aws_apigatewayv2_domain_name" "api_gateway_deprecated" {
   tags = var.api_gateway.tags
 }
 
-resource "aws_apigatewayv2_api_mapping" "this" {
+resource "aws_apigatewayv2_api_mapping" "api_gateway_deprecated" {
   api_id      = module.api_gateway.api_id
   domain_name = module.api_gateway.domain_name_id
   stage       = module.api_gateway.stage_id
 }
 
-resource "aws_route53_record" "api_gateway" {
+resource "aws_route53_record" "api_gateway_deprecated" {
   zone_id = var.old_route53_zone_id
   name    = var.api_gateway.old_custom_domain
   type    = "A"
