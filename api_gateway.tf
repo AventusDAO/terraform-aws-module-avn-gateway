@@ -20,9 +20,9 @@ module "api_gateway" {
 
   # Custom domain
   # removed custom domain creation from module because it creates domains with "*." or needs it's own hosted zone
-  create_domain_name          = false
-  create_domain_records       = false
-  create_certificate          = false
+  create_domain_name    = false
+  create_domain_records = false
+  create_certificate    = false
 
   # Access logs
   stage_access_log_settings = {
