@@ -121,7 +121,6 @@ variable "rds" {
 variable "api_gateway" {
   type = object({
     domain_name                     = string
-    subdomains                      = list(string)
     old_custom_domain               = optional(string) #TODO: remove this line when domain migration is finalised
     old_domain_name_certificate_arn = optional(string) #TODO: remove this line when domain migration is finalised
     domain_name_certificate_arn     = string
