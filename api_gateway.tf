@@ -19,9 +19,6 @@ module "api_gateway" {
   }
 
   # Custom domain
-  #domain_name                 = var.api_gateway.domain_name
-  #subdomains                  = var.api_gateway.subdomains
-  #domain_name_certificate_arn = var.api_gateway.domain_name_certificate_arn
   # removed custom domain creation from module because it creates domains with "*." or needs it's own hosted zone
   create_domain_name          = false
   create_domain_records       = false
