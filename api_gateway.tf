@@ -147,7 +147,7 @@ module "api_gateway" {
 }
 
 resource "aws_apigatewayv2_domain_name" "api_gateway" {
-  domain_name = var.api_gateway.custom_domain
+  domain_name = var.api_gateway.domain_name
 
   domain_name_configuration {
     certificate_arn = var.api_gateway.domain_name_certificate_arn
@@ -162,13 +162,11 @@ resource "aws_apigatewayv2_api_mapping" "this" {
   api_id      = module.api_gateway.api_id
   domain_name = module.api_gateway.domain_name_id
   stage       = module.api_gateway.stage_id
-
-  tags = var.api_gateway.tags
 }
 
 resource "aws_route53_record" "api_gateway" {
   zone_id = var.route53_zone_id
-  name    = var.api_gateway.custom_domain
+  name    = var.api_gateway.domain_name
   type    = "A"
 
   alias {
@@ -176,8 +174,6 @@ resource "aws_route53_record" "api_gateway" {
     zone_id                = module.api_gateway.domain_name_hosted_zone_id
     evaluate_target_health = false
   }
-
-  tags = var.api_gateway.tags
 }
 
 #TODO: delete all below after domain migration
