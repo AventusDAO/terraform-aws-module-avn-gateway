@@ -21,12 +21,18 @@ variable "lambda_version" {
 
 variable "route53_zone_id" {
   type        = string
-  description = "Zone id where to create gateway api record and admin portal record"
+  description = "Zone id where to create cognito admin portal custom domain record."
+}
+
+#TODO: to be deleted when domain migration is finalised
+variable "old_route53_zone_id" {
+  type        = string
+  description = "Zone id where to create the deprecated gateway api record and admin portal record."
 }
 
 variable "monitoring_sns_topic_arn" {
   type        = string
-  description = "SNS topic ARN where to send alarms"
+  description = "SNS topic ARN where to send alarms."
 }
 
 variable "memory_db" {
@@ -114,11 +120,13 @@ variable "rds" {
 
 variable "api_gateway" {
   type = object({
-    custom_domain               = string
-    domain_name_certificate_arn = string
-    override_name               = optional(string) # if not set, var.name is used
-    description                 = optional(string)
-    protocol_type               = optional(string, "HTTP")
+    domain_name                     = string
+    old_custom_domain               = optional(string) #TODO: remove this line when domain migration is finalised
+    old_domain_name_certificate_arn = optional(string) #TODO: remove this line when domain migration is finalised
+    domain_name_certificate_arn     = string
+    override_name                   = optional(string) # if not set, var.name is used
+    description                     = optional(string)
+    protocol_type                   = optional(string, "HTTP")
     cors_configuration = optional(
       object({
         allow_credentials = optional(bool)
@@ -139,7 +147,7 @@ variable "api_gateway" {
       }
     )
     default_stage_access_log_format = optional(string) # more here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_stage#access_log_settings
-    default_route_settings = optional(
+    stage_default_route_settings = optional(
       object({
         detailed_metrics_enabled = optional(bool)
         throttling_burst_limit   = optional(number)
@@ -155,7 +163,6 @@ variable "api_gateway" {
     retention_in_days = optional(number, 14)
     tags              = optional(map(any), {})
   })
-
   description = "Subset of AWS API gateway configurations used on 'terraform-aws-modules/apigateway-v2/aws' module."
 }
 
@@ -465,4 +472,5 @@ variable "cognito" {
     })), [])
     tags = optional(map(any), {})
   })
+  description = "Subset of AWS Cognito configurations used on 'terraform-aws-modules/apigateway-v2/aws' module."
 }
