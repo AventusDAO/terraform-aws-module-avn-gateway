@@ -114,11 +114,11 @@ variable "rds" {
 
 variable "api_gateway" {
   type = object({
-    domain_name                     = string
-    domain_name_certificate_arn     = string
-    override_name                   = optional(string) # if not set, var.name is used
-    description                     = optional(string)
-    protocol_type                   = optional(string, "HTTP")
+    domain_name                 = string
+    domain_name_certificate_arn = string
+    override_name               = optional(string) # if not set, var.name is used
+    description                 = optional(string)
+    protocol_type               = optional(string, "HTTP")
     cors_configuration = optional(
       object({
         allow_credentials = optional(bool)
