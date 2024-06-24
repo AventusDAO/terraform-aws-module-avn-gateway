@@ -24,12 +24,6 @@ variable "route53_zone_id" {
   description = "Zone id where to create cognito admin portal custom domain record."
 }
 
-#TODO: to be deleted when domain migration is finalised
-variable "old_route53_zone_id" {
-  type        = string
-  description = "Zone id where to create the deprecated gateway api record and admin portal record."
-}
-
 variable "monitoring_sns_topic_arn" {
   type        = string
   description = "SNS topic ARN where to send alarms."
@@ -121,8 +115,6 @@ variable "rds" {
 variable "api_gateway" {
   type = object({
     domain_name                     = string
-    old_custom_domain               = optional(string) #TODO: remove this line when domain migration is finalised
-    old_domain_name_certificate_arn = optional(string) #TODO: remove this line when domain migration is finalised
     domain_name_certificate_arn     = string
     override_name                   = optional(string) # if not set, var.name is used
     description                     = optional(string)

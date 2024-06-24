@@ -106,7 +106,6 @@ module "dev_gateway" {
     certificate_arn = module.gateway_cognito_acm.acm_certificate_arn
 
     pool_client = {
-      #TODO: the 'temp' of the urls needs to be deleted
       callback_urls = ["<url1>"]
       logout_urls   = ["<url2>"]
     }
