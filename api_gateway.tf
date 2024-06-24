@@ -175,34 +175,3 @@ resource "aws_route53_record" "api_gateway" {
     evaluate_target_health = false
   }
 }
-
-#TODO: delete all below after domain migration
-resource "aws_apigatewayv2_domain_name" "api_gateway_deprecated" {
-  domain_name = var.api_gateway.old_custom_domain
-
-  domain_name_configuration {
-    certificate_arn = var.api_gateway.old_domain_name_certificate_arn
-    endpoint_type   = "REGIONAL"
-    security_policy = "TLS_1_2"
-  }
-
-  tags = var.api_gateway.tags
-}
-
-resource "aws_apigatewayv2_api_mapping" "api_gateway_deprecated" {
-  api_id      = module.api_gateway.api_id
-  domain_name = aws_apigatewayv2_domain_name.api_gateway_deprecated.id
-  stage       = module.api_gateway.stage_id
-}
-
-resource "aws_route53_record" "api_gateway_deprecated" {
-  zone_id = var.old_route53_zone_id
-  name    = var.api_gateway.old_custom_domain
-  type    = "A"
-
-  alias {
-    name                   = aws_apigatewayv2_domain_name.api_gateway_deprecated.domain_name_configuration[0].target_domain_name
-    zone_id                = aws_apigatewayv2_domain_name.api_gateway_deprecated.domain_name_configuration[0].hosted_zone_id
-    evaluate_target_health = false
-  }
-}
