@@ -17,13 +17,13 @@ module "memory_db" {
   num_shards                 = var.memory_db.num_shards
   num_replicas_per_shard     = var.memory_db.num_replicas_per_shard
   snapshot_name              = var.memory_db.snapshot_name
-
-  port                     = var.memory_db.port
-  tls_enabled              = var.memory_db.tls_enabled
-  security_group_ids       = [module.sg_memorydb[0].security_group_id]
-  maintenance_window       = var.memory_db.maintenance_window
-  snapshot_retention_limit = var.memory_db.snapshot_retention_limit
-  snapshot_window          = var.memory_db.snapshot_window
+  kms_key_arn                = var.memory_db.kms_key_arn
+  port                       = var.memory_db.port
+  tls_enabled                = var.memory_db.tls_enabled
+  security_group_ids         = [module.sg_memorydb[0].security_group_id]
+  maintenance_window         = var.memory_db.maintenance_window
+  snapshot_retention_limit   = var.memory_db.snapshot_retention_limit
+  snapshot_window            = var.memory_db.snapshot_window
 
   #TODO: revisit Users and ACL - for now avn-connector doesn't allow configuring a user to connect to redis (it uses the default one)
   # Should create an admin and connector (with limited access) user and add it to a specific ACL.

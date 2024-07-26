@@ -40,6 +40,7 @@ variable "memory_db" {
     node_type                  = optional(string, "db.t4g.small")
     num_shards                 = optional(number, 1)
     num_replicas_per_shard     = optional(number, 2)
+    kms_key_arn                = optional(string, null)
     port                       = optional(number, 6379)
     tls_enabled                = optional(bool, false)
     maintenance_window         = optional(string, "tue:09:00-tue:10:00")
@@ -75,6 +76,7 @@ variable "rds" {
     port                                  = optional(number, 5432)
     snapshot_identifier                   = optional(string)
     ca_cert_identifier                    = optional(string, "rds-ca-ecc384-g1")
+    kms_key_id                            = optional(string, null)
     multi_az                              = optional(bool, false)
     maintenance_window                    = optional(string, "Tue:10:00-Tue:11:00")
     backup_window                         = optional(string, "07:00-08:00")
@@ -381,6 +383,8 @@ variable "sqs" {
     max_receive_count             = optional(number, 3)
     delay_seconds                 = optional(number, 1)
     dlq_delay_seconds             = optional(number, 0)
+    kms_master_key_id             = optional(string, null)
+    dlq_kms_master_key_id         = optional(string, null)
     alarm = object({
       alarm_description   = optional(string)
       comparison_operator = optional(string, "GreaterThanOrEqualToThreshold")
@@ -465,4 +469,21 @@ variable "cognito" {
     tags = optional(map(any), {})
   })
   description = "Subset of AWS Cognito configurations used on 'terraform-aws-modules/apigateway-v2/aws' module."
+}
+
+variable "secret_manager_settings" {
+  description = "AWS Secret Manager config for AvN Gateway"
+  type = object({
+    prefix                  = optional(string, "gateway")
+    recovery_window_in_days = optional(number, 30)
+    kms_key_id              = optional(string, null)
+    tags                    = optional(map(any), {})
+  })
+
+  default = {
+    prefix                  = "gateway"
+    recovery_window_in_days = 30
+    kms_key_id              = null
+    tags                    = {}
+  }
 }

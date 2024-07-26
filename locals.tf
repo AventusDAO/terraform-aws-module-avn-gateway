@@ -1,5 +1,48 @@
 locals {
   # secrets
+  sm = {
+    rds = {
+      value = {
+        root_user                 = ""
+        root_password             = ""
+        gateway_app_user          = ""
+        gateway_app_database      = ""
+        gateway_app_user_password = ""
+        gateway_rds_host          = var.rds.create ? module.rds[0].db_instance_address : ""
+        gateway_app_schema_sync   = false
+        db_explorer_host          = ""
+        db_explorer_user          = ""
+        db_explorer_pass          = ""
+        db_explorer_balances_name = ""
+        db_explorer_fees_name     = ""
+      }
+    }
+    cognito = {
+      value = {
+        client_secret = ""
+      }
+    }
+    vault = {
+      value = {
+        avn_vault_authority_username = "",
+        avn_vault_authority_password = "",
+        avn_vault_authority_mnemonic = "",
+        avn_vault_relayer_username   = "",
+        avn_vault_relayer_password   = "",
+        avn_vault_relayer_seed       = "",
+        vault_app_role_id            = "",
+        vault_app_secret_id          = ""
+      }
+    }
+    connector = {
+      value = {
+        tier1_provider_url = ""
+        autolower_pk       = ""
+      }
+    }
+  }
+
+  # To be removed at some point
   vault_secrets = {
     avn_vault_authority_username = "",
     avn_vault_authority_password = "",
@@ -20,6 +63,7 @@ locals {
     gateway_rds_host          = var.rds.create ? module.rds[0].db_instance_address : ""
     gateway_app_schema_sync   = false
   }
+  ################################################################################ END of to be removed
 
   # lambdas
   lambda_layers = toset(["common"])
