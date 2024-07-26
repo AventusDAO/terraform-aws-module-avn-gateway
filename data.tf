@@ -275,7 +275,10 @@ data "aws_iam_policy_document" "gateway_admin_portal" {
     resources = [
       aws_secretsmanager_secret.cognito.arn,
       aws_secretsmanager_secret.rds.arn,
-      aws_secretsmanager_secret.vault.arn
+      aws_secretsmanager_secret.vault.arn,
+      aws_secretsmanager_secret.this["cognito"].arn,
+      aws_secretsmanager_secret.this["rds"].arn,
+      aws_secretsmanager_secret.this["vault"].arn,
     ]
   }
 
@@ -329,7 +332,8 @@ data "aws_iam_policy_document" "gateway_vault" {
       "secretsmanager:DescribeSecret"
     ]
     resources = [
-      aws_secretsmanager_secret.vault.arn
+      aws_secretsmanager_secret.vault.arn,
+      aws_secretsmanager_secret.this["vault"].arn,
     ]
   }
 
@@ -363,24 +367,11 @@ data "aws_iam_policy_document" "gateway_connector" {
     resources = [
       aws_secretsmanager_secret.rds.arn,
       aws_secretsmanager_secret.vault.arn,
-      aws_secretsmanager_secret.connector.arn
+      aws_secretsmanager_secret.connector.arn,
+      aws_secretsmanager_secret.this["cognito"].arn,
+      aws_secretsmanager_secret.this["rds"].arn,
+      aws_secretsmanager_secret.this["vault"].arn,
     ]
-
-    dynamic "statement" {
-      for_each = var.secret_manager_settings.kms_key_id != null ? [1] : []
-      content {
-        effect = "Allow"
-        actions = [
-          "kms:ReEncrypt",
-          "kms:GenerateDataKey*",
-          "kms:Encrypt",
-          "kms:Decrypt"
-        ]
-        resources = [
-          var.secret_manager_settings.kms_key_id,
-        ]
-      }
-    }
   }
 
   statement {
@@ -415,6 +406,22 @@ data "aws_iam_policy_document" "gateway_connector" {
     resources = [
       module.sqs_queues[var.sqs.webhooks_queue_name].queue_arn,
     ]
+  }
+
+  dynamic "statement" {
+    for_each = var.secret_manager_settings.kms_key_id != null ? [1] : []
+    content {
+      effect = "Allow"
+      actions = [
+        "kms:ReEncrypt",
+        "kms:GenerateDataKey*",
+        "kms:Encrypt",
+        "kms:Decrypt"
+      ]
+      resources = [
+        var.secret_manager_settings.kms_key_id,
+      ]
+    }
   }
 }
 
