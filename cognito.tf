@@ -108,12 +108,13 @@ resource "aws_cognito_user_pool_client" "admin_portal" {
   #   refresh_token = "days"
   # }
 
-  # # included while https://github.com/hashicorp/terraform-provider-aws/issues/20298 is not addressed
-  # lifecycle {
-  #   ignore_changes = [
-  #     generate_secret,
-  #   ]
-  # }
+  # included while https://github.com/hashicorp/terraform-provider-aws/issues/20298 is not addressed
+  lifecycle {
+    ignore_changes = [
+      generate_secret,
+      token_validity_units,
+    ]
+  }
 }
 resource "aws_cognito_user_group" "main" {
   name         = each.key
