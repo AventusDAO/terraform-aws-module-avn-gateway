@@ -368,7 +368,7 @@ data "aws_iam_policy_document" "gateway_connector" {
       aws_secretsmanager_secret.rds.arn,
       aws_secretsmanager_secret.vault.arn,
       aws_secretsmanager_secret.connector.arn,
-      aws_secretsmanager_secret.this["cognito"].arn,
+      aws_secretsmanager_secret.this["connector"].arn,
       aws_secretsmanager_secret.this["rds"].arn,
       aws_secretsmanager_secret.this["vault"].arn,
     ]
