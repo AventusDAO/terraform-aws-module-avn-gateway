@@ -11,17 +11,17 @@ module "sg_rds" {
   description = "${coalesce(var.rds.override_name, "${var.name}-rds")} access"
   vpc_id      = var.vpc_id
 
-  ingress_with_cidr_blocks = [
-    {
-      rule        = "postgresql-tcp"
-      protocol    = "tcp"
-      description = "Allow traffic on gateway-rds port"
-      cidr_blocks = concat(
-        data.aws_vpc.current.cidr_block,
-        var.rds.allowed_cidr_blocks
-      )
-    },
-  ]
+  ingress_with_cidr_blocks = merge(
+    [
+      {
+        rule        = "postgresql-tcp"
+        protocol    = "tcp"
+        description = "Allow traffic on gateway-rds port"
+        cidr_blocks = data.aws_vpc.current.cidr_block
+      },
+    ],
+    local.rds_cidrs
+  )
 
   tags = merge(var.rds.tags, { Name = coalesce(var.rds.override_name, var.name) })
 }

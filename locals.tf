@@ -293,4 +293,16 @@ locals {
       description = "Group to grant write permission to users of the admin portal."
     }
   ]
+
+  #
+  # additional RDS cidr to allow access
+  #
+  rds_cidrs = [
+    for cidr in var.rds.allowed_cidr_blocks : {
+      rule        = "postgresql-tcp"
+      protocol    = "tcp"
+      description = "Allow traffic on gateway-rds port"
+      cidr_blocks = cidr
+    }
+  ]
 }
