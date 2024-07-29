@@ -22,6 +22,22 @@ data "aws_iam_policy_document" "gateway_send_handler_access" {
       module.sqs_queues[var.sqs.payer_queue_name].queue_arn
     ]
   }
+
+  dynamic "statement" {
+    for_each = var.sqs.kms_master_key_id != null ? [1] : []
+    content {
+      effect = "Allow"
+      actions = [
+        "kms:ReEncrypt",
+        "kms:GenerateDataKey*",
+        "kms:Encrypt",
+        "kms:Decrypt"
+      ]
+      resources = [
+        var.sqs.kms_master_key_id,
+      ]
+    }
+  }
 }
 
 data "aws_iam_policy_document" "gateway_send_handler_access_merged" {
@@ -57,6 +73,21 @@ data "aws_iam_policy_document" "gateway_split_fee_access" {
     resources = [
       module.sqs_queues[var.sqs.default_queue_name].queue_arn
     ]
+  }
+  dynamic "statement" {
+    for_each = var.sqs.kms_master_key_id != null ? [1] : []
+    content {
+      effect = "Allow"
+      actions = [
+        "kms:ReEncrypt",
+        "kms:GenerateDataKey*",
+        "kms:Encrypt",
+        "kms:Decrypt"
+      ]
+      resources = [
+        var.sqs.kms_master_key_id,
+      ]
+    }
   }
 }
 
@@ -94,6 +125,22 @@ data "aws_iam_policy_document" "gateway_tx_dispatch_access" {
       module.sqs_queues[var.sqs.tx_queue_name].queue_arn,
     ]
   }
+
+  dynamic "statement" {
+    for_each = var.sqs.kms_master_key_id != null ? [1] : []
+    content {
+      effect = "Allow"
+      actions = [
+        "kms:ReEncrypt",
+        "kms:GenerateDataKey*",
+        "kms:Encrypt",
+        "kms:Decrypt"
+      ]
+      resources = [
+        var.sqs.kms_master_key_id,
+      ]
+    }
+  }
 }
 
 data "aws_iam_policy_document" "gateway_tx_dispatch_merged" {
@@ -119,6 +166,22 @@ data "aws_iam_policy_document" "gateway_invalid_transaction_access" {
       module.sqs_queues[var.sqs.default_queue_name].dead_letter_queue_arn,
       module.sqs_queues[var.sqs.payer_queue_name].dead_letter_queue_arn
     ]
+  }
+
+  dynamic "statement" {
+    for_each = var.sqs.kms_master_key_id != null ? [1] : []
+    content {
+      effect = "Allow"
+      actions = [
+        "kms:ReEncrypt",
+        "kms:GenerateDataKey*",
+        "kms:Encrypt",
+        "kms:Decrypt"
+      ]
+      resources = [
+        var.sqs.kms_master_key_id,
+      ]
+    }
   }
 }
 
@@ -153,6 +216,7 @@ data "aws_iam_policy_document" "gateway_vote_access" {
       "arn:aws:s3:::${var.lambdas.vote_handler.vote_bucket}/*",
     ]
   }
+
 }
 
 # lift processing handler access
@@ -167,6 +231,21 @@ data "aws_iam_policy_document" "gateway_lift_processing_access" {
     resources = [
       module.sqs_queues[var.sqs.tx_queue_name].queue_arn,
     ]
+  }
+  dynamic "statement" {
+    for_each = var.sqs.kms_master_key_id != null ? [1] : []
+    content {
+      effect = "Allow"
+      actions = [
+        "kms:ReEncrypt",
+        "kms:GenerateDataKey*",
+        "kms:Encrypt",
+        "kms:Decrypt"
+      ]
+      resources = [
+        var.sqs.kms_master_key_id,
+      ]
+    }
   }
 }
 
@@ -196,7 +275,10 @@ data "aws_iam_policy_document" "gateway_admin_portal" {
     resources = [
       aws_secretsmanager_secret.cognito.arn,
       aws_secretsmanager_secret.rds.arn,
-      aws_secretsmanager_secret.vault.arn
+      aws_secretsmanager_secret.vault.arn,
+      aws_secretsmanager_secret.this["cognito"].arn,
+      aws_secretsmanager_secret.this["rds"].arn,
+      aws_secretsmanager_secret.this["vault"].arn,
     ]
   }
 
@@ -209,6 +291,22 @@ data "aws_iam_policy_document" "gateway_admin_portal" {
     resources = [
       "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:*:*"
     ]
+  }
+
+  dynamic "statement" {
+    for_each = var.secret_manager_settings.kms_key_id != null ? [1] : []
+    content {
+      effect = "Allow"
+      actions = [
+        "kms:ReEncrypt",
+        "kms:GenerateDataKey*",
+        "kms:Encrypt",
+        "kms:Decrypt"
+      ]
+      resources = [
+        var.secret_manager_settings.kms_key_id,
+      ]
+    }
   }
 }
 
@@ -234,8 +332,25 @@ data "aws_iam_policy_document" "gateway_vault" {
       "secretsmanager:DescribeSecret"
     ]
     resources = [
-      aws_secretsmanager_secret.vault.arn
+      aws_secretsmanager_secret.vault.arn,
+      aws_secretsmanager_secret.this["vault"].arn,
     ]
+  }
+
+  dynamic "statement" {
+    for_each = var.secret_manager_settings.kms_key_id != null ? [1] : []
+    content {
+      effect = "Allow"
+      actions = [
+        "kms:ReEncrypt",
+        "kms:GenerateDataKey*",
+        "kms:Encrypt",
+        "kms:Decrypt"
+      ]
+      resources = [
+        var.secret_manager_settings.kms_key_id,
+      ]
+    }
   }
 }
 
@@ -252,7 +367,10 @@ data "aws_iam_policy_document" "gateway_connector" {
     resources = [
       aws_secretsmanager_secret.rds.arn,
       aws_secretsmanager_secret.vault.arn,
-      aws_secretsmanager_secret.connector.arn
+      aws_secretsmanager_secret.connector.arn,
+      aws_secretsmanager_secret.this["cognito"].arn,
+      aws_secretsmanager_secret.this["rds"].arn,
+      aws_secretsmanager_secret.this["vault"].arn,
     ]
   }
 
@@ -288,6 +406,22 @@ data "aws_iam_policy_document" "gateway_connector" {
     resources = [
       module.sqs_queues[var.sqs.webhooks_queue_name].queue_arn,
     ]
+  }
+
+  dynamic "statement" {
+    for_each = var.secret_manager_settings.kms_key_id != null ? [1] : []
+    content {
+      effect = "Allow"
+      actions = [
+        "kms:ReEncrypt",
+        "kms:GenerateDataKey*",
+        "kms:Encrypt",
+        "kms:Decrypt"
+      ]
+      resources = [
+        var.secret_manager_settings.kms_key_id,
+      ]
+    }
   }
 }
 
@@ -325,5 +459,21 @@ data "aws_iam_policy_document" "gateway_webhooks_event_emitter_access" {
     resources = [
       module.sqs_queues[var.sqs.webhooks_queue_name].queue_arn,
     ]
+  }
+
+  dynamic "statement" {
+    for_each = var.sqs.kms_master_key_id != null ? [1] : []
+    content {
+      effect = "Allow"
+      actions = [
+        "kms:ReEncrypt",
+        "kms:GenerateDataKey*",
+        "kms:Encrypt",
+        "kms:Decrypt"
+      ]
+      resources = [
+        var.sqs.kms_master_key_id,
+      ]
+    }
   }
 }

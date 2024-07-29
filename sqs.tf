@@ -11,6 +11,8 @@ module "sqs_queues" {
   receive_wait_time_seconds     = var.sqs.receive_wait_time_seconds
   delay_seconds                 = var.sqs.delay_seconds
   dlq_delay_seconds             = var.sqs.dlq_delay_seconds
+  kms_master_key_id             = var.sqs.kms_master_key_id
+  dlq_kms_master_key_id         = var.sqs.dlq_kms_master_key_id
 
   redrive_policy = {
     maxReceiveCount = var.sqs.max_receive_count

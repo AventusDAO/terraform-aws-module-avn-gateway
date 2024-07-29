@@ -23,6 +23,7 @@ module "rds" {
   port                       = var.rds.port
   snapshot_identifier        = var.rds.snapshot_identifier
   ca_cert_identifier         = var.rds.ca_cert_identifier
+  kms_key_id                 = var.rds.kms_key_id
 
   multi_az               = var.rds.multi_az
   db_subnet_group_name   = aws_db_subnet_group.rds.id
