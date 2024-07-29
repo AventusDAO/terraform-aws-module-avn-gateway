@@ -107,6 +107,10 @@ variable "rds" {
         {
           name  = "client_encoding"
           value = "utf8"
+        },
+        {
+          name  = "rds.force_ssl"
+          value = 0
         }
       ]
     )
