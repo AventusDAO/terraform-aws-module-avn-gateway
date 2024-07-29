@@ -19,7 +19,7 @@ locals {
     }
     cognito = {
       value = {
-        client_secret = ""
+        client_secret = aws_cognito_user_pool_client.admin_portal.client_secret
       }
     }
     vault = {
