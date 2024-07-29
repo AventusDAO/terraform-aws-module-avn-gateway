@@ -112,7 +112,6 @@ resource "aws_cognito_user_pool_client" "admin_portal" {
   lifecycle {
     ignore_changes = [
       generate_secret,
-      token_validity_units #https://github.com/hashicorp/terraform-provider-aws/issues/32504
     ]
   }
 }

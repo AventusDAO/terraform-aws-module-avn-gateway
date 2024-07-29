@@ -297,12 +297,12 @@ locals {
   #
   # additional RDS cidr to allow access
   #
-  rds_cidrs = [
+  rds_cidrs = flatten([
     for cidr in var.rds.allowed_cidr_blocks : {
       rule        = "postgresql-tcp"
       protocol    = "tcp"
       description = "Allow traffic on gateway-rds port"
       cidr_blocks = cidr
     }
-  ]
+  ])
 }
