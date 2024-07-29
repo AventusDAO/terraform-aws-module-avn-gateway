@@ -16,7 +16,10 @@ module "sg_rds" {
       rule        = "postgresql-tcp"
       protocol    = "tcp"
       description = "Allow traffic on gateway-rds port"
-      cidr_blocks = data.aws_vpc.current.cidr_block
+      cidr_blocks = concat(
+        data.aws_vpc.current.cidr_block,
+        var.rds.allowed_cidr_blocks
+      )
     },
   ]
 
