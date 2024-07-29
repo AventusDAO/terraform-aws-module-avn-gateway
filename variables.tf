@@ -90,6 +90,7 @@ variable "rds" {
     create_monitoring_role                = optional(bool, true)
     monitoring_interval                   = optional(number, 60)
     monitoring_role_name                  = optional(string)
+    allowed_cidr_blocks                   = optional(list(string), [])
     parameters = optional(
       list(
         object(
