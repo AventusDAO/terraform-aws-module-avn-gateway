@@ -11,7 +11,7 @@ module "sg_rds" {
   description = "${coalesce(var.rds.override_name, "${var.name}-rds")} access"
   vpc_id      = var.vpc_id
 
-  ingress_with_cidr_blocks = merge(
+  ingress_with_cidr_blocks = concat(
     [
       {
         rule        = "postgresql-tcp"
