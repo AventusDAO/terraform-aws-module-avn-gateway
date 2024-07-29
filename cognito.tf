@@ -102,17 +102,17 @@ resource "aws_cognito_user_pool_client" "admin_portal" {
   prevent_user_existence_errors        = var.cognito.pool_client.prevent_user_existence_errors
   supported_identity_providers         = var.cognito.pool_client.supported_identity_providers
 
-  token_validity_units {
-    access_token  = "minutes"
-    id_token      = "minutes"
-    refresh_token = "days"
-  }
+  # token_validity_units {
+  #   access_token  = "minutes"
+  #   id_token      = "minutes"
+  #   refresh_token = "days"
+  # }
 
   # included while https://github.com/hashicorp/terraform-provider-aws/issues/20298 is not addressed
   lifecycle {
     ignore_changes = [
       generate_secret,
-      token_validity_units #https://github.com/hashicorp/terraform-provider-aws/issues/32504
+      token_validity_units,
     ]
   }
 }

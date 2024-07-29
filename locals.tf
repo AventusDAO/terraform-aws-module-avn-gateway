@@ -19,7 +19,7 @@ locals {
     }
     cognito = {
       value = {
-        client_secret = ""
+        client_secret = aws_cognito_user_pool_client.admin_portal.client_secret
       }
     }
     vault = {
@@ -293,4 +293,16 @@ locals {
       description = "Group to grant write permission to users of the admin portal."
     }
   ]
+
+  #
+  # additional RDS cidr to allow access
+  #
+  rds_cidrs = flatten([
+    for cidr in var.rds.allowed_cidr_blocks : {
+      rule        = "postgresql-tcp"
+      protocol    = "tcp"
+      description = "Allow traffic on gateway-rds port"
+      cidr_blocks = cidr
+    }
+  ])
 }
