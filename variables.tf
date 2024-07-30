@@ -111,10 +111,6 @@ variable "rds" {
         {
           name  = "rds.force_ssl"
           value = 0
-        },
-        {
-          name  = "ssl"
-          value = 0
         }
       ]
     )
