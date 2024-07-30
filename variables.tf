@@ -109,8 +109,9 @@ variable "rds" {
           value = "utf8"
         },
         {
-          name  = "rds.force_ssl"
-          value = 0
+          name         = "rds.force_ssl"
+          value        = 0
+          apply_method = "pending-reboot"
         }
       ]
     )
