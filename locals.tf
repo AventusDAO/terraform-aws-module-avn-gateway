@@ -124,7 +124,11 @@ locals {
     }
 
     vote_handler = {
-      env_vars                      = var.lambdas.vote_handler.env_vars
+      env_vars = merge(
+        {
+          AVN_VOTES_BUCKET = var.lambdas.vote_handler.vote_bucket
+        }, var.lambdas.vote_handler.env_vars
+      )
       memory_size                   = var.lambdas.vote_handler.memory_size
       timeout                       = var.lambdas.vote_handler.timeout
       override_event_source_mapping = var.lambdas.vote_handler.override_event_source_mapping

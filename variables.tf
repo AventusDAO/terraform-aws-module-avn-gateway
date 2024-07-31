@@ -276,6 +276,7 @@ variable "lambdas" {
         timeout                       = optional(number, 30)
         override_event_source_mapping = optional(map(any), null)
         vote_bucket                   = string
+        vote_bucket_create            = optional(bool, false)
         }
       )
     )
