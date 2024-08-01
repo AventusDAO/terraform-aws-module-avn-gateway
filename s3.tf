@@ -6,7 +6,7 @@ module "s3_vote_bucket" {
   bucket                   = var.lambdas.vote_handler.vote_bucket
   acl                      = "private"
   control_object_ownership = true
-  object_ownership         = "BucketOwnerEnforced"
+  object_ownership         = "BucketOwnerPreferred"
 
   versioning = {
     enabled = true
