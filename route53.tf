@@ -16,3 +16,8 @@ resource "aws_route53_record" "admin_portal" {
     zone_id = "Z2FDTNDATAQYW2"
   }
 }
+
+moved {
+  from = aws_route53_record.admin_portal
+  to   = aws_route53_record.admin_portal[0]
+}

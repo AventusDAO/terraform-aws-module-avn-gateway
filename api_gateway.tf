@@ -177,3 +177,8 @@ resource "aws_route53_record" "api_gateway" {
     evaluate_target_health = false
   }
 }
+
+moved {
+  from = aws_route53_record.api_gateway
+  to   = aws_route53_record.api_gateway[0]
+}
