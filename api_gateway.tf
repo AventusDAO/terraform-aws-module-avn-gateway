@@ -165,6 +165,8 @@ resource "aws_apigatewayv2_api_mapping" "api_gateway" {
 }
 
 resource "aws_route53_record" "api_gateway" {
+  count = create_dns_record ? 1 : 0
+
   zone_id = var.route53_zone_id
   name    = var.api_gateway.domain_name
   type    = "A"

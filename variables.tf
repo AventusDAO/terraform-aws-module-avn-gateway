@@ -22,6 +22,13 @@ variable "lambda_version" {
 variable "route53_zone_id" {
   type        = string
   description = "Zone id where to create cognito admin portal custom domain record."
+  default     = ""
+}
+
+variable "create_cognito_dns_record" {
+  type        = bool
+  description = "Create domain record for cognito"
+  default     = true
 }
 
 variable "monitoring_sns_topic_arn" {
@@ -124,6 +131,7 @@ variable "api_gateway" {
   type = object({
     domain_name                 = string
     domain_name_certificate_arn = string
+    create_dns_record           = optional(bool, true)
     override_name               = optional(string) # if not set, var.name is used
     description                 = optional(string)
     protocol_type               = optional(string, "HTTP")
