@@ -2,7 +2,7 @@
 # gateway cognito custom record
 #
 resource "aws_route53_record" "admin_portal" {
-  count = var.create_cognito_dns_record ? 1 : 0
+  count = var.cognito.create_dns_record ? 1 : 0
 
   zone_id         = var.route53_zone_id
   name            = aws_cognito_user_pool_domain.admin_portal.domain

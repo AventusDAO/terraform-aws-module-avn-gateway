@@ -25,12 +25,6 @@ variable "route53_zone_id" {
   default     = ""
 }
 
-variable "create_cognito_dns_record" {
-  type        = bool
-  description = "Create domain record for cognito"
-  default     = true
-}
-
 variable "monitoring_sns_topic_arn" {
   type        = string
   description = "SNS topic ARN where to send alarms."
@@ -415,11 +409,11 @@ variable "sqs" {
   })
   description = "List of FIFO queue names to create and its global configurations. Alarms for more than 20 messages on the DLQ will also be created."
 }
-
 variable "cognito" {
   type = object({
     domain                       = string
     certificate_arn              = string
+    create_dns_record            = optional(bool, true)
     override_name                = optional(string) # if not set, var.name is used
     recovery_mechanism           = optional(list(string), ["verified_email"])
     allow_admin_create_user_only = optional(bool, true)
