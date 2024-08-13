@@ -22,6 +22,7 @@ variable "lambda_version" {
 variable "route53_zone_id" {
   type        = string
   description = "Zone id where to create cognito admin portal custom domain record."
+  default     = ""
 }
 
 variable "monitoring_sns_topic_arn" {
@@ -124,6 +125,7 @@ variable "api_gateway" {
   type = object({
     domain_name                 = string
     domain_name_certificate_arn = string
+    create_dns_record           = optional(bool, true)
     override_name               = optional(string) # if not set, var.name is used
     description                 = optional(string)
     protocol_type               = optional(string, "HTTP")
@@ -407,11 +409,11 @@ variable "sqs" {
   })
   description = "List of FIFO queue names to create and its global configurations. Alarms for more than 20 messages on the DLQ will also be created."
 }
-
 variable "cognito" {
   type = object({
     domain                       = string
     certificate_arn              = string
+    create_dns_record            = optional(bool, true)
     override_name                = optional(string) # if not set, var.name is used
     recovery_mechanism           = optional(list(string), ["verified_email"])
     allow_admin_create_user_only = optional(bool, true)

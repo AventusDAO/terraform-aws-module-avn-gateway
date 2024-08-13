@@ -165,6 +165,8 @@ resource "aws_apigatewayv2_api_mapping" "api_gateway" {
 }
 
 resource "aws_route53_record" "api_gateway" {
+  count = var.api_gateway.create_dns_record ? 1 : 0
+
   zone_id = var.route53_zone_id
   name    = var.api_gateway.domain_name
   type    = "A"
@@ -174,4 +176,9 @@ resource "aws_route53_record" "api_gateway" {
     zone_id                = aws_apigatewayv2_domain_name.api_gateway.domain_name_configuration[0].hosted_zone_id
     evaluate_target_health = false
   }
+}
+
+moved {
+  from = aws_route53_record.api_gateway
+  to   = aws_route53_record.api_gateway[0]
 }
