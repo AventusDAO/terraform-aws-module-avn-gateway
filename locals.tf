@@ -286,4 +286,6 @@ locals {
       cidr_blocks = cidr
     }
   ])
+
+  domain_admin_portal = try(var.cognito.domain_admin_portal, "admin-portal.${(replace(var.name, "-gateway", ""))}.aventus.network/")
 }
