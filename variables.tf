@@ -412,6 +412,7 @@ variable "sqs" {
 variable "cognito" {
   type = object({
     domain                       = string
+    domain_admin_portal          = optional(string, null)
     certificate_arn              = string
     create_dns_record            = optional(bool, true)
     override_name                = optional(string) # if not set, var.name is used
