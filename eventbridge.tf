@@ -13,7 +13,7 @@ module "eventbridge" {
     lift_processing_handler = {
       description         = "process-lifts trigger lambda lift_processing_handler"
       schedule_expression = "rate(3 minutes)"
-      state               = var.eventbridge_rules.tx_status_update_state
+      state               = var.eventbridge_rules.lift_processing_state
     }
   }
 
