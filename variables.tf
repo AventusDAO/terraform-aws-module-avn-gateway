@@ -497,3 +497,15 @@ variable "secret_manager_settings" {
     tags                    = {}
   }
 }
+
+variable "eventbridge_rules" {
+  description = "EventBridge rules config"
+  type = object({
+    tx_status_update_state = optional(string, "ENABLED")
+    lift_processing_state  = optional(string, "ENABLED")
+  })
+  default = {
+    tx_status_update_state = "ENABLED"
+    lift_processing_state  = "ENABLED"
+  }
+}
