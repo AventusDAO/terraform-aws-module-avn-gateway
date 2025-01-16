@@ -89,6 +89,12 @@ resource "aws_cognito_user_pool_domain" "admin_portal" {
   user_pool_id    = aws_cognito_user_pool.admin_portal.id
 }
 
+resource "aws_cognito_user_pool_domain" "aws" {
+  count        = var.cognito.aws_domain != null ? 1 : 0
+  domain       = var.cognito.aws_domain
+  user_pool_id = aws_cognito_user_pool.admin_portal.id
+}
+
 resource "aws_cognito_user_pool_client" "admin_portal" {
   name                                 = coalesce(var.cognito.override_name, "${var.name}-admin-portal")
   user_pool_id                         = aws_cognito_user_pool.admin_portal.id

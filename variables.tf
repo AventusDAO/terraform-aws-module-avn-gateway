@@ -410,6 +410,7 @@ variable "cognito" {
     certificate_arn              = string
     create_dns_record            = optional(bool, true)
     route53_zone_id              = string
+    aws_domain                   = optional(string, null)
     override_name                = optional(string) # if not set, var.name is used
     recovery_mechanism           = optional(list(string), ["verified_email"])
     allow_admin_create_user_only = optional(bool, true)
