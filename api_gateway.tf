@@ -145,3 +145,26 @@ module "api_gateway" {
 
   tags = merge(var.api_gateway.tags, { Name = coalesce(var.api_gateway.override_name, var.name) })
 }
+
+
+resource "aws_apigatewayv2_domain_name" "this" {
+  for_each = var.api_gateway.domains
+
+  domain_name = each.value.domain_name
+
+  domain_name_configuration {
+    certificate_arn = each.value.certificate_arn
+    endpoint_type   = "REGIONAL"
+    security_policy = "TLS_1_2"
+  }
+
+  tags = var.api_gateway.tags
+}
+
+resource "aws_apigatewayv2_api_mapping" "this" {
+  for_each = var.api_gateway.domains
+
+  api_id      = module.api_gateway.api_id
+  domain_name = aws_apigatewayv2_domain_name.this[each.key].id
+  stage       = module.api_gateway.stage_id
+}
