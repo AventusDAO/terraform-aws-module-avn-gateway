@@ -3,7 +3,7 @@ name: Automatic Infra-scripts Release
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   github-release:
