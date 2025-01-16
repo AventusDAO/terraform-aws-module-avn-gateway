@@ -19,12 +19,6 @@ variable "lambda_version" {
   description = "(Optional) Commit hash of deployed lambdas. By default 'latest' is used."
 }
 
-variable "route53_zone_id" {
-  type        = string
-  description = "Zone id where to create cognito admin portal custom domain record."
-  default     = ""
-}
-
 variable "monitoring_sns_topic_arn" {
   type        = string
   description = "SNS topic ARN where to send alarms."
@@ -123,12 +117,15 @@ variable "rds" {
 
 variable "api_gateway" {
   type = object({
-    domain_name                 = string
-    domain_name_certificate_arn = string
-    create_dns_record           = optional(bool, true)
-    override_name               = optional(string) # if not set, var.name is used
-    description                 = optional(string)
-    protocol_type               = optional(string, "HTTP")
+    domains = map(object({
+      domain_name       = string
+      certificate_arn   = string
+      create_dns_record = optional(bool, true)
+      route53_zone_id   = string
+    }))
+    override_name = optional(string) # if not set, var.name is used
+    description   = optional(string)
+    protocol_type = optional(string, "HTTP")
     cors_configuration = optional(
       object({
         allow_credentials = optional(bool)
@@ -137,8 +134,7 @@ variable "api_gateway" {
         allow_origins     = optional(list(string))
         expose_headers    = optional(list(string))
         max_age           = optional(number)
-        }
-      ),
+      }),
       {
         allow_credentials = false
         allow_headers     = ["*"]
@@ -148,14 +144,13 @@ variable "api_gateway" {
         max_age           = 100
       }
     )
-    default_stage_access_log_format = optional(string) # more here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_stage#access_log_settings
+    default_stage_access_log_format = optional(string)
     stage_default_route_settings = optional(
       object({
         detailed_metrics_enabled = optional(bool)
         throttling_burst_limit   = optional(number)
         throttling_rate_limit    = optional(number)
-        }
-      ),
+      }),
       {
         detailed_metrics_enabled = true
         throttling_burst_limit   = 100
@@ -412,9 +407,10 @@ variable "sqs" {
 variable "cognito" {
   type = object({
     domain                       = string
-    domain_admin_portal          = optional(string, null)
     certificate_arn              = string
     create_dns_record            = optional(bool, true)
+    route53_zone_id              = string
+    aws_domain                   = optional(string, null)
     override_name                = optional(string) # if not set, var.name is used
     recovery_mechanism           = optional(list(string), ["verified_email"])
     allow_admin_create_user_only = optional(bool, true)
@@ -426,8 +422,7 @@ variable "cognito" {
         require_symbols                  = optional(bool)
         require_uppercase                = optional(bool)
         temporary_password_validity_days = optional(number)
-        }
-      ),
+      }),
       {
         minimum_length                   = 12
         require_lowercase                = true

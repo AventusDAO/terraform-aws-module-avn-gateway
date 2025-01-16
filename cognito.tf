@@ -28,7 +28,7 @@ resource "aws_cognito_user_pool" "admin_portal" {
       Your username is <b>{username}</b> and temporary password is <b>{####}</b>
       <p>To log in, browse to <span style="color: #5100ff;">https://${local.domain_admin_portal}</span></p> <p>You will be prompted to change your password when you first log in, this password will expire in 1 day.</p>
       <br/><br/> <br/>
-      <h4>Powered by Aventus (www.aventus.network)</h4>
+      <h4>Powered by Aventus (www.aventus.io)</h4>
     </div>
 EOT
       email_subject = "${title(replace(var.name, "-", " "))} registration - your temporary password"
@@ -87,6 +87,12 @@ resource "aws_cognito_user_pool_domain" "admin_portal" {
   domain          = var.cognito.domain
   certificate_arn = var.cognito.certificate_arn
   user_pool_id    = aws_cognito_user_pool.admin_portal.id
+}
+
+resource "aws_cognito_user_pool_domain" "aws" {
+  count        = var.cognito.aws_domain != null ? 1 : 0
+  domain       = var.cognito.aws_domain
+  user_pool_id = aws_cognito_user_pool.admin_portal.id
 }
 
 resource "aws_cognito_user_pool_client" "admin_portal" {
