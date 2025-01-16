@@ -11,8 +11,8 @@ output "dns_settings" {
     api_gateway = {
       for k, v in var.api_gateway.domains : k => {
         name               = try(v.domain_name, null)
-        hosted_zone_id     = try(aws_apigatewayv2_domain_name.this[k].hosted_zone_id, null)
-        target_domain_name = try(aws_apigatewayv2_domain_name.this[k].target_domain_name, null)
+        hosted_zone_id     = try(aws_apigatewayv2_domain_name.this[k].domain_name_configuration[0].hosted_zone_id, null)
+        target_domain_name = try(aws_apigatewayv2_domain_name.this[k].domain_name_configuration[0].target_domain_name, null)
       }
     }
     admin_portal = {
