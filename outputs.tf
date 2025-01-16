@@ -7,7 +7,7 @@ output "rds" {
 
 output "dns_settings" {
   description = "DNS Settings for API Gateway and Admin Portal"
-  value = tomap({
+  value = {
     api_gateway = {
       for k, v in var.api_gateway.domains : k => {
         name               = try(v.domain_name, null)
@@ -20,5 +20,5 @@ output "dns_settings" {
       hosted_zone_id     = "Z2FDTNDATAQYW2" # This zone_id is fixed (cloudfront distribution)
       target_domain_name = try(aws_cognito_user_pool_domain.admin_portal.cloudfront_distribution_arn, null)
     }
-  })
+  }
 }
