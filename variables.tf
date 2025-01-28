@@ -30,7 +30,7 @@ variable "memory_db" {
     create                     = optional(bool, true)
     override_name              = optional(string) #if not set, var.name is used
     description                = optional(string, "Gateway MemoryDB cluster (redis)")
-    engine_version             = optional(string, "6.2")
+    engine_version             = optional(string, "7.1")
     auto_minor_version_upgrade = optional(bool, false)
     node_type                  = optional(string, "db.t4g.small")
     num_shards                 = optional(number, 1)
@@ -43,7 +43,7 @@ variable "memory_db" {
     snapshot_retention_limit   = optional(number, 14)
     snapshot_window            = optional(string, "06:00-07:00")
     create_parameter_group     = optional(bool, false)
-    parameter_group_name       = optional(string, "default.memorydb-redis6")
+    parameter_group_name       = optional(string, "default.memorydb-redis7")
     subnet_group_name          = optional(string)
     subnet_group_description   = optional(string)
     subnet_group_tags          = optional(map(any), {})
@@ -59,9 +59,9 @@ variable "rds" {
     create                                = optional(bool, true)
     override_name                         = optional(string) #if not set, var.name is used
     engine                                = optional(string, "postgres")
-    engine_version                        = optional(string, "14.10")
-    family                                = optional(string, "postgres14")
-    major_engine_version                  = optional(string, "14")
+    engine_version                        = optional(string, "17.2")
+    family                                = optional(string, "postgres17")
+    major_engine_version                  = optional(string, "17")
     instance_class                        = optional(string, "db.t4g.small")
     auto_minor_version_upgrade            = optional(bool, false)
     storage_type                          = optional(string, "gp3")
@@ -167,8 +167,8 @@ variable "lambdas" {
   type = object({
     vpc_subnet_ids            = list(string)
     extra_envs                = optional(bool, true)
-    layer_compatible_runtimes = optional(list(string), ["nodejs14.x"])
-    runtime                   = optional(string, "nodejs14.x")
+    layer_compatible_runtimes = optional(list(string), ["nodejs18.x"])
+    runtime                   = optional(string, "nodejs18.x")
     zip_location = optional(
       object({
         bucket     = optional(string)

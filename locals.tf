@@ -3,18 +3,16 @@ locals {
   sm = {
     rds = {
       value = {
-        root_user                 = ""
-        root_password             = ""
-        gateway_app_user          = ""
-        gateway_app_database      = ""
+        gateway_app_user          = "gateway_app"
+        gateway_app_database      = "gateway_app_db"
         gateway_app_user_password = ""
-        gateway_rds_host          = var.rds.create ? module.rds[0].db_instance_address : ""
-        gateway_app_schema_sync   = false
+        gateway_rds_host          = try(module.rds[0].db_instance_address, null)
+        gateway_app_schema_sync   = tostring(false)
         db_explorer_host          = ""
-        db_explorer_user          = ""
+        db_explorer_user          = "explorer_ro"
         db_explorer_pass          = ""
-        db_explorer_balances_name = ""
-        db_explorer_fees_name     = ""
+        db_explorer_balances_name = "explorer_balances_db"
+        db_explorer_fees_name     = "explorer_fees_db"
       }
     }
     cognito = {
