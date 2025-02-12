@@ -24,7 +24,7 @@ module "lambdas_layers" {
 #
 module "lambdas" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "7.2.2"
+  version = "7.20.1"
 
   vpc_subnet_ids         = var.lambdas.vpc_subnet_ids
   vpc_security_group_ids = [module.sg_lambdas.security_group_id]
