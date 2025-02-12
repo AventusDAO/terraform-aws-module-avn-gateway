@@ -1,35 +1,4 @@
 locals {
-  # Common configurations
-  common_lambda_config = {
-    allowed_triggers = local.common_lambda_permissions
-    memory_size      = 256 # Default size unless overridden
-    timeout          = 30  # Default timeout unless overridden
-  }
-
-  # Common SQS URLs used across multiple lambdas
-  sqs_urls = {
-    default = module.sqs_queues[var.sqs.default_queue_name].queue_url
-    payer   = module.sqs_queues[var.sqs.payer_queue_name].queue_url
-    tx      = module.sqs_queues[var.sqs.tx_queue_name].queue_url
-  }
-
-  # Common SQS ARNs
-  sqs_arns = {
-    default     = module.sqs_queues[var.sqs.default_queue_name].queue_arn
-    payer       = module.sqs_queues[var.sqs.payer_queue_name].queue_arn
-    tx          = module.sqs_queues[var.sqs.tx_queue_name].queue_arn
-    webhooks    = module.sqs_queues[var.sqs.webhooks_queue_name].queue_arn
-    dlq_default = module.sqs_queues[var.sqs.default_queue_name].dead_letter_queue_arn
-    dlq_payer   = module.sqs_queues[var.sqs.payer_queue_name].dead_letter_queue_arn
-  }
-
-  # Common event source mapping configuration
-  event_source_mapping_config = {
-    batch_failure = {
-      function_response_types = ["ReportBatchItemFailures"]
-    }
-  }
-
   # secrets
   sm = {
     admin-portal = {
@@ -43,7 +12,7 @@ locals {
         corsAllowedUrl          = "https://${var.cognito.domain_admin_portal}"
         backendUrl              = ""
         cognitoLogoutUrl        = "https://${var.cognito.domain_admin_portal}/logout"
-        redisUrl                = module.memory_db[0].cluster_endpoint_address
+        redisUrl                = module.memory_db.redis_endpoint
         logGroups = join(", ", concat(
           [for handler in ["split_fee_handler", "send_handler", "authorisation_handler", "invalid_transaction_handler", "tx_dispatch_handler"] :
             module.lambdas[handler].lambda_cloudwatch_log_group_name
@@ -102,27 +71,191 @@ locals {
       override_event_source_mapping = var.lambdas.authorisation_handler.override_event_source_mapping
       allowed_triggers              = local.common_lambda_permissions
     }
-    send_handler = merge(var.lambdas.send_handler, {
+
+    send_handler = {
       env_vars = var.lambdas.extra_envs ? merge(
         {
-          SQS_DEFAULT_QUEUE_URL = local.sqs_urls.default
-          SQS_PAYER_QUEUE_URL   = local.sqs_urls.payer
-        },
-        var.lambdas.send_handler.env_vars
+          SQS_DEFAULT_QUEUE_URL = module.sqs_queues[var.sqs.default_queue_name].queue_url
+          SQS_PAYER_QUEUE_URL   = module.sqs_queues[var.sqs.payer_queue_name].queue_url
+        }, var.lambdas.send_handler.env_vars
       ) : var.lambdas.send_handler.env_vars
-      extra_policy_arn = aws_iam_policy.gateway_send_handler_access.arn
-    })
-    poll_handler                      = var.lambdas.poll_handler
-    query_handler                     = var.lambdas.query_handler
-    lift_processing_handler           = var.lambdas.lift_processing_handler
-    tx_status_update_handler          = var.lambdas.tx_status_update_handler
-    vote_handler                      = var.lambdas.vote_handler
-    lower_handler                     = var.lambdas.lower_handler
-    split_fee_handler                 = var.lambdas.split_fee_handler
-    tx_dispatch_handler               = var.lambdas.tx_dispatch_handler
-    webhooks_event_emitter_handler    = var.lambdas.webhooks_event_emitter_handler
-    webhooks_verification_key_handler = var.lambdas.webhooks_verification_key_handler
-    invalid_transaction_handler       = var.lambdas.invalid_transaction_handler
+
+      memory_size                   = var.lambdas.send_handler.memory_size
+      timeout                       = var.lambdas.send_handler.timeout
+      extra_policy_arn              = aws_iam_policy.gateway_send_handler_access.arn
+      override_event_source_mapping = var.lambdas.send_handler.override_event_source_mapping
+      allowed_triggers              = local.common_lambda_permissions
+    }
+
+    poll_handler = {
+      env_vars                      = var.lambdas.poll_handler.env_vars
+      memory_size                   = var.lambdas.poll_handler.memory_size
+      timeout                       = var.lambdas.poll_handler.timeout
+      override_event_source_mapping = var.lambdas.poll_handler.override_event_source_mapping
+      allowed_triggers              = local.common_lambda_permissions
+    }
+
+    query_handler = {
+      env_vars                      = var.lambdas.query_handler.env_vars
+      memory_size                   = var.lambdas.query_handler.memory_size
+      timeout                       = var.lambdas.query_handler.timeout
+      override_event_source_mapping = var.lambdas.query_handler.override_event_source_mapping
+      allowed_triggers              = local.common_lambda_permissions
+    }
+
+    lift_processing_handler = {
+      env_vars = var.lambdas.extra_envs ? merge(
+        {
+          SQS_TX_QUEUE_URL = module.sqs_queues[var.sqs.tx_queue_name].queue_url
+        }, var.lambdas.lift_processing_handler.env_vars
+      ) : var.lambdas.lift_processing_handler.env_vars
+
+      memory_size                   = var.lambdas.lift_processing_handler.memory_size
+      timeout                       = var.lambdas.lift_processing_handler.timeout
+      override_event_source_mapping = var.lambdas.lift_processing_handler.override_event_source_mapping
+      extra_policy_arn              = aws_iam_policy.gateway_lift_processing_access.arn
+      allowed_triggers = merge(
+        local.common_lambda_permissions,
+        {
+          allow_event_bridge_rule = {
+            principal  = "events.amazonaws.com"
+            source_arn = module.eventbridge.eventbridge_rule_arns["lift_processing_handler"]
+          }
+        }
+      )
+    }
+
+    tx_status_update_handler = {
+      env_vars                      = var.lambdas.tx_status_update_handler.env_vars
+      memory_size                   = var.lambdas.tx_status_update_handler.memory_size
+      timeout                       = var.lambdas.tx_status_update_handler.timeout
+      override_event_source_mapping = var.lambdas.tx_status_update_handler.override_event_source_mapping
+      allowed_triggers = merge(
+        local.common_lambda_permissions,
+        {
+          allow_event_bridge_rule = {
+            principal  = "events.amazonaws.com"
+            source_arn = module.eventbridge.eventbridge_rule_arns["tx_status_update_handler"]
+          }
+        }
+      )
+    }
+
+    vote_handler = {
+      env_vars = merge(
+        {
+          AVN_VOTES_BUCKET = var.lambdas.vote_handler.vote_bucket
+        }, var.lambdas.vote_handler.env_vars
+      )
+      memory_size                   = var.lambdas.vote_handler.memory_size
+      timeout                       = var.lambdas.vote_handler.timeout
+      override_event_source_mapping = var.lambdas.vote_handler.override_event_source_mapping
+      extra_policy_arn              = aws_iam_policy.gateway_vote_access.arn
+      allowed_triggers              = local.common_lambda_permissions
+    }
+
+    lower_handler = {
+      env_vars                      = var.lambdas.lower_handler.env_vars
+      memory_size                   = var.lambdas.lower_handler.memory_size
+      timeout                       = var.lambdas.lower_handler.timeout
+      override_event_source_mapping = var.lambdas.lower_handler.override_event_source_mapping
+      allowed_triggers              = local.common_lambda_permissions
+    }
+
+    split_fee_handler = {
+      env_vars = var.lambdas.extra_envs ? merge(
+        {
+          SQS_DEFAULT_QUEUE_URL = module.sqs_queues[var.sqs.default_queue_name].queue_url
+          SQS_PAYER_QUEUE_URL   = module.sqs_queues[var.sqs.payer_queue_name].queue_url
+        }, var.lambdas.split_fee_handler.env_vars
+      ) : var.lambdas.split_fee_handler.env_vars
+
+      event_source_mapping = coalesce(var.lambdas.split_fee_handler.override_event_source_mapping, {
+        sqs_payer = {
+          event_source_arn        = module.sqs_queues[var.sqs.payer_queue_name].queue_arn
+          function_response_types = ["ReportBatchItemFailures"]
+        }
+      })
+
+      memory_size      = var.lambdas.split_fee_handler.memory_size
+      timeout          = var.lambdas.split_fee_handler.timeout
+      extra_policy_arn = aws_iam_policy.gateway_split_fee_access.arn
+      allowed_triggers = local.common_lambda_permissions
+    }
+
+    tx_dispatch_handler = {
+      env_vars = var.lambdas.extra_envs ? merge(
+        {
+          SQS_DEFAULT_QUEUE_URL = module.sqs_queues[var.sqs.default_queue_name].queue_url
+          SQS_TX_QUEUE_URL      = module.sqs_queues[var.sqs.tx_queue_name].queue_url
+        }, var.lambdas.tx_dispatch_handler.env_vars
+      ) : var.lambdas.tx_dispatch_handler.env_vars
+
+      event_source_mapping = coalesce(var.lambdas.tx_dispatch_handler.override_event_source_mapping, {
+        sqs_default = {
+          event_source_arn        = module.sqs_queues[var.sqs.default_queue_name].queue_arn
+          function_response_types = ["ReportBatchItemFailures"]
+        }
+      })
+      memory_size      = var.lambdas.tx_dispatch_handler.memory_size
+      timeout          = var.lambdas.tx_dispatch_handler.timeout
+      extra_policy_arn = aws_iam_policy.gateway_tx_dispatch_access.arn
+      allowed_triggers = local.common_lambda_permissions
+    }
+
+    webhooks_event_emitter_handler = {
+      env_vars = var.lambdas.extra_envs ? merge(
+        {
+          WEBHOOKS_SIGNER_KMS_KEY_ID = aws_kms_key.gateway_webhooks.key_id
+        },
+        var.lambdas.webhooks_event_emitter_handler.env_vars
+      ) : var.lambdas.webhooks_event_emitter_handler.env_vars
+      memory_size      = var.lambdas.webhooks_event_emitter_handler.memory_size
+      timeout          = var.lambdas.webhooks_event_emitter_handler.timeout
+      extra_policy_arn = aws_iam_policy.gateway_webhooks_event_emitter_access.arn
+      allowed_triggers = {
+        sqs_webhooks_event_emitter = {
+          principal  = "sqs.amazonaws.com"
+          source_arn = module.sqs_queues[var.sqs.webhooks_queue_name].queue_arn
+        }
+      }
+      event_source_mapping = {
+        sqs_webhooks = {
+          event_source_arn        = module.sqs_queues[var.sqs.webhooks_queue_name].queue_arn
+          function_response_types = ["ReportBatchItemFailures"]
+        }
+      }
+    }
+
+    webhooks_verification_key_handler = {
+      env_vars = var.lambdas.extra_envs ? merge(
+        {
+          WEBHOOKS_SIGNER_KMS_KEY_ID = aws_kms_key.gateway_webhooks.key_id
+        },
+        var.lambdas.webhooks_verification_key_handler.env_vars
+      ) : var.lambdas.webhooks_verification_key_handler.env_vars
+      memory_size      = var.lambdas.webhooks_verification_key_handler.memory_size
+      timeout          = var.lambdas.webhooks_verification_key_handler.timeout
+      allowed_triggers = local.common_lambda_permissions
+      extra_policy_arn = aws_iam_policy.gateway_webhooks_verification_key_access.arn
+    }
+
+    invalid_transaction_handler = {
+      env_vars = var.lambdas.invalid_transaction_handler.env_vars
+      event_source_mapping = coalesce(var.lambdas.invalid_transaction_handler.override_event_source_mapping, {
+        sqs_default = {
+          event_source_arn = module.sqs_queues[var.sqs.default_queue_name].dead_letter_queue_arn
+        }
+        sqs_payer = {
+          event_source_arn = module.sqs_queues[var.sqs.payer_queue_name].dead_letter_queue_arn
+        }
+      })
+
+      memory_size      = var.lambdas.invalid_transaction_handler.memory_size
+      timeout          = var.lambdas.invalid_transaction_handler.timeout
+      extra_policy_arn = aws_iam_policy.gateway_invalid_transaction_access.arn
+      allowed_triggers = local.common_lambda_permissions
+    }
   }
 
   common_lambda_permissions = {
@@ -133,33 +266,42 @@ locals {
     }
   }
 
-  # Cognito user groups
   defaults_cognito_user_groups = [
-    for group in ["admin", "ops", "payer", "read", "relayer", "write"] : {
-      name        = group
-      description = "Group to grant ${group} permission to users of the admin portal."
+    {
+      name        = "admin",
+      description = "Group to grant admin permission to users of the admin portal."
+    },
+    {
+      name        = "ops",
+      description = "Group for users who maintain the infra and infra level configurations."
+    },
+    {
+      name        = "payer",
+      description = "Group for payers of the AvN Gateway."
+    },
+    {
+      name        = "read",
+      description = "Group to grant read permission to users of the admin portal."
+    },
+    {
+      name        = "relayer",
+      description = "Group for relayers of the AvN Gateway."
+    },
+    {
+      name        = "write",
+      description = "Group to grant write permission to users of the admin portal."
     }
   ]
 
   #
   # additional RDS cidr to allow access
   #
-  rds_cidrs = [
+  rds_cidrs = flatten([
     for cidr in var.rds.allowed_cidr_blocks : {
       rule        = "postgresql-tcp"
       protocol    = "tcp"
       description = "Allow traffic on gateway-rds port"
       cidr_blocks = cidr
     }
-  ]
-
-  # TODO: New lambda configuration format to be implemented after testing
-  /*
-  new_lambda_config = {
-    for name, config in local.lambdas : name => merge(
-      local.common_lambda_config,
-      config
-    )
-  }
-  */
+  ])
 }
