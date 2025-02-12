@@ -1,31 +1,11 @@
 locals {
   # secrets
   sm = {
-    admin-portal = {
-      value = {
-        cognitoRegion           = data.aws_region.current.name
-        cloudwatchRegion        = data.aws_region.current.name
-        cognitoPoolId           = aws_cognito_user_pool.admin_portal.id
-        userPoolClientId        = aws_cognito_user_pool_client.admin_portal.id
-        cognitoAuthUrl          = var.cognito.aws_domain != null ? "https://${var.cognito.aws_domain}.auth.${data.aws_region.current.name}.amazoncognito.com" : "https://${var.cognito.domain}"
-        cognitoLoginRedirectUrl = "https://${var.cognito.domain_admin_portal}/login"
-        corsAllowedUrl          = "https://${var.cognito.domain_admin_portal}"
-        backendUrl              = ""
-        cognitoLogoutUrl        = "https://${var.cognito.domain_admin_portal}/logout"
-        redisUrl                = try(module.memory_db[0].cluster_endpoint_address, "")
-        logGroups = join(", ", concat(
-          [for handler in ["split_fee_handler", "send_handler", "authorisation_handler", "invalid_transaction_handler", "tx_dispatch_handler"] :
-            module.lambdas[handler].lambda_cloudwatch_log_group_name
-          ],
-          ["/aws/eks/fluentbit-cloudwatch/workload/gateway"]
-        ))
-      }
-    }
     rds = {
       value = {
         gateway_app_user          = "gateway_app"
         gateway_app_database      = "gateway_app_db"
-        gateway_app_user_password = ""
+        gateway_app_user_password = random_password.this.result
         gateway_rds_host          = try(module.rds[0].db_instance_address, null)
         gateway_app_schema_sync   = tostring(false)
         db_explorer_host          = ""

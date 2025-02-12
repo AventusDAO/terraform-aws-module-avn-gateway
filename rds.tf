@@ -65,3 +65,9 @@ module "rds_monitoring" {
   db_instance_id    = module.rds[0].db_instance_identifier
   tags              = var.rds.tags
 }
+
+resource "random_password" "this" {
+  length           = 16
+  special          = false
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
