@@ -5,7 +5,7 @@ locals {
       value = {
         gateway_app_user          = "gateway_app"
         gateway_app_database      = "gateway_app_db"
-        gateway_app_user_password = ""
+        gateway_app_user_password = random_password.this.result
         gateway_rds_host          = try(module.rds[0].db_instance_address, null)
         gateway_app_schema_sync   = tostring(false)
         db_explorer_host          = ""
