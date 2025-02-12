@@ -276,7 +276,6 @@ data "aws_iam_policy_document" "gateway_admin_portal" {
       aws_secretsmanager_secret.this["cognito"].arn,
       aws_secretsmanager_secret.this["rds"].arn,
       aws_secretsmanager_secret.this["vault"].arn,
-      aws_secretsmanager_secret.this["admin-portal"].arn,
     ]
   }
 
