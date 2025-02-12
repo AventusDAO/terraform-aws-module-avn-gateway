@@ -12,7 +12,7 @@ locals {
         corsAllowedUrl          = "https://${var.cognito.domain_admin_portal}"
         backendUrl              = ""
         cognitoLogoutUrl        = "https://${var.cognito.domain_admin_portal}/logout"
-        redisUrl                = module.memory_db.redis_endpoint
+        redisUrl                = try(module.memory_db[0].redis_endpoint, null)
         logGroups = join(", ", concat(
           [for handler in ["split_fee_handler", "send_handler", "authorisation_handler", "invalid_transaction_handler", "tx_dispatch_handler"] :
             module.lambdas[handler].lambda_cloudwatch_log_group_name
