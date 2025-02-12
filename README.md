@@ -127,12 +127,14 @@ Otherwise, a random app user/passw will be created and saved on terraform state.
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.8 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0.0 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >= 2.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | >= 2.0 |
 
 ## Modules
 
@@ -144,8 +146,8 @@ Otherwise, a random app user/passw will be created and saved on terraform state.
 | <a name="module_eks_iam_role_gateway_vault"></a> [eks\_iam\_role\_gateway\_vault](#module\_eks\_iam\_role\_gateway\_vault) | cloudposse/eks-iam-role/aws | v2.1.0 |
 | <a name="module_eventbridge"></a> [eventbridge](#module\_eventbridge) | terraform-aws-modules/eventbridge/aws | 3.2.3 |
 | <a name="module_gateway_sqs_queues_alarms"></a> [gateway\_sqs\_queues\_alarms](#module\_gateway\_sqs\_queues\_alarms) | terraform-aws-modules/cloudwatch/aws//modules/metric-alarm | 4.3.0 |
-| <a name="module_lambdas"></a> [lambdas](#module\_lambdas) | terraform-aws-modules/lambda/aws | 7.2.2 |
-| <a name="module_lambdas_layers"></a> [lambdas\_layers](#module\_lambdas\_layers) | terraform-aws-modules/lambda/aws | 7.2.2 |
+| <a name="module_lambdas"></a> [lambdas](#module\_lambdas) | terraform-aws-modules/lambda/aws | 7.20.1 |
+| <a name="module_lambdas_layers"></a> [lambdas\_layers](#module\_lambdas\_layers) | terraform-aws-modules/lambda/aws | 7.20.1 |
 | <a name="module_memory_db"></a> [memory\_db](#module\_memory\_db) | terraform-aws-modules/memory-db/aws | v1.1.2 |
 | <a name="module_memory_db_monitoring"></a> [memory\_db\_monitoring](#module\_memory\_db\_monitoring) | git@github.com:Aventus-Network-Services/terraform-aws-memorydb-monitoring | v0.1.0 |
 | <a name="module_rds"></a> [rds](#module\_rds) | terraform-aws-modules/rds/aws | 6.10.0 |
@@ -184,6 +186,7 @@ Otherwise, a random app user/passw will be created and saved on terraform state.
 | [aws_route53_record.api_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_secretsmanager_secret.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
 | [aws_secretsmanager_secret_version.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
+| [random_password.this](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy_document.gateway_admin_portal](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.gateway_connector](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
