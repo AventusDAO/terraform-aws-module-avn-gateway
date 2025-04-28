@@ -1,53 +1,14 @@
-name: Validate PR
+name: Check PR
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review, edited]
     branches:
       - main
 
 jobs:
   check:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
+    uses: Aventus-Network-Services/shared-workflows/.github/workflows/check-workflow.yml@v5.9.0
 
-      - name: Enable brew
-        run: |
-          echo "/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin" >> $GITHUB_PATH
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-      - name: Install `pre-commit`
-        run: brew install pre-commit
-
-      - name: Install TFLint
-        run: curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
-
-      - name: Install `pre-commit` hooks
-        run: pre-commit install
-
-      - name: Run `pre-commit`` checks
-        run: pre-commit run --all-files
-
-  terraform-docs:
-    name: Validate terraform docs
-    runs-on: ubuntu-latest
+  terraform-docs-validate:
     needs: [check]
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        ref: ${{ github.event.pull_request.head.ref }}
-
-    - name: Render terraform docs and push changes back to PR
-      uses: terraform-docs/gh-actions@main
-      with:
-        working-dir: .
-        output-file: README.md
-        output-method: inject
-        git-push: true
-        git-commit-message: "create terraform-docs"
-        template: |-
-          <!-- BEGIN_TF_DOCS -->
-          {{ .Content }}
-          <!-- END_TF_DOCS -->
+    uses: Aventus-Network-Services/shared-workflows/.github/workflows/terraform-docs-workflow.yml@v5.9.0
