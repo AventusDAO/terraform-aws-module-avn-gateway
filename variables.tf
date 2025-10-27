@@ -147,14 +147,14 @@ variable "api_gateway" {
     default_stage_access_log_format = optional(string)
     stage_default_route_settings = optional(
       object({
-        detailed_metrics_enabled = optional(bool)
-        throttling_burst_limit   = optional(number)
-        throttling_rate_limit    = optional(number)
+        detailed_metrics_enabled = optional(bool, true)
+        throttling_burst_limit   = optional(number, null)
+        throttling_rate_limit    = optional(number, null)
       }),
       {
         detailed_metrics_enabled = true
-        throttling_burst_limit   = 100
-        throttling_rate_limit    = 100
+        throttling_burst_limit   = null
+        throttling_rate_limit    = null
       }
     )
     retention_in_days = optional(number, 14)

@@ -93,10 +93,8 @@ module "api_gateway" {
     }
 
     "POST /query" = {
-      authorizer_key         = "authorisation_handler_lambda"
-      authorization_type     = "CUSTOM"
-      throttling_rate_limit  = 500
-      throttling_burst_limit = 400
+      authorizer_key     = "authorisation_handler_lambda"
+      authorization_type = "CUSTOM"
 
       integration = {
         description            = "Query handler integration"
