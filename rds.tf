@@ -3,7 +3,7 @@
 #
 module "rds" {
   source  = "terraform-aws-modules/rds/aws"
-  version = "6.10.0"
+  version = "6.13.1"
 
   count = var.rds.create ? 1 : 0
 

@@ -59,7 +59,7 @@ variable "rds" {
     create                                = optional(bool, true)
     override_name                         = optional(string) #if not set, var.name is used
     engine                                = optional(string, "postgres")
-    engine_version                        = optional(string, "17.2")
+    engine_version                        = optional(string, null)
     family                                = optional(string, "postgres17")
     major_engine_version                  = optional(string, "17")
     instance_class                        = optional(string, "db.t4g.small")
@@ -167,8 +167,8 @@ variable "lambdas" {
   type = object({
     vpc_subnet_ids            = list(string)
     extra_envs                = optional(bool, true)
-    layer_compatible_runtimes = optional(list(string), ["nodejs18.x"])
-    runtime                   = optional(string, "nodejs18.x")
+    layer_compatible_runtimes = optional(list(string), ["nodejs22.x"])
+    runtime                   = optional(string, "nodejs22.x")
     zip_location = optional(
       object({
         bucket     = optional(string)
