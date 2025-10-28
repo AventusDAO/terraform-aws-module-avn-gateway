@@ -59,7 +59,7 @@ variable "rds" {
     create                                = optional(bool, true)
     override_name                         = optional(string) #if not set, var.name is used
     engine                                = optional(string, "postgres")
-    engine_version                        = optional(string, "17.2")
+    engine_version                        = optional(string, null)
     family                                = optional(string, "postgres17")
     major_engine_version                  = optional(string, "17")
     instance_class                        = optional(string, "db.t4g.small")
@@ -147,14 +147,18 @@ variable "api_gateway" {
     default_stage_access_log_format = optional(string)
     stage_default_route_settings = optional(
       object({
-        detailed_metrics_enabled = optional(bool)
-        throttling_burst_limit   = optional(number)
-        throttling_rate_limit    = optional(number)
+        data_trace_enabled       = optional(bool, true)
+        detailed_metrics_enabled = optional(bool, true)
+        logging_level            = optional(string)
+        throttling_burst_limit   = optional(number, 5000)
+        throttling_rate_limit    = optional(number, 10000)
       }),
       {
+        data_trace_enabled       = true
         detailed_metrics_enabled = true
-        throttling_burst_limit   = 100
-        throttling_rate_limit    = 100
+        logging_level            = "INFO"
+        throttling_burst_limit   = 5000
+        throttling_rate_limit    = 10000
       }
     )
     retention_in_days = optional(number, 14)
@@ -167,8 +171,8 @@ variable "lambdas" {
   type = object({
     vpc_subnet_ids            = list(string)
     extra_envs                = optional(bool, true)
-    layer_compatible_runtimes = optional(list(string), ["nodejs18.x"])
-    runtime                   = optional(string, "nodejs18.x")
+    layer_compatible_runtimes = optional(list(string), ["nodejs22.x"])
+    runtime                   = optional(string, "nodejs22.x")
     zip_location = optional(
       object({
         bucket     = optional(string)

@@ -46,9 +46,11 @@ module "api_gateway" {
   }
 
   stage_default_route_settings = {
+    data_trace_enabled       = var.api_gateway.stage_default_route_settings.data_trace_enabled
     detailed_metrics_enabled = var.api_gateway.stage_default_route_settings.detailed_metrics_enabled
+    logging_level            = var.api_gateway.stage_default_route_settings.logging_level
     throttling_burst_limit   = var.api_gateway.stage_default_route_settings.throttling_burst_limit
-    throttling_rate_limit    = var.api_gateway.stage_default_route_settings.throttling_burst_limit
+    throttling_rate_limit    = var.api_gateway.stage_default_route_settings.throttling_rate_limit
   }
 
   authorizers = {
@@ -93,10 +95,8 @@ module "api_gateway" {
     }
 
     "POST /query" = {
-      authorizer_key         = "authorisation_handler_lambda"
-      authorization_type     = "CUSTOM"
-      throttling_rate_limit  = 500
-      throttling_burst_limit = 400
+      authorizer_key     = "authorisation_handler_lambda"
+      authorization_type = "CUSTOM"
 
       integration = {
         description            = "Query handler integration"
