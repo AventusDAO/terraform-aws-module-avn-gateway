@@ -46,7 +46,9 @@ module "api_gateway" {
   }
 
   stage_default_route_settings = {
+    data_trace_enabled       = var.api_gateway.stage_default_route_settings.data_trace_enabled
     detailed_metrics_enabled = var.api_gateway.stage_default_route_settings.detailed_metrics_enabled
+    logging_level            = var.api_gateway.stage_default_route_settings.logging_level
     throttling_burst_limit   = var.api_gateway.stage_default_route_settings.throttling_burst_limit
     throttling_rate_limit    = var.api_gateway.stage_default_route_settings.throttling_rate_limit
   }
