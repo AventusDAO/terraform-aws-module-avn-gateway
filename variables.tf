@@ -150,15 +150,15 @@ variable "api_gateway" {
         data_trace_enabled       = optional(bool, true)
         detailed_metrics_enabled = optional(bool, true)
         logging_level            = optional(string)
-        throttling_burst_limit   = optional(number, null)
-        throttling_rate_limit    = optional(number, null)
+        throttling_burst_limit   = optional(number, 5000)
+        throttling_rate_limit    = optional(number, 10000)
       }),
       {
         data_trace_enabled       = true
         detailed_metrics_enabled = true
         logging_level            = "INFO"
-        throttling_burst_limit   = null
-        throttling_rate_limit    = null
+        throttling_burst_limit   = 5000
+        throttling_rate_limit    = 10000
       }
     )
     retention_in_days = optional(number, 14)
