@@ -48,7 +48,7 @@ module "api_gateway" {
   stage_default_route_settings = {
     detailed_metrics_enabled = var.api_gateway.stage_default_route_settings.detailed_metrics_enabled
     throttling_burst_limit   = var.api_gateway.stage_default_route_settings.throttling_burst_limit
-    throttling_rate_limit    = var.api_gateway.stage_default_route_settings.throttling_burst_limit
+    throttling_rate_limit    = var.api_gateway.stage_default_route_settings.throttling_rate_limit
   }
 
   authorizers = {
