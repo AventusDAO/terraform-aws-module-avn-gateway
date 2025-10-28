@@ -147,12 +147,16 @@ variable "api_gateway" {
     default_stage_access_log_format = optional(string)
     stage_default_route_settings = optional(
       object({
+        data_trace_enabled       = optional(bool, true)
         detailed_metrics_enabled = optional(bool, true)
+        logging_level            = optional(string)
         throttling_burst_limit   = optional(number, null)
         throttling_rate_limit    = optional(number, null)
       }),
       {
+        data_trace_enabled       = true
         detailed_metrics_enabled = true
+        logging_level            = "INFO"
         throttling_burst_limit   = null
         throttling_rate_limit    = null
       }
