@@ -58,7 +58,7 @@ resource "aws_db_subnet_group" "rds" {
 }
 
 module "rds_monitoring" {
-  source = "git@github.com:Aventus-Network-Services/terraform-aws-rds-monitoring?ref=v0.1.0"
+  source = "git@github.com:Aventus-Network-Services/terraform-aws-rds-monitoring?ref=v0.2.0"
 
   sns_topic         = [var.monitoring_sns_topic_arn]
   alarm_name_prefix = "${title(module.rds[0].db_instance_identifier)}-RDS"
