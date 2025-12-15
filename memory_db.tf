@@ -49,7 +49,7 @@ module "memory_db" {
 }
 
 module "memory_db_monitoring" {
-  source = "git@github.com:Aventus-Network-Services/terraform-aws-memorydb-monitoring?ref=v0.2.0"
+  source = "git@github.com:AventusDAO/terraform-aws-memorydb-monitoring?ref=v0.3.0"
 
   sns_topic         = [var.monitoring_sns_topic_arn]
   alarm_name_prefix = "${title(module.memory_db[0].cluster_id)}-MemoryDB"
