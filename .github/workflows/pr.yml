@@ -7,8 +7,8 @@ on:
 
 jobs:
   check:
-    uses: Aventus-Network-Services/shared-workflows/.github/workflows/check-workflow.yml@v5.9.0
+    uses: AventusDAO/shared-workflows/.github/workflows/check-workflow.yml@v5.9.0
 
   terraform-docs-validate:
     needs: [check]
-    uses: Aventus-Network-Services/shared-workflows/.github/workflows/terraform-docs-workflow.yml@v5.9.0
+    uses: AventusDAO/shared-workflows/.github/workflows/terraform-docs-workflow.yml@v5.9.0
