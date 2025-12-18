@@ -2,13 +2,16 @@ name: Check PR
 
 on:
   pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review, edited]
     branches:
       - main
 
 jobs:
   check:
-    uses: AventusDAO/shared-workflows/.github/workflows/check-workflow.yml@v5.9.0
+    uses: AventusDAO/shared-workflows/.github/workflows/check-workflow.yml@v5.20.0
+    with:
+      checkout_repository: ${{github.event.pull_request.head.repo.full_name}}
+      checkout_ref: ${{github.event.pull_request.head.ref}}
 
   terraform-docs-validate:
-    needs: [check]
-    uses: AventusDAO/shared-workflows/.github/workflows/terraform-docs-workflow.yml@v5.9.0
+    uses: AventusDAO/shared-workflows/.github/workflows/terraform-docs-workflow.yml@v5.20.0

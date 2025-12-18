@@ -27,9 +27,9 @@
 | <a name="module_lambdas"></a> [lambdas](#module\_lambdas) | terraform-aws-modules/lambda/aws | 7.20.1 |
 | <a name="module_lambdas_layers"></a> [lambdas\_layers](#module\_lambdas\_layers) | terraform-aws-modules/lambda/aws | 7.20.1 |
 | <a name="module_memory_db"></a> [memory\_db](#module\_memory\_db) | terraform-aws-modules/memory-db/aws | v1.1.2 |
-| <a name="module_memory_db_monitoring"></a> [memory\_db\_monitoring](#module\_memory\_db\_monitoring) | git@github.com:AventusDAO/terraform-aws-memorydb-monitoring | v0.1.0 |
+| <a name="module_memory_db_monitoring"></a> [memory\_db\_monitoring](#module\_memory\_db\_monitoring) | git@github.com:AventusDAO/terraform-aws-memorydb-monitoring | v0.3.0 |
 | <a name="module_rds"></a> [rds](#module\_rds) | terraform-aws-modules/rds/aws | 6.13.1 |
-| <a name="module_rds_monitoring"></a> [rds\_monitoring](#module\_rds\_monitoring) | git@github.com:AventusDAO/terraform-aws-rds-monitoring | v0.1.0 |
+| <a name="module_rds_monitoring"></a> [rds\_monitoring](#module\_rds\_monitoring) | git@github.com:AventusDAO/terraform-aws-rds-monitoring | v0.3.0 |
 | <a name="module_s3_vote_bucket"></a> [s3\_vote\_bucket](#module\_s3\_vote\_bucket) | terraform-aws-modules/s3-bucket/aws | 4.1.2 |
 | <a name="module_sg_lambdas"></a> [sg\_lambdas](#module\_sg\_lambdas) | terraform-aws-modules/security-group/aws | 5.1.0 |
 | <a name="module_sg_memorydb"></a> [sg\_memorydb](#module\_sg\_memorydb) | terraform-aws-modules/security-group/aws | 5.1.0 |
