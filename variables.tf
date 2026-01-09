@@ -171,8 +171,8 @@ variable "lambdas" {
   type = object({
     vpc_subnet_ids            = list(string)
     extra_envs                = optional(bool, true)
-    layer_compatible_runtimes = optional(list(string), ["nodejs22.x"])
-    runtime                   = optional(string, "nodejs22.x")
+    layer_compatible_runtimes = optional(list(string), ["nodejs24.x"])
+    runtime                   = optional(string, "nodejs24.x")
     zip_location = optional(
       object({
         bucket     = optional(string)
