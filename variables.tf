@@ -173,6 +173,7 @@ variable "lambdas" {
     extra_envs                = optional(bool, true)
     layer_compatible_runtimes = optional(list(string), ["nodejs24.x"])
     runtime                   = optional(string, "nodejs24.x")
+
     zip_location = optional(
       object({
         bucket     = optional(string)
